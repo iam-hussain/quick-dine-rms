@@ -1,0 +1,24 @@
+@use "sass:math";
+@use "./type-checking" as check;
+
+/// Convert pixel value to rem value.
+///
+/// @param {Number} $px
+/// @param {Number} $base [16]
+/// @group Converter
+/// @since v1.6.0
+///
+/// @example
+///    @debug px-to-rem(10);
+///    //=> 0.625rem
+///
+@function px-to-rem($px, $base: 16) {
+	@if not math.is-unitless($px) {
+		@error '❌  ===> Pixel: #{$px} has a unit';
+	}
+	@if not math.is-unitless($base) {
+		@error '❌  ===> Base Pixel: #{$base} has a unit';
+	}
+
+	@return math.div($px, $base) * 1rem;
+}
