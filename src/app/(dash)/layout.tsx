@@ -8,7 +8,7 @@ export default function POS({ children }: { children: React.ReactNode }) {
     <Container variant={"screen"} className="flex relative">
       {/* <TopMenu className="col-span-full row-span-1" /> */}
       <SideMenu className="" />
-      <section className="pos__primary-section h-full w-full bg-paper">
+      <section className="md:p-6 p-4 h-full w-full bg-paper">
         {children}
       </section>
     </Container>
