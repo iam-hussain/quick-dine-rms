@@ -43,46 +43,37 @@ import { useStoreStore } from "@/stores/storeSlice";
 
 export const columns: ColumnDef<any>[] = [
   {
-    id: "id",
+    meta: "id",
     accessorKey: "id",
     header: () => <div className="text-left">ID</div>,
     cell: ({ row }) => <div className="">{row.getValue("id")}</div>,
   },
   {
-    id: "name",
+    meta: "name",
     accessorKey: "name",
     header: () => <div className="text-left">Name</div>,
     cell: ({ row }) => <div className="">{row.getValue("name")}</div>,
   },
   {
-    id: "description",
-    accessorKey: "deck",
+    meta: "description",
+    accessorKey: "description",
     header: () => <div className="text-left">Description</div>,
-    cell: ({ row }) => <div className="">{row.getValue("deck")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("description")}</div>,
   },
   {
-    id: "price",
+    meta: "price",
     accessorKey: "price",
     header: () => <div className="text-right">Price</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("price"));
-
-      const formatter = new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-      });
-
-      return (
-        <div className="text-right font-medium">{formatter.format(amount)}</div>
-      );
-    },
+    cell: ({ row }) => (
+      <div className="text-right font-medium">{row.getValue("price")}</div>
+    ),
   },
   {
-    id: "available",
-    accessorKey: "outOfStock",
-    header: () => <div className="text-left">Available</div>,
+    meta: "available",
+    accessorKey: "available",
+    header: () => <div className="text-center">Available</div>,
     cell: ({ row }) => (
-      <div className="">{row.getValue("outOfStock") ? "No" : "Yes"}</div>
+      <div className="text-center">{row.getValue("available")}</div>
     ),
   },
 ];
@@ -96,9 +87,19 @@ export function ProductTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  console.log({ products });
+
+  const formatter = new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+  });
+
   const table = useReactTable({
-    data: products,
+    data: products.map((e) => ({
+      ...e,
+      price: formatter.format(parseFloat(e.price)),
+      description: e.deck,
+      available: e.outOfStock ? "No" : "Yes",
+    })),
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -118,7 +119,7 @@ export function ProductTable() {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 gap-2">
         <Input
           placeholder="Search names..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
