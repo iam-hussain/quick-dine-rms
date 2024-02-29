@@ -1,14 +1,14 @@
 "use client";
-
 import { Container } from "@/components/atoms/container";
-import { Separator } from "@/components/atoms/separator";
 import Icon, { IconKey } from "@/components/atoms/icon";
 import MenuItem from "@/components/molecules/menu-item";
 import { ScrollArea } from "@/components/atoms/scroll-area";
 import { Button } from "@/components/atoms/button";
-import clsx from "clsx";
 import { useActionStore } from "@/stores/actionSlice";
 import UserBadge from "../molecules/user-badge";
+import { useMedia } from "react-use";
+import { motion } from "framer-motion";
+import clsx from "clsx";
 
 type Menu = {
   icon: IconKey;
@@ -60,40 +60,69 @@ const SettingMenus: Menu[] = [
 ];
 
 function SideMenu({ className }: { className?: string }) {
+  const isSmallDevice = useMedia("(max-width: 1280px)");
   const minimize = useActionStore((state) => !state.isSideBarOpen);
   const setMinimize = useActionStore((state) => state.setSideBarOpen);
 
-  return (
-    <>
-      <div
-        onClick={() => setMinimize()}
-        className={clsx(
-          "bg-bw-foreground h-full w-full md:hidden absolute z-30 opacity-30 top-0 bottom-0",
-          {
-            "-left-[100vw] -z-50": minimize,
-            "left-0 right-0": !minimize,
-          }
-        )}
-      />
+  const variants = {
+    initial: { width: 50, x: -50 },
+    full: { width: 240, x: 0 },
+    half: { width: 60, x: 0 },
+    close: { width: 60, x: -60 },
+  };
 
-      <Container
-        className={clsx(
-          "border-r-4 border-paper h-full pb-8 relative md:w-full bg-background md:max-w-52 w-4/6 p-2",
-          className,
-          {
-            "md:left-auto left-0 top-0 md:top-auto": !minimize,
-          }
-        )}
-        display={"flex_col"}
+  const hideShow = {
+    hide: { opacity: 0, scale: 0 },
+    show: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        delay: 0.5,
+      },
+    },
+  };
+
+  const fader = {
+    hide: { opacity: 0, scale: 0 },
+    show: {
+      opacity: 1,
+      scale: 1,
+    },
+  };
+
+  const buttonVariants = {
+    initial: { scale: 1 },
+    hover: { scale: 1.1 },
+    pressed: { scale: 0.9 },
+    minimize: {
+      x: 0,
+    },
+    expand: {
+      x: 80,
+    },
+  };
+
+  return (
+    <motion.div
+      initial="half"
+      animate={minimize ? (isSmallDevice ? "close" : "half") : "full"}
+      variants={variants}
+      className={clsx(
+        "h-full pb-8 bg-background p-2 xl:relative absolute flex flex-col justify-between",
+        className
+      )}
+    >
+      <motion.div
+        whileHover="hover"
+        whileTap="pressed"
+        animate={minimize ? "minimize" : "expand"}
+        variants={buttonVariants}
       >
         <Button
           variant={"transparent"}
-          className={clsx("md:flex font-normal hidden m-auto mr-0 mt-2", {
-            // "absolute top-3 right-4": !minimize,
-
-            "text-inactive-foreground": minimize,
-            "text-primary": !minimize,
-          })}
+          className={clsx(
+            "md:flex font-normal hidden p-2 m-auto bg-paper-dark text-paper-foreground"
+          )}
           onClick={() => setMinimize()}
         >
           <Icon
@@ -101,74 +130,62 @@ function SideMenu({ className }: { className?: string }) {
             className={"h-5 w-5"}
           />
         </Button>
-        <Container
-          className={clsx("text-center mt-2", {
+      </motion.div>
+      <div
+        className={clsx(
+          "flex w-auto gap-2 justify-start align-middle items-center select-none text-right m-auto my-6"
+        )}
+      >
+        <Icon name="FaBowlFood" className="text-primary text-2xl font-thin" />
+        <motion.h1
+          className={clsx("text-xl font-display", {
             hidden: minimize,
           })}
+          initial="hide"
+          animate={minimize ? "hide" : "show"}
+          variants={fader}
         >
-          <p className="text-md font-semibold pb-1">TastyTidbits Tavern</p>
-          <p className="text-xs text-slate-600">
+          QuickDine
+        </motion.h1>
+      </div>
+
+      <ScrollArea className="grow w-full flex justify-end">
+        <Container className="flex flex-col gap-2 text-right my-2 px-1">
+          {AppMenus.map((each, key) => (
+            <MenuItem minimize={minimize} active={false} {...each} key={key} />
+          ))}
+          {SettingMenus.map((each, key) => (
+            <MenuItem minimize={minimize} active={false} {...each} key={key} />
+          ))}
+        </Container>
+      </ScrollArea>
+
+      <motion.div
+        className={clsx("flex flex-col gap-2", {
+          hidden: minimize,
+        })}
+        initial="hide"
+        animate={minimize ? "hide" : "show"}
+        variants={hideShow}
+      >
+        <UserBadge
+          name="Zakir Hussain"
+          image=""
+          minimize={minimize}
+          className={clsx("py-2", {
+            "px-4": !minimize,
+          })}
+        />
+        <div className={"text-center m-auto w-full py-4"}>
+          <p className="text-md font-semibold pb-1 text-foreground/90">
+            TastyTidbits Tavern
+          </p>
+          <p className="text-xs text-foreground/70">
             1234 NW Bobcat Lane, St. Robert, MO 65584-5678
           </p>
-        </Container>
-
-        <Separator className={clsx("my-4")} />
-        <ScrollArea className="grow w-full flex justify-end">
-          <Container className="flex flex-col gap-2 text-right my-4">
-            <p
-              className={clsx("text-base font-semibold px-4", {
-                hidden: minimize,
-              })}
-            >
-              Applications
-            </p>
-            {AppMenus.map((each, key) => (
-              <MenuItem
-                minimize={minimize}
-                active={false}
-                {...each}
-                key={key}
-              />
-            ))}
-          </Container>
-          <Separator className="my-4" />
-          <Container className="flex flex-col gap-2 text-right">
-            <p
-              className={clsx("text-base font-semibold px-4 py-2", {
-                hidden: minimize,
-              })}
-            >
-              Settings
-            </p>
-            {SettingMenus.map((each, key) => (
-              <MenuItem
-                minimize={minimize}
-                active={false}
-                {...each}
-                key={key}
-              />
-            ))}
-          </Container>
-        </ScrollArea>
-        <Separator className={clsx("my-4")} />
-        <Container className="flex flex-col gap-2 text-right w-full">
-          <UserBadge
-            name="Zakir Hussain"
-            image=""
-            minimize={minimize}
-            className={clsx("py-2", {
-              "px-4": !minimize,
-            })}
-          />
-          <MenuItem
-            minimize={minimize}
-            active={false}
-            label="Logout"
-            icon="IoLogOut"
-          />
-        </Container>
-      </Container>
-    </>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

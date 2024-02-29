@@ -1,7 +1,9 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import clsx from "clsx";
 import { Button } from "@/components/atoms/button";
+import Icon from "@/components/atoms/icon";
+import clsx from "clsx";
+import { motion } from "framer-motion";
 
 function UserBadge({
   name,
@@ -14,11 +16,16 @@ function UserBadge({
   minimize?: Boolean;
   className?: string;
 }) {
+  const buttonVariants = {
+    initial: { scale: 1 },
+    hover: { scale: 1.1 },
+    pressed: { scale: 0.9 },
+  };
+
   return (
-    <Button
-      variant={"transparent"}
+    <div
       className={clsx(
-        "flex flex-row gap-2 text-right items-center align-bottom w-full p-0",
+        "flex flex-col text-right items-center align-bottom w-full p-0 py-4 bg-paper/30",
         className,
         {
           "justify-center": minimize,
@@ -26,22 +33,30 @@ function UserBadge({
         }
       )}
     >
-      {!minimize && (
-        <div
-          className={clsx(
-            "flex flex-col text-paper-foreground justify-center align-middle items-end"
-          )}
-        >
-          <p className="text-sm">{name}</p>
-        </div>
-      )}
-      <Avatar className="cursor-pointer select-none bg-paper h-8 w-8">
-        <AvatarImage src={image} alt={name} />
-        <AvatarFallback className="bg-bw-foreground text-bw text-sm">
-          {name.slice(0, 1)}
-        </AvatarFallback>
-      </Avatar>
-    </Button>
+      <motion.div
+        whileHover="hover"
+        whileTap="pressed"
+        variants={buttonVariants}
+      >
+        <Avatar className="cursor-pointer select-none bg-paper h-8 w-8">
+          <AvatarImage src={image} alt={name} />
+          <AvatarFallback className="bg-primary text-primary-foreground text-sm">
+            {name.slice(0, 1)}
+          </AvatarFallback>
+        </Avatar>
+      </motion.div>
+      <p className="text-base mb-4 font-medium text-foreground/80">{name}</p>
+      <motion.div
+        whileHover="hover"
+        whileTap="pressed"
+        variants={buttonVariants}
+      >
+        <Button variant={"outline"} className="flex gap-2">
+          <Icon name={"IoLogOut"} className="h-5 w-5" />
+          Logout
+        </Button>
+      </motion.div>
+    </div>
   );
 }
 

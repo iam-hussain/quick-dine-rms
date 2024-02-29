@@ -53,7 +53,6 @@ function LoginForm({ redirect }: LoginFormProps) {
           router.push("/stores");
         }
       }
-      console.log({ data });
     },
     onError: (err) => {
       if (typeof err === "string") {
@@ -66,15 +65,7 @@ function LoginForm({ redirect }: LoginFormProps) {
   });
 
   async function onSubmit(variables: LoginSchemaValues) {
-    console.log("Hello", variables);
-
-    mutation.mutate(variables as any);
-    // try {
-    //   const data = await instance.post("/auth/login", variables);
-    //   console.log({ data });
-    // } catch (err) {
-    //   console.log({ err });
-    // }
+    return await mutation.mutateAsync(variables as any);
   }
 
   return (

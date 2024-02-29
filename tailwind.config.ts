@@ -41,6 +41,7 @@ const config: Config = {
         },
         paper: {
           DEFAULT: "hsl(var(--paper))",
+          dark: "hsl(var(--paper-dark))",
           foreground: "hsl(var(--paper-foreground))",
         },
         inactive: {
