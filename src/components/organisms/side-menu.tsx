@@ -59,59 +59,59 @@ const SettingMenus: Menu[] = [
   },
 ];
 
+const variants = {
+  initial: { width: 60, x: -60 },
+  full: { width: 240, x: 0 },
+  half: { width: 60, x: 0 },
+  close: { width: 60, x: -60 },
+};
+
+const hideShow = {
+  hide: { opacity: 0, scale: 0 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delay: 0.2,
+    },
+  },
+};
+
+const fader = {
+  hide: { opacity: 0, scale: 0 },
+  show: {
+    opacity: 1,
+    scale: 1,
+  },
+};
+
+const buttonVariants = {
+  initial: { scale: 1 },
+  hover: { scale: 1.1 },
+  pressed: { scale: 0.9 },
+  minimize: {
+    x: 0,
+    opacity: 0,
+    scale: 0,
+  },
+  expand: {
+    x: 140,
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delay: 0.2,
+    },
+  },
+};
+
 function SideMenu({ className }: { className?: string }) {
   const isSmallDevice = useMedia("(max-width: 1280px)");
   const minimize = useActionStore((state) => !state.isSideBarOpen);
   const setMinimize = useActionStore((state) => state.setSideBarOpen);
 
-  const variants = {
-    initial: { width: 50, x: -50 },
-    full: { width: 240, x: 0 },
-    half: { width: 60, x: 0 },
-    close: { width: 60, x: -60 },
-  };
-
-  const hideShow = {
-    hide: { opacity: 0, scale: 0 },
-    show: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        delay: 0.2,
-      },
-    },
-  };
-
-  const fader = {
-    hide: { opacity: 0, scale: 0 },
-    show: {
-      opacity: 1,
-      scale: 1,
-    },
-  };
-
-  const buttonVariants = {
-    initial: { scale: 1 },
-    hover: { scale: 1.1 },
-    pressed: { scale: 0.9 },
-    minimize: {
-      x: 0,
-      opacity: 0,
-      scale: 0,
-    },
-    expand: {
-      x: 145,
-      opacity: 1,
-      scale: 1,
-      transition: {
-        delay: 0.2,
-      },
-    },
-  };
-
   return (
     <motion.div
-      initial="half"
+      initial="initial"
       animate={minimize ? (isSmallDevice ? "close" : "half") : "full"}
       variants={variants}
       className={clsx(
