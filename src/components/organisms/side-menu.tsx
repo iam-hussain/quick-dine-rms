@@ -77,7 +77,7 @@ function SideMenu({ className }: { className?: string }) {
       opacity: 1,
       scale: 1,
       transition: {
-        delay: 0.5,
+        delay: 0.2,
       },
     },
   };
@@ -96,9 +96,16 @@ function SideMenu({ className }: { className?: string }) {
     pressed: { scale: 0.9 },
     minimize: {
       x: 0,
+      opacity: 0,
+      scale: 0,
     },
     expand: {
-      x: 80,
+      x: 145,
+      opacity: 1,
+      scale: 1,
+      transition: {
+        delay: 0.2,
+      },
     },
   };
 
@@ -112,31 +119,20 @@ function SideMenu({ className }: { className?: string }) {
         className
       )}
     >
-      <motion.div
-        whileHover="hover"
-        whileTap="pressed"
-        animate={minimize ? "minimize" : "expand"}
-        variants={buttonVariants}
-      >
-        <Button
-          variant={"transparent"}
-          className={clsx(
-            "md:flex font-normal hidden p-2 m-auto bg-paper-dark text-paper-foreground"
-          )}
-          onClick={() => setMinimize()}
-        >
-          <Icon
-            name={minimize ? "HiMenuAlt2" : "IoClose"}
-            className={"h-5 w-5"}
-          />
-        </Button>
-      </motion.div>
       <div
         className={clsx(
-          "flex w-auto gap-2 justify-start align-middle items-center select-none text-right m-auto my-6"
+          "flex w-auto gap-2 justify-start align-middle items-center select-none text-right m-auto my-6 relative"
         )}
       >
-        <Icon name="FaBowlFood" className="text-primary text-2xl font-thin" />
+        <motion.div
+          whileHover="hover"
+          whileTap="pressed"
+          variants={buttonVariants}
+          className="cursor-pointer"
+          onClick={() => setMinimize()}
+        >
+          <Icon name="FaBowlFood" className="text-primary text-2xl font-thin" />
+        </motion.div>
         <motion.h1
           className={clsx("text-xl font-display", {
             hidden: minimize,
@@ -147,9 +143,26 @@ function SideMenu({ className }: { className?: string }) {
         >
           QuickDine
         </motion.h1>
+        <motion.div
+          whileHover="hover"
+          whileTap="pressed"
+          animate={minimize ? "minimize" : "expand"}
+          variants={buttonVariants}
+          className="absolute"
+        >
+          <Button
+            variant={"ghost"}
+            className={clsx(
+              "md:flex font-normal hidden p-2 m-auto bg-paper-dark text-paper-foreground"
+            )}
+            onClick={() => setMinimize()}
+          >
+            <Icon name={"IoIosArrowBack"} className={"h-5 w-5"} />
+          </Button>
+        </motion.div>
       </div>
 
-      <ScrollArea className="grow w-full flex justify-end">
+      <ScrollArea className="grow w-full flex justify-end py-4">
         <Container className="flex flex-col gap-2 text-right my-2 px-1">
           {AppMenus.map((each, key) => (
             <MenuItem minimize={minimize} active={false} {...each} key={key} />
