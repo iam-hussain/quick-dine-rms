@@ -116,7 +116,11 @@ function LoginForm({ redirect }: LoginFormProps) {
           )}
         />
         <div className="pt-4">
-          <Button className="w-full" type="submit">
+          <Button
+            className="w-full"
+            type="submit"
+            disabled={mutation.isPending}
+          >
             Sign In
           </Button>
         </div>

@@ -41,63 +41,27 @@ import {
 } from "@/components/atoms/table";
 import { useStoreStore } from "@/stores/storeSlice";
 
-const data: Payment[] = [
+export const columns: ColumnDef<any>[] = [
   {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-];
-
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
-
-export const columns: ColumnDef<Payment>[] = [
-  {
+    id: "id",
     accessorKey: "id",
     header: () => <div className="text-left">ID</div>,
     cell: ({ row }) => <div className="">{row.getValue("id")}</div>,
   },
   {
+    id: "name",
     accessorKey: "name",
     header: () => <div className="text-left">Name</div>,
     cell: ({ row }) => <div className="">{row.getValue("name")}</div>,
   },
   {
+    id: "description",
     accessorKey: "deck",
     header: () => <div className="text-left">Description</div>,
     cell: ({ row }) => <div className="">{row.getValue("deck")}</div>,
   },
   {
+    id: "price",
     accessorKey: "price",
     header: () => <div className="text-right">Price</div>,
     cell: ({ row }) => {
@@ -114,6 +78,7 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
+    id: "available",
     accessorKey: "outOfStock",
     header: () => <div className="text-left">Available</div>,
     cell: ({ row }) => (
@@ -155,17 +120,17 @@ export function ProductTable() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Search names..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm bg-bw"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+              Fields <ChevronDownIcon className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -173,6 +138,7 @@ export function ProductTable() {
               .getAllColumns()
               .filter((column) => column.getCanHide())
               .map((column) => {
+                console.log({ column });
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
@@ -239,7 +205,7 @@ export function ProductTable() {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      {/* <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
@@ -262,7 +228,7 @@ export function ProductTable() {
             Next
           </Button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
-import { cookieNames, getCookie } from "./cookies";
+import { cookieNames, deleteCookie, getCookie } from "./cookies";
+import messages from "@/validations/messages";
 
 const instance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/api/`,
@@ -32,6 +33,19 @@ instance.interceptors.response.use(
     if (error instanceof AxiosError) {
       const massage = error.response?.data?.massage || "";
       if (massage) {
+        if (massage === "INVALID_TOKEN" || massage === "TOKEN_NOT_FOUND") {
+          deleteCookie(cookieNames.access_token);
+          window.location.href = "/";
+        }
+
+        if (massage === "TOKEN_FOUND") {
+          window.location.href = "/store";
+        }
+
+        if (massage === "INVALID_STORE_TOKEN") {
+          window.location.href = "/stores";
+        }
+
         return Promise.reject(massage);
       }
     }
