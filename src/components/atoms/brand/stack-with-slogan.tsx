@@ -18,8 +18,10 @@ function BrandStackSlogan({ className }: BrandSvgProps) {
         name="FaBowlFood"
         className="text-primary md:text-9xl text-7xl font-thin"
       />
-      <h1 className="md:text-7xl text-5xl font-display">QuickDine</h1>
-      <p className="text-secondary uppercase font-medium text-xs md:text-base">
+      <h1 className="md:text-7xl text-5xl font-display text-foreground">
+        QuickDine
+      </h1>
+      <p className="text-foreground/50 uppercase font-medium text-xs md:text-base">
         Order with Ease, Dine with Pleasure
       </p>
     </div>

@@ -144,6 +144,7 @@ function SideMenu({ className }: { className?: string }) {
           QuickDine
         </motion.h1>
         <motion.div
+          initial="minimize"
           whileHover="hover"
           whileTap="pressed"
           animate={minimize ? "minimize" : "expand"}
