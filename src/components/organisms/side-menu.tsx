@@ -9,6 +9,7 @@ import UserBadge from "../molecules/user-badge";
 import { useMedia } from "react-use";
 import { motion } from "framer-motion";
 import clsx from "clsx";
+import { useStoreStore } from "@/stores/storeSlice";
 
 type Menu = {
   icon: IconKey;
@@ -60,10 +61,22 @@ const SettingMenus: Menu[] = [
 ];
 
 const variants = {
-  initial: { width: 60, x: -60 },
-  full: { width: 240, x: 0 },
-  half: { width: 60, x: 0 },
-  close: { width: 60, x: -60 },
+  initial: {
+    width: 60,
+    x: -60,
+  },
+  full: {
+    width: 240,
+    x: 0,
+  },
+  half: {
+    width: 60,
+    x: 0,
+  },
+  close: {
+    width: 60,
+    x: -60,
+  },
 };
 
 const hideShow = {
@@ -93,6 +106,9 @@ const buttonVariants = {
     x: 0,
     opacity: 0,
     scale: 0,
+    transition: {
+      duration: 0.5,
+    },
   },
   expand: {
     x: 140,
@@ -108,6 +124,7 @@ function SideMenu({ className }: { className?: string }) {
   const isSmallDevice = useMedia("(max-width: 1280px)");
   const minimize = useActionStore((state) => !state.isSideBarOpen);
   const setMinimize = useActionStore((state) => state.setSideBarOpen);
+  const store = useStoreStore((state) => state.store);
 
   return (
     <motion.div
@@ -152,10 +169,8 @@ function SideMenu({ className }: { className?: string }) {
           className="absolute"
         >
           <Button
-            variant={"ghost"}
-            className={clsx(
-              "md:flex font-normal hidden p-2 m-auto bg-paper-dark text-paper-foreground"
-            )}
+            variant={"accent"}
+            className={clsx("md:flex font-normal hidden p-2 m-auto")}
             onClick={() => setMinimize()}
           >
             <Icon name={"IoIosArrowBack"} className={"h-5 w-5"} />
@@ -192,7 +207,7 @@ function SideMenu({ className }: { className?: string }) {
         />
         <div className={"text-center m-auto w-full py-4"}>
           <p className="text-md font-semibold pb-1 text-foreground/90">
-            TastyTidbits Tavern
+            {store.name || ""}
           </p>
           <p className="text-xs text-foreground/70">
             1234 NW Bobcat Lane, St. Robert, MO 65584-5678

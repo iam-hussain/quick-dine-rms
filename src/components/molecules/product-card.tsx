@@ -21,7 +21,7 @@ function ProductCard({
   return (
     <button
       className={clsx(
-        "flex flex-col h-full w-full align-middle items-center rounded-lg p-2 bg-bw cursor-pointer text-center select-none hover:text-accent-foreground hover:border-accent-foreground/50 hover:bg-accent active:border-bw-foreground border-2",
+        "flex flex-col h-full w-full align-middle items-center rounded-lg p-2 bg-bw cursor-pointer text-center select-none hover:text-accent-foreground hover:bg-accent hover:border-accent active:border-accent-foreground border-2 border-bw",
         {
           "justify-center": !image,
           "justify-start": image,

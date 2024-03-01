@@ -56,24 +56,33 @@ export const columns: ColumnDef<any>[] = [
   },
   {
     meta: "description",
-    accessorKey: "description",
+    accessorKey: "deck",
     header: () => <div className="text-left">Description</div>,
-    cell: ({ row }) => <div className="">{row.getValue("description")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("deck")}</div>,
   },
   {
     meta: "price",
     accessorKey: "price",
     header: () => <div className="text-right">Price</div>,
-    cell: ({ row }) => (
-      <div className="text-right font-medium">{row.getValue("price")}</div>
-    ),
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("price"));
+
+      const formatter = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+      });
+
+      return (
+        <div className="text-right font-medium">{formatter.format(amount)}</div>
+      );
+    },
   },
   {
     meta: "available",
-    accessorKey: "available",
-    header: () => <div className="text-center">Available</div>,
+    accessorKey: "outOfStock",
+    header: () => <div className="text-left">Available</div>,
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("available")}</div>
+      <div className="">{row.getValue("outOfStock") ? "No" : "Yes"}</div>
     ),
   },
 ];
@@ -88,18 +97,8 @@ export function ProductTable() {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const formatter = new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-  });
-
   const table = useReactTable({
-    data: products.map((e) => ({
-      ...e,
-      price: formatter.format(parseFloat(e.price)),
-      description: e.deck,
-      available: e.outOfStock ? "No" : "Yes",
-    })),
+    data: products,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -118,7 +117,7 @@ export function ProductTable() {
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full grow">
       <div className="flex items-center py-4 gap-2">
         <Input
           placeholder="Search names..."
@@ -139,7 +138,6 @@ export function ProductTable() {
               .getAllColumns()
               .filter((column) => column.getCanHide())
               .map((column) => {
-                console.log({ column });
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
