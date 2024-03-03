@@ -43,7 +43,8 @@ function LoginForm({ redirect }: LoginFormProps) {
   const { setError } = form;
 
   const mutation = useMutation({
-    mutationFn: (variables) => instance.post("/auth/login", variables),
+    mutationFn: (variables) =>
+      instance.post("/authentication/sign-in", variables),
     onSuccess: (data: any) => {
       if (data?.access_token) {
         setCookie(cookieNames.access_token, data.access_token);
