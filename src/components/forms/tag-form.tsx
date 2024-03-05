@@ -12,23 +12,20 @@ import {
   FormLabel,
 } from "@/components/atoms/form";
 import { Input } from "@/components/atoms/input";
-import schemas, { LoginSchemaValues } from "@/validations";
+import schemas, { TagSchemaValues } from "@/validations";
 import { useRouter } from "next/navigation";
 import instance from "@/lib/instance";
 import { useMutation } from "@tanstack/react-query";
-import { cookieNames, setCookie } from "@/lib/cookies";
 import { getValidationMessage } from "@/validations/messages";
+import { useEffect } from "react";
 
-const defaultValues: Partial<LoginSchemaValues> = {};
+const defaultValues: Partial<TagSchemaValues> = {};
 
-type LoginFormProps = {
-  redirect: string;
-};
+type TagFormProps = {};
 
-function LoginForm({ redirect }: LoginFormProps) {
-  const router = useRouter();
-  const form = useForm<LoginSchemaValues>({
-    resolver: zodResolver(schemas.login),
+function TagForm({}: TagFormProps) {
+  const form = useForm<TagSchemaValues>({
+    resolver: zodResolver(schemas.tag),
     defaultValues,
     mode: "onSubmit",
   });
@@ -36,17 +33,9 @@ function LoginForm({ redirect }: LoginFormProps) {
   const { setError } = form;
 
   const mutation = useMutation({
-    mutationFn: (variables) =>
-      instance.post("/authentication/sign-in", variables),
+    mutationFn: (variables) => instance.post("/store/a-canteen/tag", variables),
     onSuccess: (data: any) => {
-      if (data?.access_token) {
-        setCookie(cookieNames.access_token, data.access_token);
-        if (data?.includes_store) {
-          router.push("/store");
-        } else {
-          router.push("/stores");
-        }
-      }
+      console.log({ data });
     },
     onError: (err) => {
       if (typeof err === "string") {
@@ -58,34 +47,22 @@ function LoginForm({ redirect }: LoginFormProps) {
     },
   });
 
-  async function onSubmit(variables: LoginSchemaValues) {
+  async function onSubmit(variables: TagSchemaValues) {
+    console.log({ variables });
     return await mutation.mutateAsync(variables as any);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-        {/* <FormField
-          control={form.control}
-          name="slug"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Store Slug</FormLabel>
-              <FormControl>
-                <Input placeholder="aaa-canteen" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
         <FormField
           control={form.control}
-          name="email"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Tag Name</FormLabel>
               <FormControl>
-                <Input placeholder="Email" autoComplete="email" {...field} />
+                <Input placeholder="Name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -93,17 +70,12 @@ function LoginForm({ redirect }: LoginFormProps) {
         />
         <FormField
           control={form.control}
-          name="password"
+          name="deck"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input
-                  autoComplete="new-password"
-                  placeholder="Password"
-                  type="password"
-                  {...field}
-                />
+                <Input placeholder="Description" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -113,9 +85,9 @@ function LoginForm({ redirect }: LoginFormProps) {
           <Button
             className="w-full"
             type="submit"
-            disabled={mutation.isPending}
+            // disabled={mutation.isPending}
           >
-            Sign In
+            Create
           </Button>
         </div>
       </form>
@@ -123,4 +95,4 @@ function LoginForm({ redirect }: LoginFormProps) {
   );
 }
 
-export default LoginForm;
+export default TagForm;

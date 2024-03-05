@@ -31,7 +31,7 @@ instance.interceptors.response.use(
   },
   function (error) {
     if (error instanceof AxiosError) {
-      const massage = error.response?.data?.massage || "";
+      const massage = error.response?.data?.code || "";
       if (massage) {
         if (massage === "INVALID_TOKEN" || massage === "TOKEN_NOT_FOUND") {
           deleteCookie(cookieNames.access_token);

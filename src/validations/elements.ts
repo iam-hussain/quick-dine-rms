@@ -13,6 +13,7 @@ export const number = () => {
 export const string = (options?: {
   type?: "email" | "username";
   length?: "4-20" | "6-20";
+  optional?: boolean;
 }) => {
   let stringSchema = z.string({
     required_error: messages.required,
@@ -25,6 +26,10 @@ export const string = (options?: {
 
   if (options.type === "email") {
     stringSchema = stringSchema.email({ message: messages.valid_email });
+  }
+
+  if (!length && options.optional) {
+    stringSchema = stringSchema.optional() as any;
   }
 
   if (options.length === "4-20") {

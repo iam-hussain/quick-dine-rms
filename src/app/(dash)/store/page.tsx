@@ -3,6 +3,7 @@ import { Container } from "@/components/atoms/container";
 import Icon from "@/components/atoms/icon";
 import { ProductTable } from "@/components/organisms/product-table";
 import LoginForm from "@/components/forms/login-form";
+import TagForm from "@/components/forms/tag-form";
 
 export default async function Dashboard() {
   return (
@@ -14,20 +15,15 @@ export default async function Dashboard() {
           Add Product
         </Button>
       </div>
-      <div className="flex w-full">
+      <div className="flex w-full h-full gap-8 md:flex-row flex-col-reverse">
         <ProductTable />
-        <div className="flex flex-col gap-6 w-full justify-center text-center md:text-left align-middle md:w-3/6 m-auto p-4 h-full">
-          <div className="bg-bw py-8 md:px-8 px-4 w-auto md:max-w-sm rounded-lg m-auto">
+        <div className="flex flex-col gap-2 md:gap-6 w-auto md:min-w-[400px] justify-center text-center md:text-left align-middle md:h-full h-auto">
+          <div className="bg-bw py-8 md:px-8 px-4 w-full rounded-lg m-auto">
             <h1 className="text-3xl md:text-4xl font-bold pb-4 select-none">
-              Login.
+              Tag.
             </h1>
             <div className="flex flex-col w-full mb-2">
-              <LoginForm redirect={"/stores"} />
-            </div>
-            <div className="flex flex-col w-full gap-3 md:max-w-xs pt-2">
-              <h6 className="text-md font-sans">Need it for your store?</h6>
-
-              <Button variant={"outline"}>Create Account</Button>
+              <TagForm />
             </div>
           </div>
         </div>
