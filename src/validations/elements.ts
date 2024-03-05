@@ -28,7 +28,7 @@ export const string = (options?: {
     stringSchema = stringSchema.email({ message: messages.valid_email });
   }
 
-  if (!length && options.optional) {
+  if (options.optional) {
     stringSchema = stringSchema.optional() as any;
   }
 
