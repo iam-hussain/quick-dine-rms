@@ -3,9 +3,11 @@ import { devtools, persist } from "zustand/middleware";
 
 interface ActionState {
   store: any;
+  tags: any[];
   products: any[];
   categories: any[];
   setStoreData: (store: any) => void;
+  setTagsData: (store: [any]) => void;
 }
 
 export const useStoreStore = create<ActionState>()(
@@ -13,10 +15,11 @@ export const useStoreStore = create<ActionState>()(
     persist(
       (set) => ({
         store: {},
+        tags: [],
         products: [],
         categories: [],
-        setStoreData: ({ products = [], ...store }) =>
-          set(() => ({ products, store })),
+        setStoreData: (store) => set((e) => ({ ...e, store })),
+        setTagsData: (tags) => set((e) => ({ ...e, tags })),
       }),
       {
         name: "store-storage",

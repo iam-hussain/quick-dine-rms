@@ -15,7 +15,7 @@ import { Input } from "@/components/atoms/input";
 import schemas, { TagSchemaValues } from "@/validations";
 import { useRouter } from "next/navigation";
 import instance from "@/lib/instance";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getValidationMessage } from "@/validations/messages";
 import { useEffect } from "react";
 
@@ -24,6 +24,8 @@ const defaultValues: Partial<TagSchemaValues> = {};
 type TagFormProps = {};
 
 function TagForm({}: TagFormProps) {
+  const queryClient = useQueryClient();
+
   const form = useForm<TagSchemaValues>({
     resolver: zodResolver(schemas.tag),
     defaultValues,
@@ -34,8 +36,9 @@ function TagForm({}: TagFormProps) {
 
   const mutation = useMutation({
     mutationFn: (variables) => instance.post("/store/a-canteen/tag", variables),
-    onSuccess: (data: any) => {
+    onSuccess: async (data: any) => {
       console.log({ data });
+      await queryClient.invalidateQueries({ queryKey: ["tag"] });
     },
     onError: (err) => {
       if (typeof err === "string") {

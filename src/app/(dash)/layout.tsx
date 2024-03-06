@@ -8,10 +8,25 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function POS({ children }: { children: React.ReactNode }) {
   const setStoreData = useStoreStore((state) => state.setStoreData);
-  // useQuery({
-  //   queryKey: ["store"],
-  //   queryFn: () => instance.get("/store").then((data) => setStoreData(data)),
-  // });
+  const setTagsData = useStoreStore((state) => state.setTagsData);
+  useQuery({
+    queryKey: ["tags"],
+    queryFn: () =>
+      instance.get("/store/tags").then((data) => {
+        setTagsData(data as unknown as [any]);
+        return data;
+      }),
+    refetchOnMount: true,
+  });
+  useQuery({
+    queryKey: ["store"],
+    queryFn: () =>
+      instance.get("/store").then((data) => {
+        setStoreData(data);
+        return data;
+      }),
+    refetchOnMount: true,
+  });
 
   // if (isLoading) return <div>Loading...</div>;
 

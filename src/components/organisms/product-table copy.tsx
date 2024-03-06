@@ -62,10 +62,21 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => <div className="">{row.getValue("deck")}</div>,
   },
   {
-    meta: "type",
-    accessorKey: "type",
-    header: () => <div className="text-right">Type</div>,
-    cell: ({ row }) => <div className="">{row.getValue("type")}</div>,
+    meta: "price",
+    accessorKey: "price",
+    header: () => <div className="text-right">Price</div>,
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("price"));
+
+      const formatter = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+      });
+
+      return (
+        <div className="text-right font-medium">{formatter.format(amount)}</div>
+      );
+    },
   },
   {
     meta: "available",
@@ -84,7 +95,7 @@ export const columns: ColumnDef<any>[] = [
 ];
 
 export function ProductTable() {
-  const tags = useStoreStore((state) => state.tags);
+  const products = useStoreStore((state) => state.products);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -94,7 +105,7 @@ export function ProductTable() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: tags,
+    data: products,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
