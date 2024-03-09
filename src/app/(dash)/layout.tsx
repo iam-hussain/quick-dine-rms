@@ -1,41 +1,15 @@
 "use client";
 
-import { Container } from "@/components/atoms/container";
 import SideMenu from "@/components/organisms/side-menu";
-import instance from "@/lib/instance";
-import { useStoreStore } from "@/stores/storeSlice";
-import { useQuery } from "@tanstack/react-query";
-import { TbRuler } from "react-icons/tb";
+import { useActionStore } from "@/stores/actionSlice";
 
 export default function POS({ children }: { children: React.ReactNode }) {
-  const setStoreData = useStoreStore((state) => state.setStoreData);
-  const setTagsData = useStoreStore((state) => state.setTagsData);
-  useQuery({
-    queryKey: ["tags"],
-    queryFn: () => instance.get("/store/tags"),
-  });
-  useQuery({
-    queryKey: ["store"],
-    queryFn: () => instance.get("/store"),
-    refetchOnMount: false,
-    refetchOnReconnect: true,
-  });
-
-  // if (isLoading) return <div>Loading...</div>;
-
-  // if (error) return <div>Error: {error.message}</div>;
-
-  // if (data) {
-  //   setStoreData(data);
-  // }
-
+  const minimize = useActionStore((state) => state.isSideBarMinimized);
   return (
-    <Container variant={"screen"} className="flex relative">
+    <main className="flex relative min-h-fill w-full h-auto">
       {/* <TopMenu className="col-span-full row-span-1" /> */}
       <SideMenu />
-      <section className="md:p-6 p-4 h-full w-full bg-paper">
-        {children}
-      </section>
-    </Container>
+      <div className="md:p-6 p-4 h-auto w-full bg-paper">{children}</div>
+    </main>
   );
 }

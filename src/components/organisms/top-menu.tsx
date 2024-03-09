@@ -12,8 +12,8 @@ import FullScreenButton from "../molecules/full-screen-button";
 import SearchBar from "./search-bar";
 
 function TopMenu({ className }: { className?: string }) {
-  const minimize = useActionStore((state) => state.isSideBarOpen);
-  const setMinimize = useActionStore((state) => state.setSideBarOpen);
+  const minimize = useActionStore((state) => state.isSideBarMinimized);
+  const setMinimize = useActionStore((state) => state.setSideBarMinimize);
 
   return (
     <Container

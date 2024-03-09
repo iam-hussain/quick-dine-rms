@@ -2,11 +2,6 @@
 
 import * as React from "react";
 import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons";
-import {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
@@ -18,18 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { Button } from "@/components/atoms/button";
-import { Checkbox } from "@/components/atoms/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/atoms/dropdown-menu";
 import { Input } from "@/components/atoms/input";
 import {
   Table,
@@ -39,58 +23,35 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/atoms/table";
-import { useStoreStore } from "@/stores/storeSlice";
-import { DialogBox } from "../molecules/dailog-box";
 import instance from "@/lib/instance";
 import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "@/components/atoms/skeleton";
 
 export const columns: ColumnDef<any>[] = [
   {
-    meta: "id",
     accessorKey: "id",
-    header: () => <div className="text-left">ID</div>,
+    header: () => <div className="text-left w-1/5">ID</div>,
     cell: ({ row }) => <div className="">{row.getValue("id")}</div>,
   },
   {
-    meta: "name",
     accessorKey: "name",
-    header: () => <div className="text-left">Name</div>,
+    header: () => <div className="text-left w-2/5">Name</div>,
     cell: ({ row }) => <div className="">{row.getValue("name")}</div>,
   },
   {
-    meta: "description",
     accessorKey: "deck",
-    header: () => <div className="text-left">Description</div>,
-    cell: ({ row }) => <div className="">{row.getValue("deck")}</div>,
-  },
-  {
-    meta: "type",
-    accessorKey: "type",
-    header: () => <div className="text-right">Type</div>,
-    cell: ({ row }) => <div className="">{row.getValue("type")}</div>,
-  },
-  {
-    meta: "available",
-    accessorKey: "outOfStock",
-    header: () => <div className="text-left">Available</div>,
+    header: () => <div className="text-left w-2/5">Description</div>,
     cell: ({ row }) => (
-      <div className="">{row.getValue("outOfStock") ? "No" : "Yes"}</div>
+      <div className="text-foreground/70">{row.getValue("deck")}</div>
     ),
-  },
-  {
-    meta: "available",
-    accessorKey: "action",
-    header: () => <div className="text-left">Action</div>,
-    cell: ({ row }) => <DialogBox />,
   },
 ];
 
-export function ProductTable() {
-  const { data } = useQuery({
+function TagTable() {
+  const { data, isLoading } = useQuery({
     queryKey: ["tags"],
     queryFn: () => instance.get("/store/tags"),
   });
-  // const tags = useStoreStore((state) => state.tags);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -118,9 +79,32 @@ export function ProductTable() {
     },
   });
 
+  if (isLoading) {
+    return (
+      <div className="w-full grow space-y-3 py-4">
+        <div className="flex items-center pb-4 gap-2">
+          <Skeleton className="h-10 w-1/3" />
+        </div>
+        <Skeleton className="h-auto w-full rounded-xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-2/3" />
+          <Skeleton className="h-10 w-2/4" />
+          <Skeleton className="h-10 w-5/6" />
+          <Skeleton className="h-10 w-4/6" />
+          <Skeleton className="h-10 w-5/6" />
+        </div>
+        <div className="flex items-center justify-between space-x-2 py-4">
+          <Skeleton className="h-10 w-1/3" />
+          <Skeleton className="h-10 w-1/3" />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full grow">
-      <div className="flex items-center py-4 gap-2">
+    <div className="w-full grow py-4">
+      <div className="flex items-center pb-4 gap-2">
         <Input
           placeholder="Search names..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -129,32 +113,6 @@ export function ProductTable() {
           }
           className="max-w-sm bg-bw"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Fields <ChevronDownIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
       <div className="rounded-md">
         <Table>
@@ -206,10 +164,9 @@ export function ProductTable() {
           </TableBody>
         </Table>
       </div>
-      {/* <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          Total {table.getFilteredRowModel().rows.length} items.
         </div>
         <div className="space-x-2">
           <Button
@@ -229,7 +186,9 @@ export function ProductTable() {
             Next
           </Button>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }
+
+export default TagTable;

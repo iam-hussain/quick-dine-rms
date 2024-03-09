@@ -2,8 +2,8 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 interface ActionState {
-  isSideBarOpen: boolean;
-  setSideBarOpen: () => void;
+  isSideBarMinimized: boolean;
+  setSideBarMinimize: () => void;
   isFullscreenActive: boolean;
   setFullscreenOpen: (callback: () => Promise<void>) => void;
 }
@@ -12,13 +12,15 @@ export const useActionStore = create<ActionState>()(
   devtools(
     persist(
       (set) => ({
-        isSideBarOpen: false,
-        setSideBarOpen: () =>
-          set((state) => ({ isSideBarOpen: !state.isSideBarOpen })),
+        isSideBarMinimized: true,
+        setSideBarMinimize: () =>
+          set((state) => ({ isSideBarMinimized: !state.isSideBarMinimized })),
         isFullscreenActive: false,
         setFullscreenOpen: (callback) => {
           callback();
-          return set((state) => ({ isSideBarOpen: !state.isSideBarOpen }));
+          return set((state) => ({
+            isSideBarMinimized: !state.isSideBarMinimized,
+          }));
         },
       }),
       {

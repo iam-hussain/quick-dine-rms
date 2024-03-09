@@ -66,7 +66,7 @@ const SettingMenus: Menu[] = [
 const variants = {
   initial: {
     width: 60,
-    x: -60,
+    x: 0,
   },
   full: {
     width: 240,
@@ -125,8 +125,8 @@ const buttonVariants = {
 
 function SideMenu({ className }: { className?: string }) {
   const isSmallDevice = useMedia("(max-width: 1280px)");
-  const minimize = useActionStore((state) => !state.isSideBarOpen);
-  const setMinimize = useActionStore((state) => state.setSideBarOpen);
+  const minimize = useActionStore((state) => state.isSideBarMinimized);
+  const setMinimize = useActionStore((state) => state.setSideBarMinimize);
   const store = useStoreStore((state) => state.store);
   const { data, isError, isLoading } = useQuery({
     queryKey: ["store"],
