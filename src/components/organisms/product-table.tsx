@@ -41,6 +41,8 @@ import {
 } from "@/components/atoms/table";
 import { useStoreStore } from "@/stores/storeSlice";
 import { DialogBox } from "../molecules/dailog-box";
+import instance from "@/lib/instance";
+import { useQuery } from "@tanstack/react-query";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -84,7 +86,13 @@ export const columns: ColumnDef<any>[] = [
 ];
 
 export function ProductTable() {
-  const tags = useStoreStore((state) => state.tags);
+  const { data } = useQuery({
+    queryKey: ["tags"],
+    queryFn: () => instance.get("/store/tags"),
+    refetchOnMount: false,
+    refetchOnReconnect: true,
+  });
+  // const tags = useStoreStore((state) => state.tags);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -94,7 +102,7 @@ export function ProductTable() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: tags,
+    data: (data as never as any) || [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

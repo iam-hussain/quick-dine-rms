@@ -10,6 +10,9 @@ import { useMedia } from "react-use";
 import { motion } from "framer-motion";
 import clsx from "clsx";
 import { useStoreStore } from "@/stores/storeSlice";
+import instance from "@/lib/instance";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 type Menu = {
   icon: IconKey;
@@ -125,6 +128,16 @@ function SideMenu({ className }: { className?: string }) {
   const minimize = useActionStore((state) => !state.isSideBarOpen);
   const setMinimize = useActionStore((state) => state.setSideBarOpen);
   const store = useStoreStore((state) => state.store);
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["store"],
+    queryFn: () => instance.get("/store"),
+    refetchOnMount: false,
+    refetchOnReconnect: true,
+  });
+
+  useEffect(() => {
+    console.log({ data });
+  }, [data]);
 
   return (
     <motion.div
@@ -205,9 +218,10 @@ function SideMenu({ className }: { className?: string }) {
             "px-4": !minimize,
           })}
         />
+        {isLoading && <p>Loading</p>}
         <div className={"text-center m-auto w-full py-4"}>
           <p className="text-md font-semibold pb-1 text-foreground/90">
-            {store.name || ""}
+            {(data && data?.name) || ""}
           </p>
           <p className="text-xs text-foreground/70">
             1234 NW Bobcat Lane, St. Robert, MO 65584-5678

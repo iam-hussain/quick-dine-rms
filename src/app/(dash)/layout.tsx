@@ -5,27 +5,22 @@ import SideMenu from "@/components/organisms/side-menu";
 import instance from "@/lib/instance";
 import { useStoreStore } from "@/stores/storeSlice";
 import { useQuery } from "@tanstack/react-query";
+import { TbRuler } from "react-icons/tb";
 
 export default function POS({ children }: { children: React.ReactNode }) {
   const setStoreData = useStoreStore((state) => state.setStoreData);
   const setTagsData = useStoreStore((state) => state.setTagsData);
   useQuery({
     queryKey: ["tags"],
-    queryFn: () =>
-      instance.get("/store/tags").then((data) => {
-        setTagsData(data as unknown as [any]);
-        return data;
-      }),
-    refetchOnMount: true,
+    queryFn: () => instance.get("/store/tags"),
+    refetchOnMount: false,
+    refetchOnReconnect: true,
   });
   useQuery({
     queryKey: ["store"],
-    queryFn: () =>
-      instance.get("/store").then((data) => {
-        setStoreData(data);
-        return data;
-      }),
-    refetchOnMount: true,
+    queryFn: () => instance.get("/store"),
+    refetchOnMount: false,
+    refetchOnReconnect: true,
   });
 
   // if (isLoading) return <div>Loading...</div>;

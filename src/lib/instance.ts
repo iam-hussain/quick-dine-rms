@@ -27,7 +27,7 @@ instance.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    return response?.data || response;
+    return (response?.data as any) || (response as any);
   },
   function (error) {
     if (error instanceof AxiosError) {
