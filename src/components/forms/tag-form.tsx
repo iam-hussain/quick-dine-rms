@@ -39,7 +39,10 @@ function TagForm({}: TagFormProps) {
     onSuccess: async (data: any) => {
       console.log({ data });
       await queryClient.invalidateQueries({ queryKey: ["tags"] });
-      form.reset();
+      form.reset({
+        name: "",
+        deck: "",
+      });
       toast.success("Tag created!");
     },
     onError: (err) => {

@@ -29,18 +29,27 @@ import { Skeleton } from "@/components/atoms/skeleton";
 
 export const columns: ColumnDef<any>[] = [
   {
+    size: 10,
+    minSize: 10,
+    maxSize: 10,
     accessorKey: "id",
-    header: () => <div className="text-left w-1/5">ID</div>,
-    cell: ({ row }) => <div className="">{row.getValue("id")}</div>,
+    header: () => <div className="text-left">ID</div>,
+    cell: ({ row }) => <div className="w-[20px]">{row.getValue("id")}</div>,
   },
   {
+    size: 10,
+    minSize: 10,
+    maxSize: 10,
     accessorKey: "name",
-    header: () => <div className="text-left w-2/5">Name</div>,
+    header: () => <div className="text-left">Name</div>,
     cell: ({ row }) => <div className="">{row.getValue("name")}</div>,
   },
   {
+    size: 10,
+    minSize: 10,
+    maxSize: 10,
     accessorKey: "deck",
-    header: () => <div className="text-left w-2/5">Description</div>,
+    header: () => <div className="text-left">Description</div>,
     cell: ({ row }) => (
       <div className="text-foreground/70">{row.getValue("deck")}</div>
     ),
@@ -52,29 +61,17 @@ function TagTable() {
     queryKey: ["tags"],
     queryFn: () => instance.get("/store/tags"),
   });
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data: (data as never as any) || [],
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
       rowSelection,
     },
   });
