@@ -13,8 +13,6 @@ export default function POS({ children }: { children: React.ReactNode }) {
   useQuery({
     queryKey: ["tags"],
     queryFn: () => instance.get("/store/tags"),
-    refetchOnMount: false,
-    refetchOnReconnect: true,
   });
   useQuery({
     queryKey: ["store"],

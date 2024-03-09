@@ -1,5 +1,5 @@
 "use client";
-
+import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/atoms/button";
@@ -38,7 +38,9 @@ function TagForm({}: TagFormProps) {
     mutationFn: (variables) => instance.post("/store/a-canteen/tag", variables),
     onSuccess: async (data: any) => {
       console.log({ data });
-      await queryClient.invalidateQueries({ queryKey: ["tag"] });
+      await queryClient.invalidateQueries({ queryKey: ["tags"] });
+      form.reset();
+      toast.success("Tag created!");
     },
     onError: (err) => {
       if (typeof err === "string") {

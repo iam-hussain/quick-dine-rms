@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { Toaster } from "@/components/atoms/toaster";
+import { Toaster } from "@/components/atoms/sonner";
 import { QueryClientProvider } from "@/components/providers/query-client-provider";
 
 import "../styles/globals.scss";

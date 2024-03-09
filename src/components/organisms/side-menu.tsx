@@ -130,7 +130,7 @@ function SideMenu({ className }: { className?: string }) {
   const store = useStoreStore((state) => state.store);
   const { data, isError, isLoading } = useQuery({
     queryKey: ["store"],
-    queryFn: () => instance.get("/store"),
+    queryFn: () => instance.get("/store") as any,
     refetchOnMount: false,
     refetchOnReconnect: true,
   });
@@ -221,7 +221,7 @@ function SideMenu({ className }: { className?: string }) {
         {isLoading && <p>Loading</p>}
         <div className={"text-center m-auto w-full py-4"}>
           <p className="text-md font-semibold pb-1 text-foreground/90">
-            {(data && data?.name) || ""}
+            {data?.name || ""}
           </p>
           <p className="text-xs text-foreground/70">
             1234 NW Bobcat Lane, St. Robert, MO 65584-5678

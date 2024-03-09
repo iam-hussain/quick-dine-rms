@@ -89,8 +89,6 @@ export function ProductTable() {
   const { data } = useQuery({
     queryKey: ["tags"],
     queryFn: () => instance.get("/store/tags"),
-    refetchOnMount: false,
-    refetchOnReconnect: true,
   });
   // const tags = useStoreStore((state) => state.tags);
   const [sorting, setSorting] = React.useState<SortingState>([]);
