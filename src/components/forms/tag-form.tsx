@@ -68,7 +68,7 @@ function TagForm({}: TagFormProps) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tag Name</FormLabel>
+              <FormLabel>Name*</FormLabel>
               <FormControl>
                 <Input placeholder="Name" {...field} />
               </FormControl>

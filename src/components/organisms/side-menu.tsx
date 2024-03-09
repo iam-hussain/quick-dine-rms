@@ -124,7 +124,7 @@ const buttonVariants = {
 };
 
 function SideMenu({ className }: { className?: string }) {
-  const isSmallDevice = useMedia("(max-width: 1280px)");
+  const isSmallDevice = useMedia("(max-width: 1280px)", false);
   const minimize = useActionStore((state) => state.isSideBarMinimized);
   const setMinimize = useActionStore((state) => state.setSideBarMinimize);
   const store = useStoreStore((state) => state.store);

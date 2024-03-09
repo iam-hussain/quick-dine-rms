@@ -44,7 +44,8 @@ import { IoCart } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdAdd } from "react-icons/md";
-import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";import { FiEdit } from "react-icons/fi";
+
 
 const icons = {
   BiRestaurant,
@@ -93,6 +94,7 @@ const icons = {
   FaShoppingCart,
   MdAdd,
   IoIosArrowBack,
+  FiEdit
 };
 
 export type IconKey = keyof typeof icons;
