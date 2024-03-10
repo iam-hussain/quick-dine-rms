@@ -57,19 +57,20 @@ function TagsBox({ className }: { className?: string }) {
           },
           i: React.Key | null | undefined
         ) => (
-          <div
-            className=" bg-background text-foreground relative p-4 rounded-md pr-12"
+          <Button
+            variant={"accent"}
+            className="flex flex-col bg-background text-foreground relative p-4 rounded-md px-12 h-auto"
             key={i}
           >
             <Badge
-              variant={"outline"}
+              variant={"secondary"}
               className="select-none absolute top-2 right-2"
             >
               {e.products.length || 0}
             </Badge>
             <p className="font-semibold">{e.name}</p>
-            <div className="text-foreground/70 text-xs">{e.deck || ""}</div>
-          </div>
+            <p className="text-foreground/70 text-xs">{e.deck || ""}</p>
+          </Button>
         )
       )}
       <div className="col-span-full flex justify-center align-middle items-start py-6">
