@@ -16,9 +16,9 @@ export default function Dashboard() {
 
   const columns: ColumnDef<any>[] = [
     {
-      size: 150,
-      minSize: 150,
-      maxSize: 150,
+      size: 155,
+      minSize: 155,
+      maxSize: 155,
       accessorKey: "shortId",
       header: () => <div className="text-left">ID</div>,
       cell: ({ row }) => <div className="">{row.getValue("shortId")}</div>,
