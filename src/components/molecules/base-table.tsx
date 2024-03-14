@@ -7,7 +7,6 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { Button } from "@/components/atoms/button";
@@ -20,73 +19,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/atoms/table";
-import instance from "@/lib/instance";
-import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/atoms/skeleton";
-import Icon from "@/components/atoms/icon";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/lib/utils";
 
-const columns: ColumnDef<any>[] = [
-  {
-    size: 100,
-    minSize: 100,
-    maxSize: 100,
-    accessorKey: "shortId",
-    header: () => <div className="text-left">ID</div>,
-    cell: ({ row }) => <div className="">{row.getValue("shortId")}</div>,
-  },
-  {
-    size: 250,
-    minSize: 250,
-    maxSize: 250,
-    accessorKey: "name",
-    header: () => <div className="text-left">Name</div>,
-    cell: ({ row }) => <div className="">{row.getValue("name")}</div>,
-  },
-  {
-    accessorKey: "deck",
-    header: () => <div className="text-left">Description</div>,
-    cell: ({ row }) => (
-      <div className="text-foreground/70">{row.getValue("deck")}</div>
-    ),
-  },
-  {
-    size: 120,
-    minSize: 120,
-    maxSize: 120,
-    accessorKey: "position",
-    header: () => <div className="text-center">Position</div>,
-    cell: ({ row }) => (
-      <div className="text-foreground/70 text-center">
-        {row.getValue("position")}
-      </div>
-    ),
-  },
-
-  {
-    size: 120,
-    minSize: 120,
-    maxSize: 120,
-    accessorKey: "deck",
-    header: () => <div className="text-right pr-4">Action</div>,
-    cell: ({ row }) => (
-      <div className="flex gap-2 justify-end align-middle items-center">
-        <Button variant={"ghost"} className="p-2">
-          <Icon name="MdOutlineEdit" className="h-4 w-4" />
-        </Button>
-        <Button variant={"ghost"} className="p-2">
-          <Icon name="MdDeleteOutline" className="h-4 w-4 text-destructive" />
-        </Button>
-      </div>
-    ),
-  },
-];
-
-function TagTable({ className }: { className?: string }) {
-  z;
-
+function BaseTable({
+  className,
+  isLoading,
+  data,
+  columns,
+}: {
+  className?: string;
+  isLoading: Boolean;
+  data?: any[] | undefined;
+  columns: ColumnDef<any>[];
+}) {
   const table = useReactTable({
-    data: (data as never as any) || [],
+    data: data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -95,7 +43,7 @@ function TagTable({ className }: { className?: string }) {
 
   if (isLoading) {
     return (
-      <div className={twMerge("w-full space-y-2 py-4", className || "")}>
+      <div className={cn("w-full space-y-2 py-4", className || "")}>
         <div className="flex items-center pb-4 gap-2">
           <Skeleton className="h-10 w-1/3" />
         </div>
@@ -117,7 +65,7 @@ function TagTable({ className }: { className?: string }) {
   }
 
   return (
-    <div className={twMerge("w-full py-4", className || "")}>
+    <div className={cn("w-full py-4", className || "")}>
       <div className="flex items-center pb-4 gap-2">
         <Input
           placeholder="Search names..."
@@ -222,4 +170,4 @@ function TagTable({ className }: { className?: string }) {
   );
 }
 
-export default TagTable;
+export default BaseTable;
