@@ -1,18 +1,41 @@
 "use client";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/atoms/dialog";
 import { Button } from "@/components/atoms/button";
 import Icon from "@/components/atoms/icon";
-import TagForm from "@/components/forms/tag-form";
 import BaseTable from "@/components/molecules/base-table";
 import { ColumnDef } from "@tanstack/react-table";
 import instance from "@/lib/instance";
 import { useQuery } from "@tanstack/react-query";
+import CategoryForm from "@/components/forms/category-form";
+import { useEffect, useState } from "react";
+import { CategorySchemaValues } from "@/validations";
 
 export default function Dashboard() {
   const { data, isLoading } = useQuery({
     queryKey: ["categories"],
     queryFn: () => instance.get("/store/categories"),
   });
+  const [value, setValue] = useState<
+    Partial<
+      CategorySchemaValues & {
+        id: string;
+      }
+    >
+  >({
+    id: "",
+  });
+
+  useEffect(() => {
+    console.log({ value });
+  }, [value]);
 
   const columns: ColumnDef<any>[] = [
     {
@@ -50,18 +73,29 @@ export default function Dashboard() {
         </div>
       ),
     },
-
     {
       size: 120,
       minSize: 120,
       maxSize: 120,
-      accessorKey: "deck",
+      accessorKey: "action",
       header: () => <div className="text-right pr-4">Action</div>,
       cell: ({ row }) => (
         <div className="flex gap-2 justify-end align-middle items-center">
-          <Button variant={"ghost"} className="p-2">
-            <Icon name="MdOutlineEdit" className="h-4 w-4" />
-          </Button>
+          <DialogTrigger asChild>
+            <Button
+              variant={"ghost"}
+              className="p-2"
+              onClick={() =>
+                setValue({
+                  id: row.getValue("shortId"),
+                  name: row.getValue("name"),
+                  deck: row.getValue("deck"),
+                })
+              }
+            >
+              <Icon name="MdOutlineEdit" className="h-4 w-4" />
+            </Button>
+          </DialogTrigger>
           <Button variant={"ghost"} className="p-2">
             <Icon name="MdDeleteOutline" className="h-4 w-4 text-destructive" />
           </Button>
@@ -71,25 +105,49 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="flex flex-col justify-start align-top items-start grow w-full h-full">
-      <section className="flex justify-between w-full h-auto mb-4">
-        <h1 className="text-xl md:text-2xl font-semibold">Manage Category</h1>
-        <Button className="flex gap-2">
-          <Icon name="IoMdAdd" className="h-5 w-5" />
-          Add Category
-        </Button>
-      </section>
-      <section className="flex w-full h-full gap-8 md:flex-row justify-start">
-        <BaseTable
-          columns={columns}
-          data={data as unknown as any[]}
-          isLoading={isLoading}
-        />
-      </section>
-      {/* <div className="w-screen h-screen absolute top-0 bottom-0 left-0 right-0">
-        <div className="bg-bw-foreground/50 w-full h-full"></div>
-        <div className="min-h-60 bg-bw min-w-60"></div>
-      </div> */}
-    </div>
+    <Dialog>
+      <div className="flex flex-col justify-start align-top items-start grow w-full h-full">
+        <section className="flex justify-between w-full h-auto mb-4">
+          <h1 className="text-xl md:text-2xl font-semibold">Manage Category</h1>
+          <DialogTrigger asChild>
+            <Button
+              className="flex gap-2"
+              onClick={() =>
+                setValue({
+                  id: "",
+                })
+              }
+            >
+              <Icon name="IoMdAdd" className="h-5 w-5" />
+              Create
+            </Button>
+          </DialogTrigger>
+        </section>
+        <section className="flex w-full h-full gap-8 md:flex-row justify-start">
+          <BaseTable
+            columns={columns}
+            data={data as unknown as any[]}
+            isLoading={isLoading}
+          />
+        </section>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{value.id ? "Edit" : "Create"} category</DialogTitle>
+            <DialogDescription>
+              {value.id
+                ? `You are editing the category with id: ${value.id}.`
+                : "You can create a category here."}
+            </DialogDescription>
+          </DialogHeader>
+          <CategoryForm
+            defaultValues={{
+              name: value.name,
+              deck: value.deck,
+            }}
+            id={value.id}
+          />
+        </DialogContent>
+      </div>
+    </Dialog>
   );
 }

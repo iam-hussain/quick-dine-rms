@@ -19,11 +19,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getValidationMessage } from "@/validations/messages";
 import { useEffect } from "react";
 
-const defaultValues: Partial<CategorySchemaValues> = {};
+type CategoryFormProps = {
+  id?: string;
+  defaultValues: Partial<CategorySchemaValues>;
+};
 
-type TagFormProps = {};
-
-function TagForm({}: TagFormProps) {
+function CategoryForm({ id = "", defaultValues }: CategoryFormProps) {
   const queryClient = useQueryClient();
 
   const form = useForm<CategorySchemaValues>({
@@ -35,15 +36,18 @@ function TagForm({}: TagFormProps) {
   const { setError } = form;
 
   const mutation = useMutation({
-    mutationFn: (variables) => instance.post("/store/a-canteen/tag", variables),
+    mutationFn: (variables) =>
+      id
+        ? instance.patch(`/store/category/${id}`, variables)
+        : instance.post("/store/category", variables),
     onSuccess: async (data: any) => {
       console.log({ data });
-      await queryClient.invalidateQueries({ queryKey: ["tags"] });
+      await queryClient.invalidateQueries({ queryKey: ["categories"] });
       form.reset({
         name: "",
         deck: "",
       });
-      toast.success("Tag created!");
+      toast.success("Category created!");
     },
     onError: (err) => {
       if (typeof err === "string") {
@@ -89,13 +93,13 @@ function TagForm({}: TagFormProps) {
             </FormItem>
           )}
         />
-        <div className="pt-4">
+        <div className="pt-4 text-right">
           <Button
-            className="w-full"
+            className="md:w-auto w-full"
             type="submit"
-            // disabled={mutation.isPending}
+            disabled={mutation.isPending}
           >
-            Create
+            {id ? "Update" : "Create"}
           </Button>
         </div>
       </form>
@@ -103,4 +107,4 @@ function TagForm({}: TagFormProps) {
   );
 }
 
-export default TagForm;
+export default CategoryForm;
