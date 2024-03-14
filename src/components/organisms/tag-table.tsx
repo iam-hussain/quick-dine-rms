@@ -83,7 +83,10 @@ const columns: ColumnDef<any>[] = [
 ];
 
 function TagTable({ className }: { className?: string }) {
-  z;
+  const { data, isLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => instance.get("/store/categories"),
+  });
 
   const table = useReactTable({
     data: (data as never as any) || [],
