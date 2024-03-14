@@ -79,7 +79,7 @@ export default function Dashboard() {
           Add Category
         </Button>
       </section>
-      <section className="flex w-full h-full gap-8 md:flex-row flex-col-reverse">
+      <section className="flex w-full h-full gap-8 md:flex-row justify-start">
         <BaseTable
           columns={columns}
           data={data as unknown as any[]}

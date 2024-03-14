@@ -66,7 +66,7 @@ const SettingMenus: Menu[] = [
 const variants = {
   initial: {
     width: 60,
-    x: 0,
+    x: -60,
   },
   full: {
     width: 240,
@@ -114,7 +114,15 @@ const buttonVariants = {
     },
   },
   expand: {
-    x: 140,
+    x: 50,
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delay: 0.2,
+    },
+  },
+  mobExpand: {
+    x: 70,
     opacity: 1,
     scale: 1,
     transition: {
@@ -124,7 +132,7 @@ const buttonVariants = {
 };
 
 function SideMenu({ className }: { className?: string }) {
-  const isSmallDevice = useMedia("(max-width: 1280px)", false);
+  const isSmallDevice = useMedia("(max-width: 767px)", false);
   const minimize = useActionStore((state) => state.isSideBarMinimized);
   const setMinimize = useActionStore((state) => state.setSideBarMinimize);
   const store = useStoreStore((state) => state.store);
@@ -145,7 +153,7 @@ function SideMenu({ className }: { className?: string }) {
       animate={minimize ? (isSmallDevice ? "close" : "half") : "full"}
       variants={variants}
       className={clsx(
-        "h-full pb-8 bg-background p-2 xl:relative absolute flex flex-col justify-between",
+        "h-[calc(100%-54px)] md:h-full pb-8 bg-background p-2 md:relative absolute flex flex-col justify-between z-50",
         className
       )}
     >
@@ -177,13 +185,15 @@ function SideMenu({ className }: { className?: string }) {
           initial="minimize"
           whileHover="hover"
           whileTap="pressed"
-          animate={minimize ? "minimize" : "expand"}
+          animate={
+            minimize ? "minimize" : isSmallDevice ? "mobExpand" : "expand"
+          }
           variants={buttonVariants}
-          className="absolute"
+          className="absolute right-0"
         >
           <Button
             variant={"accent"}
-            className={clsx("md:flex font-normal hidden p-2 m-auto")}
+            className={clsx("flex font-normal p-2 m-auto")}
             onClick={() => setMinimize()}
           >
             <Icon name={"IoIosArrowBack"} className={"h-5 w-5"} />
