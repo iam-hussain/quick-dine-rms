@@ -48,7 +48,7 @@ function CategoryForm({
   const mutation = useMutation({
     mutationFn: (variables) =>
       id
-        ? instance.post(`/store/category/${id}`, variables)
+        ? instance.patch(`/store/category/${id}`, variables)
         : instance.post("/store/category", variables),
     onSuccess: async (data: any) => {
       if (onSuccess) {
