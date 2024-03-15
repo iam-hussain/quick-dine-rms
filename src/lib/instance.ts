@@ -5,7 +5,13 @@ import messages from "@/validations/messages";
 const instance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/api/`,
   timeout: 5000,
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  },
+  validateStatus: function (status) {
+    return status == 200;
+  },
 });
 
 instance.interceptors.request.use(
@@ -30,6 +36,7 @@ instance.interceptors.response.use(
     return (response?.data as any) || (response as any);
   },
   function (error) {
+    console.log({ error });
     if (error instanceof AxiosError) {
       const massage = error.response?.data?.code || "";
       if (massage) {
@@ -46,7 +53,7 @@ instance.interceptors.response.use(
           window.location.href = "/stores";
         }
 
-        return Promise.reject(massage);
+        // return Promise.reject(massage);
       }
     }
     // Any status codes that falls outside the range of 2xx cause this function to trigger

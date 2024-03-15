@@ -22,9 +22,10 @@ import { useEffect } from "react";
 type CategoryFormProps = {
   id?: string;
   defaultValues: Partial<CategorySchemaValues>;
+  onSuccess?: () => void;
 };
 
-function CategoryForm({ id = "", defaultValues }: CategoryFormProps) {
+function CategoryForm({ id = "", defaultValues, onSuccess }: CategoryFormProps) {
   const queryClient = useQueryClient();
 
   const form = useForm<CategorySchemaValues>({
@@ -38,16 +39,23 @@ function CategoryForm({ id = "", defaultValues }: CategoryFormProps) {
   const mutation = useMutation({
     mutationFn: (variables) =>
       id
-        ? instance.patch(`/store/category/${id}`, variables)
+        ? instance.post(`/store/category/${id}`, variables)
         : instance.post("/store/category", variables),
     onSuccess: async (data: any) => {
+      if(onSuccess) {
+        onSuccess()
+      }
       console.log({ data });
       await queryClient.invalidateQueries({ queryKey: ["categories"] });
       form.reset({
         name: "",
         deck: "",
       });
-      toast.success("Category created!");
+      if (id) {
+        toast.success("Category updated!");
+      } else {
+        toast.success("Category created!");
+      }
     },
     onError: (err) => {
       if (typeof err === "string") {

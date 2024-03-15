@@ -33,9 +33,7 @@ export default function Dashboard() {
     id: "",
   });
 
-  useEffect(() => {
-    console.log({ value });
-  }, [value]);
+  const [open, setOpen] = useState(false);
 
   const columns: ColumnDef<any>[] = [
     {
@@ -105,7 +103,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <div className="flex flex-col justify-start align-top items-start grow w-full h-full">
         <section className="flex justify-between w-full h-auto mb-4">
           <h1 className="text-xl md:text-2xl font-semibold">Manage Category</h1>
@@ -145,6 +143,7 @@ export default function Dashboard() {
               deck: value.deck,
             }}
             id={value.id}
+            onSuccess={() => setOpen(false)}
           />
         </DialogContent>
       </div>
