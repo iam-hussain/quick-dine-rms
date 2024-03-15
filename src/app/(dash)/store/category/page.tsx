@@ -67,6 +67,19 @@ export default function Dashboard() {
       header: () => <div className="text-left">ID</div>,
       cell: ({ row }) => <div className="">{row.getValue("shortId")}</div>,
     },
+
+    {
+      size: 120,
+      minSize: 120,
+      maxSize: 120,
+      accessorKey: "position",
+      header: () => <div className="text-center">Position</div>,
+      cell: ({ row }) => (
+        <div className="text-foreground/70 text-center">
+          {row.getValue("position")}
+        </div>
+      ),
+    },
     {
       size: 250,
       minSize: 250,
@@ -86,11 +99,11 @@ export default function Dashboard() {
       size: 120,
       minSize: 120,
       maxSize: 120,
-      accessorKey: "position",
-      header: () => <div className="text-center">Position</div>,
+      accessorKey: "productsConnected",
+      header: () => <div className="text-center">Products</div>,
       cell: ({ row }) => (
         <div className="text-foreground/70 text-center">
-          {row.getValue("position")}
+          {row.getValue("productsConnected")}
         </div>
       ),
     },
