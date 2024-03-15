@@ -8,21 +8,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/atoms/dialog";
+import { toast } from "sonner";
 import { Button } from "@/components/atoms/button";
 import Icon from "@/components/atoms/icon";
 import BaseTable from "@/components/molecules/base-table";
 import { ColumnDef } from "@tanstack/react-table";
 import instance from "@/lib/instance";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import CategoryForm from "@/components/forms/category-form";
 import { useEffect, useState } from "react";
 import { CategorySchemaValues } from "@/validations";
 
 export default function Dashboard() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => instance.get("/store/categories"),
-  });
   const [value, setValue] = useState<
     Partial<
       CategorySchemaValues & {
@@ -33,7 +30,33 @@ export default function Dashboard() {
     id: "",
   });
 
+  const queryClient = useQueryClient();
+  const [contentType, setContentType] = useState<"FORM" | "PROMPT">("FORM");
   const [open, setOpen] = useState(false);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => instance.get("/store/categories"),
+  });
+
+  const mutation = useMutation({
+    mutationFn: () => instance.delete(`/store/category/${value.id}`),
+    onSuccess: async () => {
+      setOpen(false);
+      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+
+      toast.success(
+        `Category with ID ${value.id} has been successfully deleted. 🎉`
+      );
+    },
+    onError: (err) => {
+      setOpen(false);
+      toast.error(
+        `Unable to delete the category with ID ${value.id}. Please try again later. If the issue persists, contact support for assistance.`
+      );
+      console.error(err);
+    },
+  });
 
   const columns: ColumnDef<any>[] = [
     {
@@ -83,20 +106,39 @@ export default function Dashboard() {
             <Button
               variant={"ghost"}
               className="p-2"
-              onClick={() =>
+              onClick={() => {
                 setValue({
                   id: row.getValue("shortId"),
-                  name: row.getValue("name"),
-                  deck: row.getValue("deck"),
-                })
-              }
+                  position: Number(row.getValue("position")) || 0,
+                  name: row.getValue("name") || "",
+                  deck: row.getValue("deck") || "",
+                });
+                setContentType("FORM");
+              }}
             >
               <Icon name="MdOutlineEdit" className="h-4 w-4" />
             </Button>
+          </DialogTrigger>{" "}
+          <DialogTrigger asChild>
+            <Button
+              variant={"ghost"}
+              className="p-2"
+              onClick={() => {
+                setValue({
+                  id: row.getValue("shortId"),
+                  position: Number(row.getValue("position")) || 0,
+                  name: row.getValue("name") || "",
+                  deck: row.getValue("deck") || "",
+                });
+                setContentType("PROMPT");
+              }}
+            >
+              <Icon
+                name="MdDeleteOutline"
+                className="h-4 w-4 text-destructive"
+              />
+            </Button>
           </DialogTrigger>
-          <Button variant={"ghost"} className="p-2">
-            <Icon name="MdDeleteOutline" className="h-4 w-4 text-destructive" />
-          </Button>
         </div>
       ),
     },
@@ -110,11 +152,12 @@ export default function Dashboard() {
           <DialogTrigger asChild>
             <Button
               className="flex gap-2"
-              onClick={() =>
+              onClick={() => {
                 setValue({
                   id: "",
-                })
-              }
+                });
+                setContentType("FORM");
+              }}
             >
               <Icon name="IoMdAdd" className="h-5 w-5" />
               Create
@@ -129,22 +172,54 @@ export default function Dashboard() {
           />
         </section>
         <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>{value.id ? "Edit" : "Create"} category</DialogTitle>
-            <DialogDescription>
-              {value.id
-                ? `You are editing the category with id: ${value.id}.`
-                : "You can create a category here."}
-            </DialogDescription>
-          </DialogHeader>
-          <CategoryForm
-            defaultValues={{
-              name: value.name,
-              deck: value.deck,
-            }}
-            id={value.id}
-            onSuccess={() => setOpen(false)}
-          />
+          {contentType === "FORM" ? (
+            <>
+              <DialogHeader>
+                <DialogTitle>
+                  {value.id ? "Edit" : "Create"} category
+                </DialogTitle>
+                <DialogDescription>
+                  {value.id
+                    ? `You are editing the category with id: ${value.id}.`
+                    : "You can create a category here."}
+                </DialogDescription>
+              </DialogHeader>
+              <CategoryForm
+                defaultValues={value}
+                onSuccess={() => setOpen(false)}
+              />
+            </>
+          ) : (
+            <>
+              <DialogHeader>
+                <DialogTitle>Delete category</DialogTitle>
+                <DialogDescription>
+                  Are you sure you want to delete the category with ID{" "}
+                  <strong className="text-destructive">{value.id}</strong> and
+                  the name{" "}
+                  <strong className="text-destructive">{value.name}</strong>?
+                  This action cannot be undone.
+                </DialogDescription>
+                <div className="pt-4 text-right flex justify-between gap-4">
+                  <Button
+                    variant={"outline"}
+                    className="md:w-auto w-full"
+                    onClick={() => setOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant={"destructive"}
+                    className="md:w-auto w-full"
+                    disabled={mutation.isPending}
+                    onClick={() => mutation.mutate()}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </DialogHeader>
+            </>
+          )}
         </DialogContent>
       </div>
     </Dialog>

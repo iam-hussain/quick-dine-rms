@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { string } from "./elements";
+import { string, number } from "./elements";
 
 const email = string({ type: "email" });
 const username = string({ type: "username", length: "4-20" });
@@ -9,12 +9,13 @@ const deck = string({ optional: true });
 const slug = string({ length: "4-20" });
 const categoryId = string();
 const id = string();
+const position = number();
 
 const schemas = {
   login: z.object({ email, password }),
   register: z.object({ email, username, password }),
   product: z.object({ id, name, deck, categoryId }),
-  category: z.object({ name, deck }),
+  category: z.object({ name, deck, position }),
 };
 
 export type RegisterSchemaValues = z.infer<typeof schemas.register>;

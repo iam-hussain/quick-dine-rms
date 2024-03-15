@@ -6,8 +6,9 @@ const instance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/api/`,
   timeout: 5000,
   headers: {
+    // "Access-Control-Allow-Origin": "*",
+    // "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
   },
   validateStatus: function (status) {
     return status == 200;

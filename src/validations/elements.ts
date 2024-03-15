@@ -2,22 +2,26 @@ import * as z from "zod";
 import messages from "./messages";
 
 export const number = () => {
-  let numberSchema = z.number({
-    required_error: messages.required,
-    invalid_type_error: messages.valid_email,
-  });
+  let numberSchema = z.preprocess(
+    (val) => {
+      if (typeof val === "string") return parseInt(val, 10);
+      return val;
+    },
+    z.number({
+      required_error: messages.required,
+    })
+  );
 
   return numberSchema;
 };
 
 export const string = (options?: {
-  type?: "email" | "username";
-  length?: "4-20" | "6-20";
+  type?: "email" | "username" | "";
+  length?: "2-20" | "4-20" | "6-20";
   optional?: boolean;
 }) => {
   let stringSchema = z.string({
     required_error: messages.required,
-    invalid_type_error: messages.valid_email,
   });
 
   if (!options || !Object.keys(options).length) {
@@ -39,6 +43,16 @@ export const string = (options?: {
       })
       .max(20, {
         message: messages.length4to20,
+      });
+  }
+
+  if (options.length === "2-20") {
+    stringSchema = stringSchema
+      .min(2, {
+        message: messages.length2to20,
+      })
+      .max(20, {
+        message: messages.length2to20,
       });
   }
 

@@ -20,17 +20,26 @@ import { getValidationMessage } from "@/validations/messages";
 import { useEffect } from "react";
 
 type CategoryFormProps = {
-  id?: string;
-  defaultValues: Partial<CategorySchemaValues>;
+  defaultValues: Partial<
+    CategorySchemaValues & {
+      id?: string;
+    }
+  >;
   onSuccess?: () => void;
 };
 
-function CategoryForm({ id = "", defaultValues, onSuccess }: CategoryFormProps) {
+function CategoryForm({
+  defaultValues: { id, ...values },
+  onSuccess,
+}: CategoryFormProps) {
   const queryClient = useQueryClient();
 
   const form = useForm<CategorySchemaValues>({
     resolver: zodResolver(schemas.category),
-    defaultValues,
+    defaultValues: {
+      position: 0,
+      ...values,
+    },
     mode: "onSubmit",
   });
 
@@ -42,19 +51,22 @@ function CategoryForm({ id = "", defaultValues, onSuccess }: CategoryFormProps) 
         ? instance.post(`/store/category/${id}`, variables)
         : instance.post("/store/category", variables),
     onSuccess: async (data: any) => {
-      if(onSuccess) {
-        onSuccess()
+      if (onSuccess) {
+        onSuccess();
       }
-      console.log({ data });
       await queryClient.invalidateQueries({ queryKey: ["categories"] });
       form.reset({
         name: "",
         deck: "",
       });
       if (id) {
-        toast.success("Category updated!");
+        toast.success(
+          `Category ID ${data.shortId} has been successfully updated! 🚀`
+        );
       } else {
-        toast.success("Category created!");
+        toast.success(
+          `A new category with ID ${data.shortId} has been created! 🌟`
+        );
       }
     },
     onError: (err) => {
@@ -62,6 +74,16 @@ function CategoryForm({ id = "", defaultValues, onSuccess }: CategoryFormProps) 
         const { name, error } = getValidationMessage(err);
         if (name && error) {
           setError(name as any, error);
+        } else {
+          if (id) {
+            toast.error(
+              `Unable to update category with ID ${id}. Please review the entered information and try again. If the issue persists, contact support for further assistance.`
+            );
+          } else {
+            toast.error(
+              `Failed to create category. Please verify the provided details and attempt again. If the problem persists, reach out to support for additional help.`
+            );
+          }
         }
       }
     },
@@ -96,6 +118,25 @@ function CategoryForm({ id = "", defaultValues, onSuccess }: CategoryFormProps) 
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Input placeholder="Description" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="position"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Position</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Position"
+                  type="number"
+                  min="0"
+                  pattern="\d*"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
