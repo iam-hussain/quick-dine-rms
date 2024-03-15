@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -16,8 +15,16 @@ import { ColumnDef } from "@tanstack/react-table";
 import instance from "@/lib/instance";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import CategoryForm from "@/components/forms/category-form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CategorySchemaValues } from "@/validations";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import clsx from "clsx";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+// import calendar from "dayjs/plugin/calendar";
+
+dayjs.extend(relativeTime);
+// dayjs.extend(calendar);
 
 export default function Dashboard() {
   const [value, setValue] = useState<
@@ -73,7 +80,18 @@ export default function Dashboard() {
       minSize: 120,
       maxSize: 120,
       accessorKey: "position",
-      header: () => <div className="text-center">Position</div>,
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className={clsx({
+            "font-bold": column.getIsSorted(),
+          })}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Position
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => (
         <div className="text-foreground/70 text-center">
           {row.getValue("position")}
@@ -85,8 +103,19 @@ export default function Dashboard() {
       minSize: 250,
       maxSize: 250,
       accessorKey: "name",
-      header: () => <div className="text-left">Name</div>,
-      cell: ({ row }) => <div className="">{row.getValue("name")}</div>,
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className={clsx("px-0", {
+            "font-bold": column.getIsSorted(),
+          })}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => <div className="px-0">{row.getValue("name")}</div>,
     },
     {
       accessorKey: "deck",
@@ -100,11 +129,64 @@ export default function Dashboard() {
       minSize: 120,
       maxSize: 120,
       accessorKey: "productsConnected",
-      header: () => <div className="text-center">Products</div>,
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className={clsx({
+            "font-bold": column.getIsSorted(),
+          })}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Products
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => (
         <div className="text-foreground/70 text-center">
           {row.getValue("productsConnected")}
         </div>
+      ),
+    },
+    {
+      size: 170,
+      minSize: 170,
+      maxSize: 170,
+      accessorKey: "createdAt",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className={clsx("px-0", {
+            "font-bold": column.getIsSorted(),
+          })}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Created At
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="px-0">{dayjs(row.getValue("createdAt")).fromNow()}</div>
+      ),
+    },
+    {
+      size: 170,
+      minSize: 170,
+      maxSize: 170,
+      accessorKey: "updatedAt",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className={clsx("px-0", {
+            "font-bold": column.getIsSorted(),
+          })}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Updated At
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="px-0">{dayjs(row.getValue("updatedAt")).fromNow()}</div>
       ),
     },
     {
