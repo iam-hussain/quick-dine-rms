@@ -16,7 +16,7 @@ import instance from "@/lib/instance";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import CategoryForm from "@/components/forms/category-form";
 import { useState } from "react";
-import { CategorySchemaValues } from "@/validations";
+import { ProductSchemaValues } from "@/validations";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import dayjs from "dayjs";
@@ -29,7 +29,7 @@ dayjs.extend(relativeTime);
 export default function Dashboard() {
   const [value, setValue] = useState<
     Partial<
-      CategorySchemaValues & {
+      ProductSchemaValues & {
         id: string;
       }
     >
@@ -42,24 +42,24 @@ export default function Dashboard() {
   const [open, setOpen] = useState(false);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => instance.get("/store/categories"),
+    queryKey: ["products"],
+    queryFn: () => instance.get("/store/products"),
   });
 
   const mutation = useMutation({
-    mutationFn: () => instance.delete(`/store/category/${value.id}`),
+    mutationFn: () => instance.delete(`/store/product/${value.id}`),
     onSuccess: async () => {
       setOpen(false);
-      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
 
       toast.success(
-        `Category with ID ${value.id} has been successfully deleted. 🎉`
+        `Product with ID ${value.id} has been successfully deleted. 🎉`
       );
     },
     onError: (err) => {
       setOpen(false);
       toast.error(
-        `Unable to delete the category with ID ${value.id}. Please try again later. If the issue persists, contact support for assistance.`
+        `Unable to delete the product with ID ${value.id}. Please try again later. If the issue persists, contact support for assistance.`
       );
       console.error(err);
     },
@@ -73,30 +73,6 @@ export default function Dashboard() {
       accessorKey: "shortId",
       header: () => <div className="text-left">ID</div>,
       cell: ({ row }) => <div className="">{row.getValue("shortId")}</div>,
-    },
-
-    {
-      size: 120,
-      minSize: 120,
-      maxSize: 120,
-      accessorKey: "position",
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          className={clsx({
-            "font-bold": column.getIsSorted(),
-          })}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Position
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      ),
-      cell: ({ row }) => (
-        <div className="text-foreground/70 text-center">
-          {row.getValue("position")}
-        </div>
-      ),
     },
     {
       size: 250,
@@ -128,29 +104,104 @@ export default function Dashboard() {
       size: 120,
       minSize: 120,
       maxSize: 120,
-      accessorKey: "productsConnected",
+      accessorKey: "price",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          className={clsx({
+          className={clsx("w-full px-0", {
             "font-bold": column.getIsSorted(),
           })}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Products
+          Price
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       ),
       cell: ({ row }) => (
         <div className="text-foreground/70 text-center">
-          {row.getValue("productsConnected")}
+          {Number(row.getValue("price")).toLocaleString("en-IN", {
+            style: "currency",
+            currency: "INR",
+          })}
         </div>
       ),
     },
     {
-      size: 170,
-      minSize: 170,
-      maxSize: 170,
+      size: 140,
+      minSize: 140,
+      maxSize: 140,
+      accessorKey: "foodType",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className={clsx("w-full px-0", {
+            "font-bold": column.getIsSorted(),
+          })}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Type
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="text-foreground/70 text-center">
+          {row.getValue("foodType")}
+        </div>
+      ),
+    },
+    {
+      size: 120,
+      minSize: 120,
+      maxSize: 120,
+      accessorKey: "outOfStock",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className={clsx("w-full px-0", {
+            "font-bold": column.getIsSorted(),
+          })}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Available
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="text-foreground/70 text-center">
+          {row.getValue("outOfStock") ? "No" : "Yes"}
+        </div>
+      ),
+    },
+    {
+      size: 120,
+      minSize: 120,
+      maxSize: 120,
+      id: "categoryName",
+      accessorFn: (d) =>
+        `<p>${d.categoryName}</p><p class="text-xs text-foreground/50">${d.categoryId}</p>`,
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className={clsx("w-full px-0", {
+            "font-bold": column.getIsSorted(),
+          })}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Category
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div
+          className="text-foreground/70 text-center"
+          dangerouslySetInnerHTML={{ __html: row.getValue("categoryName") }}
+        />
+      ),
+    },
+    {
+      size: 230,
+      minSize: 230,
+      maxSize: 230,
       accessorKey: "createdAt",
       header: ({ column }) => (
         <Button
@@ -165,7 +216,9 @@ export default function Dashboard() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="px-0">{dayjs(row.getValue("createdAt")).fromNow()}</div>
+        <div className="px-0">
+          {dayjs(row.getValue("createdAt")).format("MMM DD YYYY h:mm A")}
+        </div>
       ),
     },
     {
@@ -190,9 +243,9 @@ export default function Dashboard() {
       ),
     },
     {
-      size: 120,
-      minSize: 120,
-      maxSize: 120,
+      size: 100,
+      minSize: 100,
+      maxSize: 100,
       accessorKey: "action",
       header: () => <div className="text-right pr-4">Action</div>,
       cell: ({ row }) => (
@@ -204,7 +257,6 @@ export default function Dashboard() {
               onClick={() => {
                 setValue({
                   id: row.getValue("shortId"),
-                  position: Number(row.getValue("position")) || 0,
                   name: row.getValue("name") || "",
                   deck: row.getValue("deck") || "",
                 });
@@ -222,7 +274,6 @@ export default function Dashboard() {
               onClick={() => {
                 setValue({
                   id: row.getValue("shortId"),
-                  position: Number(row.getValue("position")) || 0,
                   name: row.getValue("name") || "",
                   deck: row.getValue("deck") || "",
                 });
@@ -244,7 +295,7 @@ export default function Dashboard() {
     <Dialog open={open} onOpenChange={setOpen}>
       <div className="flex flex-col justify-start align-top items-start grow w-full h-full">
         <section className="flex justify-between w-full h-auto mb-4">
-          <h1 className="text-xl md:text-2xl font-semibold">Manage Category</h1>
+          <h1 className="text-xl md:text-2xl font-semibold">Manage Product</h1>
           <DialogTrigger asChild>
             <Button
               className="flex gap-2"
@@ -272,12 +323,12 @@ export default function Dashboard() {
             <>
               <DialogHeader>
                 <DialogTitle>
-                  {value.id ? "Edit" : "Create"} category
+                  {value.id ? "Edit" : "Create"} product
                 </DialogTitle>
                 <DialogDescription>
                   {value.id
-                    ? `You are editing the category with id: ${value.id}.`
-                    : "You can create a category here."}
+                    ? `You are editing the product with id: ${value.id}.`
+                    : "You can create a product here."}
                 </DialogDescription>
               </DialogHeader>
               <CategoryForm
@@ -290,7 +341,7 @@ export default function Dashboard() {
               <DialogHeader>
                 <DialogTitle>Delete category</DialogTitle>
                 <DialogDescription>
-                  Are you sure you want to delete the category with ID{" "}
+                  Are you sure you want to delete the product with ID{" "}
                   <strong className="text-destructive">{value.id}</strong> and
                   the name{" "}
                   <strong className="text-destructive">{value.name}</strong>?

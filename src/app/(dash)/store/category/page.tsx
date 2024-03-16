@@ -148,9 +148,9 @@ export default function Dashboard() {
       ),
     },
     {
-      size: 170,
-      minSize: 170,
-      maxSize: 170,
+      size: 230,
+      minSize: 230,
+      maxSize: 230,
       accessorKey: "createdAt",
       header: ({ column }) => (
         <Button
@@ -165,7 +165,9 @@ export default function Dashboard() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="px-0">{dayjs(row.getValue("createdAt")).fromNow()}</div>
+        <div className="px-0">
+          {dayjs(row.getValue("createdAt")).format("MMM DD YYYY h:mm A")}
+        </div>
       ),
     },
     {
@@ -190,9 +192,9 @@ export default function Dashboard() {
       ),
     },
     {
-      size: 120,
-      minSize: 120,
-      maxSize: 120,
+      size: 100,
+      minSize: 100,
+      maxSize: 100,
       accessorKey: "action",
       header: () => <div className="text-right pr-4">Action</div>,
       cell: ({ row }) => (
