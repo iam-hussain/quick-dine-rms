@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@/components/atoms/button";
+import { usePathname } from "next/navigation";
 import Icon, { IconKey } from "@/components/atoms/icon";
 import clsx from "clsx";
 import { motion } from "framer-motion";
@@ -9,17 +9,25 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/atoms/tooltip";
+import Link from "next/link";
 
 function MenuItem({
   icon,
   label,
   minimize,
-  active,
+  link,
+  active = false,
+  onClick,
 }: {
   icon: IconKey;
   label: string;
   minimize: Boolean;
-  active: Boolean;
+  active?: Boolean;
+  link?: string;
+  onClick?: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    link?: string
+  ) => void;
 }) {
   // if (minimize) {
   //   return (
@@ -54,19 +62,22 @@ function MenuItem({
       scale: 1,
     },
   };
+  const pathname = usePathname();
 
   return (
-    <Button
-      variant={"ghost"}
+    <Link
       className={clsx(
-        "flex gap-2 font-normal hover:bg-paper hover:text-foreground justify-start align-middle items-center",
+        "h-9",
+        "inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+        "flex gap-2 font-normal hover:bg-paper hover:text-foreground align-middle items-center",
         {
-          "text-primary bg-paper/70": active,
-          "text-foreground/70": !active,
-          "justify-center p-1": minimize,
-          "justify-start": !minimize,
+          "text-primary bg-paper/70": link === pathname,
+          "text-foreground/70": link !== pathname,
+          "justify-start p-1": minimize,
+          "justify-start px-4 py-2": !minimize,
         }
       )}
+      href={link || "#"}
     >
       <Icon name={icon} className="h-5 w-5" />
       <motion.div
@@ -79,7 +90,7 @@ function MenuItem({
       >
         {label}
       </motion.div>
-    </Button>
+    </Link>
   );
 }
 

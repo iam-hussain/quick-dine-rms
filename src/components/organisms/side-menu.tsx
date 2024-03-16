@@ -9,38 +9,42 @@ import UserBadge from "../molecules/user-badge";
 import { useMedia } from "react-use";
 import { motion } from "framer-motion";
 import clsx from "clsx";
-import { useStoreStore } from "@/stores/storeSlice";
 import instance from "@/lib/instance";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 
 type Menu = {
   icon: IconKey;
   label: string;
   active?: Boolean;
+  link?: string;
 };
 
 const AppMenus: Menu[] = [
   {
     icon: "MdDashboard",
     label: "Dashboard",
+    link: "/store/dashboard",
   },
   {
     icon: "BsPrinterFill",
     label: "Billing / Orders",
     active: true,
+    link: "/store/pos",
   },
   {
     icon: "SiAirtable",
     label: "Table Orders",
+    link: "/store/table",
   },
   {
     icon: "MdSoupKitchen",
     label: "Kitchen Display",
+    link: "/store/kitchen",
   },
   {
     icon: "FaCartShopping",
     label: "Customer Display",
+    link: "/store/display",
   },
 ];
 
@@ -48,18 +52,22 @@ const SettingMenus: Menu[] = [
   {
     icon: "FaStore",
     label: "Store",
+    link: "/store",
   },
   {
     icon: "MdEventAvailable",
     label: "Availability",
+    link: "/store/availability",
   },
   {
     icon: "IoFastFoodSharp",
     label: "Products",
+    link: "/store/product",
   },
   {
     icon: "FaTags",
-    label: "Tags",
+    label: "Category",
+    link: "/store/category",
   },
 ];
 
@@ -135,17 +143,12 @@ function SideMenu({ className }: { className?: string }) {
   const isSmallDevice = useMedia("(max-width: 767px)", false);
   const minimize = useActionStore((state) => state.isSideBarMinimized);
   const setMinimize = useActionStore((state) => state.setSideBarMinimize);
-  const store = useStoreStore((state) => state.store);
-  const { data, isError, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["store"],
     queryFn: () => instance.get("/store") as any,
     refetchOnMount: false,
     refetchOnReconnect: true,
   });
-
-  useEffect(() => {
-    console.log({ data });
-  }, [data]);
 
   return (
     <motion.div
@@ -204,10 +207,10 @@ function SideMenu({ className }: { className?: string }) {
       <ScrollArea className="grow w-full flex justify-end py-4">
         <Container className="flex flex-col gap-2 text-right my-2 px-1">
           {AppMenus.map((each, key) => (
-            <MenuItem minimize={minimize} active={false} {...each} key={key} />
+            <MenuItem minimize={minimize} {...each} key={key} />
           ))}
           {SettingMenus.map((each, key) => (
-            <MenuItem minimize={minimize} active={false} {...each} key={key} />
+            <MenuItem minimize={minimize} {...each} key={key} />
           ))}
         </Container>
       </ScrollArea>
