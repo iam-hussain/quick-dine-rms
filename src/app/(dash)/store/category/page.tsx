@@ -166,7 +166,7 @@ export default function Dashboard() {
       ),
       cell: ({ row }) => (
         <div className="px-0">
-          {dayjs(row.getValue("createdAt")).format("MMM DD YYYY h:mm A")}
+          {dayjs(row.getValue("createdAt")).format("MMM DD YYYY hh:mm A")}
         </div>
       ),
     },
