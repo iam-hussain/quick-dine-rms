@@ -13,11 +13,9 @@ import {
 } from "@/components/atoms/form";
 import { Input } from "@/components/atoms/input";
 import schemas, { CategorySchemaValues } from "@/validations";
-import { useRouter } from "next/navigation";
 import instance from "@/lib/instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getValidationMessage } from "@/validations/messages";
-import { useEffect } from "react";
 
 type CategoryFormProps = {
   defaultValues: Partial<
@@ -130,13 +128,7 @@ function CategoryForm({
             <FormItem>
               <FormLabel>Position</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Position"
-                  type="number"
-                  // min="0"
-                  // pattern="\d*"
-                  {...field}
-                />
+                <Input placeholder="Position" type="number" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

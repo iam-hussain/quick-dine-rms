@@ -15,14 +15,14 @@ export const number = (options?: { min?: number; max?: number }) => {
   }
 
   return z.preprocess((val) => {
-    if (typeof val === "string") return parseInt(val, 10);
+    if (typeof val === "string") return Number(val);
     return val;
   }, numberSchema);
 };
 
 export const string = (options?: {
   type?: "email" | "username" | "";
-  length?: "2-20" | "4-20" | "6-20";
+  length?: "2-20" | "4-20" | "2-40" | "6-20";
   optional?: boolean;
 }) => {
   let stringSchema = z.string({
@@ -58,6 +58,16 @@ export const string = (options?: {
       })
       .max(20, {
         message: messages.length2to20,
+      });
+  }
+
+  if (options.length === "2-40") {
+    stringSchema = stringSchema
+      .min(2, {
+        message: messages.length2to40,
+      })
+      .max(40, {
+        message: messages.length2to40,
       });
   }
 

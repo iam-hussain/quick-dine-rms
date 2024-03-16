@@ -72,7 +72,11 @@ export default function Dashboard() {
       maxSize: 155,
       accessorKey: "shortId",
       header: () => <div className="text-left">ID</div>,
-      cell: ({ row }) => <div className="">{row.getValue("shortId")}</div>,
+      cell: ({ row }) => (
+        <div className="text-foreground/70 text-left">
+          {row.getValue("shortId")}
+        </div>
+      ),
     },
 
     {
@@ -165,7 +169,7 @@ export default function Dashboard() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="px-0">
+        <div className="text-foreground/70 text-center">
           {dayjs(row.getValue("createdAt")).format("MMM DD YYYY hh:mm A")}
         </div>
       ),
@@ -188,7 +192,9 @@ export default function Dashboard() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="px-0">{dayjs(row.getValue("updatedAt")).fromNow()}</div>
+        <div className="text-foreground/70 text-center">
+          {dayjs(row.getValue("updatedAt")).fromNow()}
+        </div>
       ),
     },
     {

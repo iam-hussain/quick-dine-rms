@@ -21,10 +21,17 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import ProductForm from "@/components/forms/product-form";
 // import calendar from "dayjs/plugin/calendar";
 
 dayjs.extend(relativeTime);
 // dayjs.extend(calendar);
+
+const typeMap = {
+  VEG: "Veg",
+  NON_VEG: "Non-veg",
+  VEGAN: "Vegan",
+};
 
 export default function Dashboard() {
   const [value, setValue] = useState<
@@ -40,6 +47,11 @@ export default function Dashboard() {
   const queryClient = useQueryClient();
   const [contentType, setContentType] = useState<"FORM" | "PROMPT">("FORM");
   const [open, setOpen] = useState(false);
+
+  const { data: categories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => instance.get("/store/categories"),
+  });
 
   const { data, isLoading } = useQuery({
     queryKey: ["products"],
@@ -72,7 +84,11 @@ export default function Dashboard() {
       maxSize: 155,
       accessorKey: "shortId",
       header: () => <div className="text-left">ID</div>,
-      cell: ({ row }) => <div className="">{row.getValue("shortId")}</div>,
+      cell: ({ row }) => (
+        <div className="text-foreground/70 text-left">
+          {row.getValue("shortId")}
+        </div>
+      ),
     },
     {
       size: 250,
@@ -118,7 +134,7 @@ export default function Dashboard() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-center">
+        <div className="text-foreground/70 text-right">
           {Number(row.getValue("price")).toLocaleString("en-IN", {
             style: "currency",
             currency: "INR",
@@ -130,7 +146,7 @@ export default function Dashboard() {
       size: 140,
       minSize: 140,
       maxSize: 140,
-      accessorKey: "foodType",
+      accessorKey: "type",
       header: ({ column }) => (
         <Button
           variant="ghost"
@@ -145,7 +161,7 @@ export default function Dashboard() {
       ),
       cell: ({ row }) => (
         <div className="text-foreground/70 text-center">
-          {row.getValue("foodType")}
+          {typeMap[row.getValue("type") as keyof typeof typeMap]}
         </div>
       ),
     },
@@ -176,9 +192,7 @@ export default function Dashboard() {
       size: 120,
       minSize: 120,
       maxSize: 120,
-      id: "categoryName",
-      accessorFn: (d) =>
-        `<p>${d.categoryName}</p><p class="text-xs text-foreground/50">${d.categoryId}</p>`,
+      accessorKey: "categoryId",
       header: ({ column }) => (
         <Button
           variant="ghost"
@@ -187,15 +201,37 @@ export default function Dashboard() {
           })}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Category
+          Category ID
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       ),
       cell: ({ row }) => (
-        <div
-          className="text-foreground/70 text-center"
-          dangerouslySetInnerHTML={{ __html: row.getValue("categoryName") }}
-        />
+        <div className="text-foreground/70 text-center">
+          {row.getValue("categoryId")}
+        </div>
+      ),
+    },
+    {
+      size: 120,
+      minSize: 120,
+      maxSize: 120,
+      accessorKey: "categoryName",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className={clsx("w-full px-0", {
+            "font-bold": column.getIsSorted(),
+          })}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Category Name
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="text-foreground/70 text-center">
+          {row.getValue("categoryName")}
+        </div>
       ),
     },
     {
@@ -216,7 +252,7 @@ export default function Dashboard() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="px-0">
+        <div className="text-foreground/70 text-center">
           {dayjs(row.getValue("createdAt")).format("MMM DD YYYY hh:mm A")}
         </div>
       ),
@@ -239,7 +275,9 @@ export default function Dashboard() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="px-0">{dayjs(row.getValue("updatedAt")).fromNow()}</div>
+        <div className="text-foreground/70 text-center">
+          {dayjs(row.getValue("updatedAt")).fromNow()}
+        </div>
       ),
     },
     {
@@ -259,6 +297,9 @@ export default function Dashboard() {
                   id: row.getValue("shortId"),
                   name: row.getValue("name") || "",
                   deck: row.getValue("deck") || "",
+                  price: row.getValue("price") || 0,
+                  type: row.getValue("type"),
+                  categoryId: row.getValue("categoryId") || "",
                 });
                 setContentType("FORM");
               }}
@@ -268,7 +309,6 @@ export default function Dashboard() {
           </DialogTrigger>{" "}
           <DialogTrigger asChild>
             <Button
-              disabled={Boolean(Number(row.getValue("productsConnected")))}
               variant={"ghost"}
               className="p-1"
               onClick={() => {
@@ -276,6 +316,9 @@ export default function Dashboard() {
                   id: row.getValue("shortId"),
                   name: row.getValue("name") || "",
                   deck: row.getValue("deck") || "",
+                  price: row.getValue("price") || 0,
+                  type: row.getValue("type"),
+                  categoryId: row.getValue("categoryId") || "",
                 });
                 setContentType("PROMPT");
               }}
@@ -331,9 +374,10 @@ export default function Dashboard() {
                     : "You can create a product here."}
                 </DialogDescription>
               </DialogHeader>
-              <CategoryForm
+              <ProductForm
                 defaultValues={value}
                 onSuccess={() => setOpen(false)}
+                categories={(categories as unknown as [any]) || []}
               />
             </>
           ) : (
