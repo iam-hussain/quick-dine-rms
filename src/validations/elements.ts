@@ -1,18 +1,23 @@
 import * as z from "zod";
 import messages from "./messages";
 
-export const number = () => {
-  let numberSchema = z.preprocess(
-    (val) => {
-      if (typeof val === "string") return parseInt(val, 10);
-      return val;
-    },
-    z.number({
-      required_error: messages.required,
-    })
-  );
+export const number = (options?: { min?: number; max?: number }) => {
+  let numberSchema = z.number({
+    required_error: messages.required,
+  });
 
-  return numberSchema;
+  if (typeof options?.min === "number" && options?.min >= 0) {
+    numberSchema = numberSchema.min(options.min);
+  }
+
+  if (typeof options?.max === "number" && options?.max >= 0) {
+    numberSchema = numberSchema.max(options.max);
+  }
+
+  return z.preprocess((val) => {
+    if (typeof val === "string") return parseInt(val, 10);
+    return val;
+  }, numberSchema);
 };
 
 export const string = (options?: {

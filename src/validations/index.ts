@@ -9,7 +9,7 @@ const deck = string({ optional: true });
 const slug = string({ length: "4-20" });
 const categoryId = string();
 const id = string();
-const position = number();
+const position = number({ min: 0, max: 5000 });
 
 const schemas = {
   login: z.object({ email, password }),

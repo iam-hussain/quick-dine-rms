@@ -133,8 +133,8 @@ function CategoryForm({
                 <Input
                   placeholder="Position"
                   type="number"
-                  min="0"
-                  pattern="\d*"
+                  // min="0"
+                  // pattern="\d*"
                   {...field}
                 />
               </FormControl>
