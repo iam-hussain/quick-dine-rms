@@ -2,12 +2,12 @@
 
 import SideMenu from "@/components/organisms/side-menu";
 import TopMenu from "@/components/organisms/top-menu";
-import { useActionStore } from "@/stores/actionSlice";
+// import { useActionStore } from "@/stores/actionSlice";
 
 export default function POS({ children }: { children: React.ReactNode }) {
-  const minimize = useActionStore((state) => state.isSideBarMinimized);
+  // const minimize = useActionStore((state) => state.isSideBarMinimized);
   return (
-    <main className="flex flex-col relative min-h-fill w-full h-full">
+    <main className="flex flex-col relative min-h-fill w-full h-auto">
       <TopMenu className="md:hidden block" />
       <div className="flex w-full h-auto min-h-full">
         <SideMenu />

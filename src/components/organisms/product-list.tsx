@@ -3,6 +3,7 @@ import { ScrollArea, ScrollBar } from "@/components/atoms/scroll-area";
 import ProductCard from "@/components/molecules/product-card";
 import { Container } from "@/components/atoms/container";
 import clsx from "clsx";
+import { LargeNumberLike } from "crypto";
 
 const products = [
   {
@@ -107,7 +108,34 @@ const products = [
   },
 ];
 
-function ProductList({ className }: { className?: string }) {
+function ProductList({
+  className,
+  products,
+}: {
+  className?: string;
+  products: {
+    id: string;
+    shortId: string;
+    name: string;
+    deck?: string;
+    price: number;
+    formattedPrice: string;
+    foodType: string;
+    type: string;
+    categoryName: string;
+    categoryId: string;
+    image: {
+      primary: {
+        id: string;
+        shortId: string;
+        caption: string;
+        altText: string;
+        content: string;
+        type: string;
+      } | null;
+    };
+  }[];
+}) {
   return (
     <ScrollArea
       className={clsx("w-full h-full bg-paper scroll-area__large", className)}

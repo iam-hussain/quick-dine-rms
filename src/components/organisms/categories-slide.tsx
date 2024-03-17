@@ -81,15 +81,24 @@ const categoryList = [
   },
 ];
 
-export function CategoriesSlide({ className }: { className?: string }) {
+export function CategoriesSlide({
+  className,
+  categories,
+}: {
+  className?: string;
+  categories: { name: string; shortId: string }[];
+}) {
   return (
     <ScrollArea
-      className={clsx("w-auto h-auto whitespace-nowrap rounded-md", className)}
+      className={clsx(
+        "w-auto h-auto min-h-full whitespace-nowrap rounded-md",
+        className
+      )}
     >
       <Container className="flex w-max space-x-2 px-2 py-3 bg-bw text-bg-foreground">
-        {categoryList.map((product, index) => (
+        {categories.map((category, index) => (
           <div key={index} className="shrink-0">
-            <CategoryCard {...product} />
+            <CategoryCard {...category} />
           </div>
         ))}
       </Container>

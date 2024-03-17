@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/atoms/button";
 import Icon from "@/components/atoms/icon";
 import BaseTable from "@/components/molecules/base-table";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, SortingFnOption } from "@tanstack/react-table";
 import instance from "@/lib/instance";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import CategoryForm from "@/components/forms/category-form";
@@ -21,6 +21,7 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { zeroLastSortMethod } from "@/lib/utils";
 // import calendar from "dayjs/plugin/calendar";
 
 dayjs.extend(relativeTime);
@@ -84,6 +85,7 @@ export default function Dashboard() {
       minSize: 120,
       maxSize: 120,
       accessorKey: "position",
+      sortingFn: zeroLastSortMethod as SortingFnOption<any> | undefined,
       header: ({ column }) => (
         <Button
           variant="ghost"

@@ -3,31 +3,24 @@ import { usePathname } from "next/navigation";
 import Icon, { IconKey } from "@/components/atoms/icon";
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/atoms/tooltip";
 import Link from "next/link";
+// import {
+//   Tooltip,
+//   TooltipContent,
+//   TooltipProvider,
+//   TooltipTrigger,
+// } from "@/components/atoms/tooltip";
 
 function MenuItem({
   icon,
   label,
   minimize,
   link,
-  active = false,
-  onClick,
 }: {
   icon: IconKey;
   label: string;
   minimize: Boolean;
-  active?: Boolean;
   link?: string;
-  onClick?: (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    link?: string
-  ) => void;
 }) {
   // if (minimize) {
   //   return (
