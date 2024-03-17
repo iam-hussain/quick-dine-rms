@@ -20,8 +20,8 @@ export default function POS({ children }: { children: React.ReactNode }) {
             }
           )}
         >
-          {/* <TopMenu className="md:hidden block z-30" /> */}
-          <div className="p-6 h-auto min-h-full w-auto bg-paper">
+          <TopMenu className="md:hidden block z-30 fixed bg-background" />
+          <div className="p-6 h-auto min-h-full w-auto bg-paper md:mt-0 mt-[52px]">
             {children}
           </div>
         </div>
