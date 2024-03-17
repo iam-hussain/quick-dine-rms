@@ -91,11 +91,11 @@ export function CategoriesSlide({
   return (
     <ScrollArea
       className={clsx(
-        "w-auto h-auto min-h-full whitespace-nowrap rounded-md",
+        "w-auto min-w-full h-auto whitespace-nowrap rounded-md",
         className
       )}
     >
-      <Container className="flex w-max space-x-2 px-2 py-3 bg-bw text-bg-foreground">
+      <Container className="flex w-full space-x-2 p-2 bg-bw text-bg-foreground">
         {categories.map((category, index) => (
           <div key={index} className="shrink-0">
             <CategoryCard {...category} />

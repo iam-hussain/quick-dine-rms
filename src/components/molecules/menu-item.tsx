@@ -4,6 +4,7 @@ import Icon, { IconKey } from "@/components/atoms/icon";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useMedia } from "react-use";
 // import {
 //   Tooltip,
 //   TooltipContent,
@@ -22,6 +23,7 @@ function MenuItem({
   minimize: Boolean;
   link?: string;
 }) {
+  const isSmallDevice = useMedia("(max-width: 767px)", false);
   // if (minimize) {
   //   return (
   //     <TooltipProvider>
@@ -49,7 +51,10 @@ function MenuItem({
   // }
 
   const fader = {
-    hide: { opacity: 0, scale: 0 },
+    hide: {
+      opacity: 0,
+      scale: 0,
+    },
     show: {
       opacity: 1,
       scale: 1,
@@ -66,7 +71,7 @@ function MenuItem({
         {
           "text-primary bg-paper/70": link === pathname,
           "text-foreground/70": link !== pathname,
-          "justify-start p-1": minimize,
+          "justify-center p-2": !isSmallDevice && minimize,
           "justify-start px-4 py-2": !minimize,
         }
       )}
@@ -74,8 +79,9 @@ function MenuItem({
     >
       <Icon name={icon} className="h-5 w-5" />
       <motion.div
+        transition={{ ease: "circInOut" }}
         initial="hide"
-        animate={minimize ? "hide" : "show"}
+        animate={minimize && !isSmallDevice ? "hide" : "show"}
         variants={fader}
         className={clsx({
           hidden: minimize,

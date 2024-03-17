@@ -354,7 +354,7 @@ export default function Dashboard() {
             </Button>
           </DialogTrigger>
         </section>
-        <section className="flex w-full h-full gap-8 md:flex-row justify-start">
+        <section className="flex w-3xl max-w-full h-full gap-8 md:flex-row justify-start">
           <BaseTable
             columns={columns}
             data={data as unknown as any[]}

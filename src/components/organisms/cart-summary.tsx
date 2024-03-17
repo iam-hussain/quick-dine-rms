@@ -4,6 +4,7 @@ import { Separator } from "@/components/atoms/separator";
 import { ScrollArea } from "@/components/atoms/scroll-area";
 import clsx from "clsx";
 import ButtonToolTip from "@/components/molecules/button-tooltip";
+import React from "react";
 
 const products = [
   {
@@ -123,11 +124,8 @@ function CartSummary({ className }: { className?: string }) {
       <ScrollArea className="w-full flex justify-end grow bg-background scroll-area__large">
         <div className="flex flex-col py-2 px-4">
           {products.map((each, i) => (
-            <>
-              <div
-                key={i}
-                className="flex justify-center items-center align-middle gap-4 rounded-md text-sm font-medium text-inactive"
-              >
+            <React.Fragment key={i}>
+              <div className="flex justify-center items-center align-middle gap-4 rounded-md text-sm font-medium text-inactive">
                 <span className="grow">{each.name}</span>
                 <div className="flex justify-center align-middle items-center text-center border border-paper">
                   <Button className="p-1" variant={"ghost"} disabled>
@@ -150,7 +148,7 @@ function CartSummary({ className }: { className?: string }) {
                 />
               </div>
               {products.length - 1 !== i && <Separator className={"my-2"} />}
-            </>
+            </React.Fragment>
           ))}
 
           <div className="relative my-4">

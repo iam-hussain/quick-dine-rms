@@ -23,21 +23,19 @@ export default function POS() {
   });
 
   return (
-    <div className="flex flex-col justify-start align-top items-start gap-4 w-full h-auto">
-      {/* <div className="pos-list-grid bg-paper w-full h-full md:row-span-full row-start-1 md:col-span-8 col-span-12 gap-y-4 py-4"> */}
-      {/* <div className="row-start-1 mx-4 grid grid-cols-6 md:grid-cols-12 gap-2 select-none place-content-around gap-y-4">
-          <BrandSideBySide className="col-span-2" />
-          <SearchBar className="w-auto md:col-span-7 md:col-start-5 md:row-start-1 row-start-2 col-span-full" />
-          <ThemeModeToggle className="md:col-start-12 row-start-1 col-span-1 col-start-6" />
-        </div> */}
+    <div className="flex justify-start align-top items-start gap-4 w-full h-auto">
+      <div className="flex flex-col gap-3 w-8/12 h-full overflow-scroll">
+        <div className="flex justify-between">
+          <SearchBar className="w-auto h-auto" />
+        </div>
 
-      <CategoriesSlide
-        className=""
-        categories={(categories as never as any[]) || []}
-      />
-      <ProductList className="" products={(products as any) || []} />
-      {/* </div> */}
-      <CartSummary className="" />
+        <CategoriesSlide
+          className=""
+          categories={(categories as never as any[]) || []}
+        />
+        <ProductList className="" products={(products as any) || []} />
+      </div>
+      <CartSummary className="w-4/12 h-full overflow-scroll" />
     </div>
   );
 }
