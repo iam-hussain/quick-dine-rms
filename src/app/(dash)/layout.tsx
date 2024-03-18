@@ -10,7 +10,7 @@ export default function POS({ children }: { children: React.ReactNode }) {
   const scrollRef = useRef(null);
 
   return (
-    <div className="contents">
+    <div className="main-wrapper">
       <SideMenu />
       <main className={"main"} id="scrolls" ref={scrollRef}>
         <TopMenu

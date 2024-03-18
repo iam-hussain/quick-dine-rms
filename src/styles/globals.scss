@@ -104,6 +104,11 @@ iframe {
 
 html,
 body {
+  height: 100%;
+  width: 100%;
+}
+
+.main-wrapper {
   height: 100svh;
   width: 100svw;
   min-height: 100svh;
@@ -114,7 +119,6 @@ body {
     height: 100vh;
   }
 }
-
 .h-d-screen {
   height: 100dvh;
 }
