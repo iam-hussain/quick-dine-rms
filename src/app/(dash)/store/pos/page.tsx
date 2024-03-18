@@ -23,8 +23,8 @@ export default function POS() {
   });
 
   return (
-    <div className="flex justify-start align-top items-start gap-4 w-full h-auto">
-      <div className="flex flex-col gap-3 w-8/12 h-full overflow-scroll">
+    <div className="pos-main-grid gap-4 w-full h-auto">
+      <div className="col-span-8 flex flex-col gap-3 w-full h-full overflow-scroll">
         <div className="flex justify-between">
           <SearchBar className="w-auto h-auto" />
         </div>
@@ -35,7 +35,7 @@ export default function POS() {
         />
         <ProductList className="" products={(products as any) || []} />
       </div>
-      <CartSummary className="w-4/12 h-full overflow-scroll" />
+      <CartSummary className="col-span-4 h-full overflow-scroll" />
     </div>
   );
 }

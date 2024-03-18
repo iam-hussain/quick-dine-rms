@@ -6,14 +6,13 @@
 @use "../functions" as fn;
 
 // Breakpoint Vars
-$xxs: fn.px-to-rem(375) !default; // Smartphone Portrait
-$xs: fn.px-to-rem(568) !default; // Smartphone Landscape
-$sm: fn.px-to-rem(768) !default; // Tablet Portrait
-$md: fn.px-to-rem(1024) !default; // Tablet Landscape
-$lg: fn.px-to-rem(1260) !default; // Kleinerer Desktop
-$xlg: fn.px-to-rem(1440) !default; // Widescreen
-$fhd: fn.px-to-rem(1920) !default; // Full HD
-$uhd: fn.px-to-rem(2560) !default; // UHD
+$xxs: fn.px-to-rem(375) !default;
+$xs: fn.px-to-rem(568) !default;
+$sm: fn.px-to-rem(640) !default;
+$md: fn.px-to-rem(768) !default;
+$lg: fn.px-to-rem(1024) !default;
+$xl: fn.px-to-rem(1280) !default;
+$xxl: fn.px-to-rem(1536) !default;
 
 // Breakpoint Map
 $breakpoints: (
@@ -22,9 +21,8 @@ $breakpoints: (
 	"sm": $sm,
 	"md": $md,
 	"lg": $lg,
-	"xlg": $xlg,
-	"fhd": $fhd,
-	"uhd": $uhd
+	"xl": $xl,
+	"xxl": $xxl
 ) !default;
 
 /// Breakpoint Mixin using breakpoint map
@@ -46,7 +44,7 @@ $breakpoints: (
 ///       .my-selector {...}
 ///    }
 ///
-@mixin breakpoint($breakpoint, $direction: "max", $breakpoint-map: $breakpoints, $max-overlap: null) {
+@mixin breakpoint($breakpoint, $direction: "min", $breakpoint-map: $breakpoints, $max-overlap: null) {
 	/// Error handling
 	$valid-direction: ("min", "max");
 

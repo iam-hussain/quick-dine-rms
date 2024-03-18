@@ -88,7 +88,9 @@ const pendingProducts = [
 
 function CartSummary({ className }: { className?: string }) {
   return (
-    <div className={clsx("w-full h-full cart-grid gap-4 bg-paper", className)}>
+    <div
+      className={clsx("w-full h-screen cart-grid gap-4 bg-paper", className)}
+    >
       <div className="grid grid-cols-4 md:grid-cols-6 py-2 px-4 gap-2 bg-background">
         <ButtonToolTip
           label="Link Customer"

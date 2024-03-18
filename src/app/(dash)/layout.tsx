@@ -8,24 +8,14 @@ import clsx from "clsx";
 export default function POS({ children }: { children: React.ReactNode }) {
   const minimize = useActionStore((state) => state.isSideBarMinimized);
   return (
-    <>
-      <main className={"page-main"}>
-        <SideMenu />
-        <div
-          className={clsx(
-            "flex flex-col grow h-auto min-h-full transition-all w-full",
-            {
-              "md:pl-[60px]": minimize,
-              "md:pl-[280px]": !minimize,
-            }
-          )}
-        >
-          <TopMenu className="md:hidden block z-30 fixed bg-background" />
-          <div className="p-6 h-auto min-h-full w-auto bg-paper md:mt-0 mt-[52px]">
-            {children}
-          </div>
+    <div className="contents">
+      <SideMenu />
+      <main className={"main"}>
+        <TopMenu className="md:hidden block z-30 fixed bg-background w-full" />
+        <div className="p-6 h-auto md:h-full w-full bg-paper md:mt-0 mt-[52px]">
+          {children}
         </div>
       </main>
-    </>
+    </div>
   );
 }
