@@ -12,6 +12,7 @@ import clsx from "clsx";
 import instance from "@/lib/instance";
 import { useQuery } from "@tanstack/react-query";
 import { Separator } from "../atoms/separator";
+import { useEffect } from "react";
 
 type Menu = {
   icon: IconKey;
@@ -176,6 +177,14 @@ function SideMenu({ className }: { className?: string }) {
     refetchOnReconnect: true,
   });
 
+  useEffect(() => {
+    if (minimize) {
+      document.body.style.overflow = "unset";
+    } else {
+      document.body.style.overflow = "hidden";
+    }
+  }, [minimize]);
+
   return (
     <>
       <motion.div
@@ -183,17 +192,14 @@ function SideMenu({ className }: { className?: string }) {
         variants={decorator}
         animate={minimize ? "hide" : "show"}
         onClick={() => setMinimize()}
-        className="fixed bg-foreground/50 h-full w-screen min-h-fill md:hidden"
+        className="fixed bg-foreground/50 h-full w-screen min-h-fill "
       ></motion.div>
       <motion.div
         initial="initial"
-        animate={minimize ? (isSmallDevice ? "mobInitial" : "half") : "full"}
+        animate={minimize ? "mobInitial" : "full"}
         variants={variants}
         transition={{ type: "spring", stiffness: 100 }}
-        className={clsx(
-          "h-full py-4 bg-background px-2 fixed flex flex-col justify-between z-50",
-          className
-        )}
+        className={clsx("side-menu py-4 bg-background px-2 z-50", className)}
       >
         <div
           className={clsx(
@@ -227,12 +233,12 @@ function SideMenu({ className }: { className?: string }) {
             </div>
             <Separator className="my-2 select-none" />
           </div>
-          <motion.div
+          {/* <motion.div
             initial="minimize"
             whileHover="hover"
             whileTap="pressed"
             transition={{ type: "spring", stiffness: 100 }}
-            animate={minimize ? "minimize" : "expand"}
+            animate={"expand"}
             variants={closerButton}
             className="absolute right-0 left-0"
           >
@@ -243,17 +249,17 @@ function SideMenu({ className }: { className?: string }) {
             >
               <Icon name={"IoIosArrowBack"} className={"h-5 w-5"} />
             </Button>
-          </motion.div>
+          </motion.div> */}
         </div>
 
         <ScrollArea className="grow w-full flex justify-end py-4">
           <Container className="flex flex-col gap-2 text-right my-2 px-1">
             {AppMenus.map((each, key) => (
-              <MenuItem minimize={minimize} {...each} key={key} />
+              <MenuItem minimize={false} {...each} key={key} />
             ))}
             <Separator className="my-2 select-none" />
             {SettingMenus.map((each, key) => (
-              <MenuItem minimize={minimize} {...each} key={key} />
+              <MenuItem minimize={false} {...each} key={key} />
             ))}
           </Container>
         </ScrollArea>
@@ -263,7 +269,7 @@ function SideMenu({ className }: { className?: string }) {
             hidden: minimize,
           })}
           initial="hide"
-          animate={minimize && !isSmallDevice ? "hide" : "show"}
+          animate={"show"}
           variants={hideShow}
         >
           {isLoading && <p>Loading</p>}
@@ -281,9 +287,9 @@ function SideMenu({ className }: { className?: string }) {
           <UserBadge
             name="Zakir Hussain"
             image=""
-            minimize={minimize}
-            className={clsx("py-2", {
-              "px-4": !minimize,
+            minimize={false}
+            className={clsx("py-2 px-4", {
+              // "px-4": !minimize,
             })}
           />
         </motion.div>

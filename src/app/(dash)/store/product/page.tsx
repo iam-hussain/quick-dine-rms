@@ -341,7 +341,7 @@ export default function Dashboard() {
           <h1 className="text-xl md:text-2xl font-semibold">Manage Product</h1>
           <DialogTrigger asChild>
             <Button
-              className="flex gap-2"
+              className="flex gap-2 md:mr-10"
               onClick={() => {
                 setValue({
                   id: "",

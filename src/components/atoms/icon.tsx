@@ -48,6 +48,8 @@ import { IoIosArrowBack } from "react-icons/io";
 import { FiEdit } from "react-icons/fi";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";
+import { BiShow } from "react-icons/bi";
+import { BiHide } from "react-icons/bi";
 
 const icons = {
   BiRestaurant,
@@ -99,6 +101,8 @@ const icons = {
   FiEdit,
   MdDeleteOutline,
   MdOutlineEdit,
+  BiShow,
+  BiHide,
 };
 
 export type IconKey = keyof typeof icons;

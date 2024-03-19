@@ -126,7 +126,7 @@ function CartSummary({ className }: { className?: string }) {
       <ScrollArea className="w-full flex justify-end grow bg-background scroll-area__large">
         <div className="flex flex-col py-2 px-4">
           {products.map((each, i) => (
-            <React.Fragment key={i}>
+            <React.Fragment key={`pd_${i}`}>
               <div className="flex justify-center items-center align-middle gap-4 rounded-md text-sm font-medium text-inactive">
                 <span className="grow">{each.name}</span>
                 <div className="flex justify-center align-middle items-center text-center border border-paper">

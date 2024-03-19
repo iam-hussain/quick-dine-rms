@@ -23,8 +23,8 @@ export default function POS() {
   });
 
   return (
-    <div className="pos-main-grid gap-4 w-full h-auto">
-      <div className="col-span-8 flex flex-col gap-3 w-full h-full overflow-scroll">
+    <div className="pos-main-grid gap-4 w-full h-full">
+      <div className="md:col-span-8 col-span-12 flex flex-col gap-3 w-full h-full overflow-scroll">
         <div className="flex justify-between">
           <SearchBar className="w-auto h-auto" />
         </div>
@@ -34,8 +34,16 @@ export default function POS() {
           categories={(categories as never as any[]) || []}
         />
         <ProductList className="" products={(products as any) || []} />
+
+        <div className="w-full h-auto flex flex-wrap">
+          {new Array(10).map((e, i) => (
+            <div className="text-md text-center h-40 w-1/2" key={i}>
+              {i}
+            </div>
+          ))}
+        </div>
       </div>
-      <CartSummary className="col-span-4 h-full overflow-scroll" />
+      <CartSummary className="md:col-span-4 col-span-12 h-full overflow-scroll" />
     </div>
   );
 }
