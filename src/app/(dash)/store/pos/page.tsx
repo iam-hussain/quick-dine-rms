@@ -10,6 +10,7 @@ import { ThemeModeToggle } from "@/components/organisms/theme-mode-toggle";
 import Icon from "@/components/atoms/icon";
 import instance from "@/lib/instance";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/atoms/button";
 
 export default function POS() {
   const { data: categories } = useQuery({
@@ -23,27 +24,27 @@ export default function POS() {
   });
 
   return (
-    <div className="pos-main-grid gap-4 w-full h-full">
-      <div className="md:col-span-8 col-span-12 flex flex-col gap-3 w-full h-full overflow-scroll">
-        <div className="flex justify-between">
-          <SearchBar className="w-auto h-auto" />
-        </div>
-
-        <CategoriesSlide
-          className=""
-          categories={(categories as never as any[]) || []}
-        />
-        <ProductList className="" products={(products as any) || []} />
-
-        <div className="w-full h-auto flex flex-wrap">
-          {new Array(10).map((e, i) => (
-            <div className="text-md text-center h-40 w-1/2" key={i}>
-              {i}
+    <div className="flex w-full h-full">
+      <div className="flex flex-col gap-2 md:w-8/12 w-full h-full py-4 px-2">
+        <div className="flex flex-col gap-3 px-4">
+          <div className="flex justify-between">
+            <SearchBar className="" />
+            <div className="gap-2 flex">
+              <Button className="flex gap-2" variant={"accent"}>
+                <Icon className="h-5 w-5" name="IoMdAdd" />
+                New Order
+              </Button>
+              <Button variant={"outline"}>Order List</Button>
             </div>
-          ))}
+          </div>
+          <CategoriesSlide categories={(categories as never as any[]) || []} />
         </div>
+        <ProductList
+          className="flex grow flex-col px-4"
+          products={(products as any) || []}
+        />
       </div>
-      <CartSummary className="md:col-span-4 col-span-12 h-full overflow-scroll" />
+      {/* <CartSummary className="md:col-span-4 col-span-12 h-full overflow-scroll" /> */}
     </div>
   );
 }

@@ -7,21 +7,11 @@ import clsx from "clsx";
 
 function SearchBar({ className }: { className?: string }) {
   return (
-    <div className={clsx("grid grid-cols-6 md:grid-cols-7 gap-2", className)}>
-      <div className="relative col-span-5  md:col-span-6">
-        <Input type="text" placeholder="Search..." className="bg-bw pr-8" />
-
-        <Icon
-          name="FiSearch"
-          className="absolute -top-1 bottom-0 right-3 m-auto select-none text-primary"
-        />
-      </div>
-      <ButtonToolTip
-        label="Search Reset"
-        icon="GrPowerReset"
-        variant={"outline"}
-      />
-    </div>
+    <Input
+      type="text"
+      placeholder="Search..."
+      className="max-w-md w-full bg-background"
+    />
   );
 }
 

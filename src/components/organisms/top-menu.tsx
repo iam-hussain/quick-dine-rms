@@ -74,10 +74,6 @@ function TopMenu({
   }, [isHidden, scrollDirection, y]);
 
   useEffect(() => {
-    console.log({ shouldHide });
-  }, [shouldHide]);
-
-  useEffect(() => {
     document.body.addEventListener("wheel", callback);
     return () => document.body.removeEventListener("file-upload", callback);
   }, [callback]);

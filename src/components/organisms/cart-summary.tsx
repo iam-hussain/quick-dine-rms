@@ -165,11 +165,8 @@ function CartSummary({ className }: { className?: string }) {
           </div>
 
           {preparing.map((each, i) => (
-            <>
-              <div
-                key={i}
-                className="flex justify-center items-center align-middle gap-4 rounded-md text-sm font-medium"
-              >
+            <React.Fragment key={`PE_${i}`}>
+              <div className="flex justify-center items-center align-middle gap-4 rounded-md text-sm font-medium">
                 <span className="grow">{each.name}</span>
                 <div className="flex justify-center align-middle items-center text-center border border-paper">
                   <Button className="p-1" variant={"ghost"} disabled>
@@ -188,7 +185,7 @@ function CartSummary({ className }: { className?: string }) {
                 </Button>
               </div>
               {preparing.length - 1 !== i && <Separator className={"my-2"} />}
-            </>
+            </React.Fragment>
           ))}
 
           <div className="relative my-4">
@@ -203,11 +200,8 @@ function CartSummary({ className }: { className?: string }) {
           </div>
 
           {pendingProducts.map((each, i) => (
-            <>
-              <div
-                key={i}
-                className="flex justify-center items-center align-middle gap-4 rounded-md text-sm font-medium"
-              >
+            <React.Fragment key={`PP_${i}`}>
+              <div className="flex justify-center items-center align-middle gap-4 rounded-md text-sm font-medium">
                 <span className="grow">{each.name}</span>
                 <div className="flex justify-center align-middle items-center text-center border border-paper">
                   <Button className="p-1" variant={"ghost"}>
@@ -228,7 +222,7 @@ function CartSummary({ className }: { className?: string }) {
               {pendingProducts.length - 1 !== i && (
                 <Separator className={"my-2"} />
               )}
-            </>
+            </React.Fragment>
           ))}
         </div>
       </ScrollArea>
