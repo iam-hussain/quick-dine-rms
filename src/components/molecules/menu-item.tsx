@@ -17,11 +17,13 @@ function MenuItem({
   label,
   minimize,
   link,
+  onRedirect,
 }: {
   icon: IconKey;
   label: string;
   minimize: Boolean;
   link?: string;
+  onRedirect?: () => void;
 }) {
   const isSmallDevice = useMedia("(max-width: 767px)", false);
   // if (minimize) {
@@ -75,6 +77,7 @@ function MenuItem({
           "justify-start px-4 py-2": !minimize,
         }
       )}
+      onClick={onRedirect}
       href={link || "#"}
     >
       <Icon name={icon} className="h-5 w-5" />

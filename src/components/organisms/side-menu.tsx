@@ -3,7 +3,6 @@ import { Container } from "@/components/atoms/container";
 import Icon, { IconKey } from "@/components/atoms/icon";
 import MenuItem from "@/components/molecules/menu-item";
 import { ScrollArea } from "@/components/atoms/scroll-area";
-import { Button } from "@/components/atoms/button";
 import { useActionStore } from "@/stores/actionSlice";
 import UserBadge from "../molecules/user-badge";
 import { useMedia } from "react-use";
@@ -255,11 +254,21 @@ function SideMenu({ className }: { className?: string }) {
         <ScrollArea className="grow w-full flex justify-end py-4">
           <Container className="flex flex-col gap-2 text-right my-2 px-1">
             {AppMenus.map((each, key) => (
-              <MenuItem minimize={false} {...each} key={key} />
+              <MenuItem
+                minimize={false}
+                {...each}
+                key={key}
+                onRedirect={() => setMinimize()}
+              />
             ))}
             <Separator className="my-2 select-none" />
             {SettingMenus.map((each, key) => (
-              <MenuItem minimize={false} {...each} key={key} />
+              <MenuItem
+                minimize={false}
+                {...each}
+                key={key}
+                onRedirect={() => setMinimize()}
+              />
             ))}
           </Container>
         </ScrollArea>
