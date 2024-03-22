@@ -88,7 +88,7 @@ const pendingProducts = [
 
 function CartSummary({ className }: { className?: string }) {
   return (
-    <div className={clsx("flex gap-2 bg-paper", className)}>
+    <div className={clsx("flex gap-2", className)}>
       {/* <div className="grid grid-cols-4 md:grid-cols-6 py-2 px-4 gap-2 bg-background">
         <ButtonToolTip
           label="Link Customer"
