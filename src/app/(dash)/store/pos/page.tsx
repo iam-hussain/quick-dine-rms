@@ -24,8 +24,8 @@ export default function POS() {
   });
 
   return (
-    <div className="flex w-full h-full">
-      <div className="flex flex-col gap-2 md:w-8/12 w-full h-full py-4 px-2">
+    <div className="flex md:flex-row flex-col w-full h-full">
+      <div className="flex flex-col gap-2 md:w-8/12 w-full h-full py-4">
         <div className="flex flex-col gap-3 px-4">
           <div className="flex justify-between">
             <SearchBar className="" />
@@ -44,7 +44,7 @@ export default function POS() {
           products={(products as any) || []}
         />
       </div>
-      <CartSummary className="flex flex-col gap-1 md:w-4/12 w-full h-full py-4 px-2" />
+      <CartSummary className="flex flex-col gap-1 md:w-4/12 w-full h-full py-4 px-4" />
     </div>
   );
 }
