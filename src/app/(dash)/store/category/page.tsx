@@ -252,7 +252,7 @@ export default function Dashboard() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <div className="flex flex-col justify-start align-top items-start grow w-full h-full">
+      <div className="flex flex-col justify-start align-top items-start grow w-full h-full p-6 max-w-screen-2xl m-auto">
         <section className="flex justify-between w-full h-auto mb-4">
           <h1 className="text-xl md:text-2xl font-semibold">Manage Category</h1>
           <DialogTrigger asChild>
