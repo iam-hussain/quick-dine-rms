@@ -34,18 +34,13 @@ function ProductList({
       } | null;
     };
   }[];
-  append: UseFieldArrayAppend<
-    {
-      items: {
-        price: number;
-        title: string;
-        note: string;
-        quantity: number;
-        productId: string;
-      }[];
-    },
-    "items"
-  >;
+  append: (data: {
+    price: number;
+    title: string;
+    note: string;
+    quantity: number;
+    productId: string;
+  }) => void;
 }) {
   return (
     <ScrollArea className={clsx("w-full h-full", className)}>

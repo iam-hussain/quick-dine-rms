@@ -42,7 +42,7 @@ export default function POS() {
   const { fields, append, remove, update } = useFieldArray({
     control,
     name: "items",
-  }); //
+  });
 
   const appendItem = (data: {
     price: number;

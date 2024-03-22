@@ -23,13 +23,11 @@ export function CategoriesSlide({
         <div className="shrink-0">
           <CategoryCard name="All" active={true} />
         </div>
-        {[...categories, ...categories, ...categories].map(
-          (category, index) => (
-            <div key={`cat_${index}`} className="shrink-0">
-              <CategoryCard {...category} />
-            </div>
-          )
-        )}
+        {categories.map((category, index) => (
+          <div key={`cat_${index}`} className="shrink-0">
+            <CategoryCard {...category} />
+          </div>
+        ))}
       </Container>
       <ScrollBar orientation="horizontal" />
     </ScrollArea>
