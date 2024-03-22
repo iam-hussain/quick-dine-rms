@@ -50,6 +50,9 @@ import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";
 import { BiShow } from "react-icons/bi";
 import { BiHide } from "react-icons/bi";
+import { FaSave } from "react-icons/fa";
+import { GiCampCookingPot } from "react-icons/gi";
+import { RiDraftFill } from "react-icons/ri";
 
 const icons = {
   BiRestaurant,
@@ -103,6 +106,9 @@ const icons = {
   MdOutlineEdit,
   BiShow,
   BiHide,
+  FaSave,
+  GiCampCookingPot,
+  RiDraftFill,
 };
 
 export type IconKey = keyof typeof icons;

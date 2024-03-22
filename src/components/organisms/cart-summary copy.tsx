@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/atoms/button";
 import Icon from "@/components/atoms/icon";
 import { Separator } from "@/components/atoms/separator";
@@ -6,111 +5,116 @@ import { ScrollArea } from "@/components/atoms/scroll-area";
 import clsx from "clsx";
 import ButtonToolTip from "@/components/molecules/button-tooltip";
 import React from "react";
-import {
-  Control,
-  FieldArrayWithId,
-  UseFieldArrayRemove,
-  UseFieldArrayUpdate,
-  UseFormRegister,
-  UseFormSetValue,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "@/components/atoms/input-otp";
-import schemas, { CartSchemaValues } from "@/validations";
-import { FormControl, FormField, FormItem } from "../atoms/form";
 
-const products: any[] = [];
+const products = [
+  {
+    name: "Ghee Rava Dosa",
+    price: 40.0,
+    deck: "Neque porro quisquam est velit...",
+    image:
+      "https://images.unsplash.com/photo-1612204104655-6c8a57ae235f?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTV8fGZvb2RzfGVufDB8fDB8fHww",
+  },
+  {
+    name: "Cheese Pizza",
+    price: 150.0,
+    image:
+      "https://images.unsplash.com/photo-1506354666786-959d6d497f1a?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
+    name: "Peri Peri Chicken Burger",
+    price: 150.0,
+    image:
+      "https://images.unsplash.com/photo-1609167830220-7164aa360951?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+];
 
-const preparing: any[] = [];
+const preparing = [
+  {
+    name: "Mutton Briyani",
+    price: 300.0,
+    image: "",
+    active: true,
+  },
+  {
+    name: "Idly",
+    price: 10.0,
+    image: "",
+  },
+  {
+    name: "Watermelon Juice",
+    price: 50.0,
+    image: "",
+  },
+  {
+    name: "Chocolate Moose",
+    price: 100.0,
+    image: "",
+  },
+];
 
-const pendingProducts: any[] = [];
+const pendingProducts = [
+  {
+    name: "Chicken Noodles",
+    price: 100.0,
+    image:
+      "https://images.unsplash.com/photo-1626804475297-41608ea09aeb?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
+    name: "Ghee Rava Dosa",
+    price: 40.0,
+    deck: "Neque porro quisquam est velit...",
+    image:
+      "https://images.unsplash.com/photo-1612204104655-6c8a57ae235f?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTV8fGZvb2RzfGVufDB8fDB8fHww",
+  },
+  {
+    name: "Cheese Pizza",
+    price: 150.0,
+    image:
+      "https://images.unsplash.com/photo-1506354666786-959d6d497f1a?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
+    name: "Peri Peri Chicken Burger",
+    price: 150.0,
+    image:
+      "https://images.unsplash.com/photo-1609167830220-7164aa360951?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
+    name: "Chicken Noodles",
+    price: 100.0,
+    image:
+      "https://images.unsplash.com/photo-1626804475297-41608ea09aeb?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+];
 
-const defaultValues: Partial<CartSchemaValues> = {};
-
-function CartSummary({
-  className,
-  remove,
-  register,
-  fields,
-  control,
-  setValue,
-  update,
-}: {
-  className?: string;
-  remove: UseFieldArrayRemove;
-  register: UseFormRegister<{
-    items: {
-      price: number;
-      title: string;
-      note: string;
-      quantity: number;
-      productId: string;
-    }[];
-  }>;
-  fields: FieldArrayWithId<
-    {
-      items: {
-        price: number;
-        title: string;
-        note: string;
-        quantity: number;
-        productId: string;
-      }[];
-    },
-    "items",
-    "id"
-  >[];
-  control: Control<
-    {
-      items: {
-        price: number;
-        title: string;
-        note: string;
-        quantity: number;
-        productId: string;
-      }[];
-    },
-    any,
-    {
-      items: {
-        price: number;
-        title: string;
-        note: string;
-        quantity: number;
-        productId: string;
-      }[];
-    }
-  >;
-  setValue: UseFormSetValue<{
-    items: {
-      price: number;
-      title: string;
-      note: string;
-      quantity: number;
-      productId: string;
-    }[];
-  }>;
-  update: UseFieldArrayUpdate<
-    {
-      items: {
-        price: number;
-        title: string;
-        note: string;
-        quantity: number;
-        productId: string;
-      }[];
-    },
-    "items"
-  >;
-}) {
+function CartSummary({ className }: { className?: string }) {
   return (
     <div className={clsx("flex gap-2", className)}>
+      {/* <div className="grid grid-cols-4 md:grid-cols-6 py-2 px-4 gap-2 bg-background">
+        <ButtonToolTip
+          label="Link Customer"
+          icon="IoPersonAddSharp"
+          variant="secondary"
+        />
+        <ButtonToolTip
+          label="New Order"
+          icon="IoMdAdd"
+          variant={"outline"}
+          className="md:col-start-4"
+        />
+        <ButtonToolTip
+          label="Order List"
+          icon="FaListUl"
+          variant={"outline"}
+          className="md:col-start-5"
+        />
+        <ButtonToolTip
+          label="Reset Order"
+          icon="GrPowerReset"
+          variant={"destructive"}
+          className="md:col-start-6"
+        />
+      </div> */}
+
       <div className="flex flex-col justify-between align-middle items-center bg-background gap-2 px-4 py-2">
         <div className="flex text-sm flex-row justify-between w-full">
           <div>
@@ -134,55 +138,6 @@ function CartSummary({
       </div>
       <ScrollArea className="w-full flex justify-end grow bg-background  px-4 py-2">
         <div className="flex flex-col">
-          <ul className="flex flex-col gap-2">
-            {fields.map((item, index) => (
-              <li
-                key={item.id}
-                className={clsx(
-                  "flex justify-center items-center align-middle gap-4 rounded-md text-sm font-medium text-inactive",
-                  {
-                    "border-b pb-2": fields.length !== index + 1,
-                  }
-                )}
-              >
-                <span className="grow">{item.title}</span>
-                <div className="flex justify-center align-middle items-center text-center border border-paper">
-                  <Button
-                    className="p-1"
-                    variant={"ghost"}
-                    disabled={item.quantity === 1}
-                    onClick={() =>
-                      update(index, { ...item, quantity: item.quantity - 1 })
-                    }
-                  >
-                    <Icon name="RiSubtractFill" />
-                  </Button>
-                  <span className="min-w-6 select-none">{item.quantity}</span>
-                  <Button
-                    className="p-1"
-                    variant={"ghost"}
-                    disabled={item.quantity > 10000}
-                    onClick={() =>
-                      update(index, { ...item, quantity: item.quantity + 1 })
-                    }
-                  >
-                    <Icon name="IoMdAdd" />
-                  </Button>
-                </div>
-                <span className="min-w-16 flex justify-end">
-                  ₹ {item.price}
-                </span>
-                <Button
-                  variant={"transparent"}
-                  className="p-2"
-                  onClick={() => remove(index)}
-                >
-                  <Icon name="TiDelete" className="h-6 w-6 text-destructive" />
-                </Button>
-              </li>
-            ))}
-          </ul>
-
           {products.map((each, i) => (
             <React.Fragment key={`pd_${i}`}>
               <div className="flex justify-center items-center align-middle gap-4 rounded-md text-sm font-medium text-inactive">
@@ -222,7 +177,7 @@ function CartSummary({
             </div>
           </div>
 
-          {preparing.map((each, i) => (
+          {[...preparing, ...preparing, ...preparing].map((each, i) => (
             <React.Fragment key={`PE_${i}`}>
               <div className="flex justify-center items-center align-middle gap-4 rounded-md text-sm font-medium">
                 <span className="grow">{each.name}</span>
@@ -285,15 +240,72 @@ function CartSummary({
         </div>
       </ScrollArea>
       <div className="flex justify-center align-middle items-center gap-2 flex-col text-sm bg-background select-none h-auto px-4 py-2">
+        {/* <div className="flex gap-4">
+          <ButtonToolTip
+            label="Add Discount"
+            icon="TbDiscount2"
+            variant={"outline"}
+            className="max-w-20 m-auto"
+          />
+
+          <ButtonToolTip
+            label="Add Package Charge"
+            icon="PiPackageFill"
+            variant={"outline"}
+            className="max-w-20 m-auto"
+          />
+
+          <ButtonToolTip
+            label="Add Delivery Charge"
+            icon="TbMotorbike"
+            variant={"outline"}
+            className="max-w-20 m-auto"
+          />
+
+          <ButtonToolTip
+            label="Add Payment"
+            icon="MdOutlinePayments"
+            variant={"outline"}
+            className="max-w-20 m-auto"
+          />
+        </div> */}
+        {/* <div className="flex flex-col justify-center align-middle items-center w-full gap-2 text-base">
+          <div className="flex gap-2 justify-between align-middle items-center w-full max-w-md">
+            <span>Subtotal</span>
+            <span>₹ 1030.00</span>
+          </div>
+
+          <div className="flex gap-2 justify-between align-middle items-center w-full max-w-md">
+            <span>Packing Charge</span>
+            <span>₹ 0.00</span>
+          </div>
+
+          <div className="flex gap-2 justify-between align-middle items-center w-full max-w-md">
+            <span>Delivery Charge</span>
+            <span>₹ 0.00</span>
+          </div>
+          <div className="flex gap-2 justify-between align-middle items-center w-full max-w-md">
+            <span>Tax</span>
+            <span>₹ 199.00</span>
+          </div>
+          <div className="flex gap-2 justify-between align-middle items-center w-full max-w-md">
+            <span>Discount</span>
+            <span>₹ 0.00</span>
+          </div>
+          <div className="flex gap-2 justify-between align-middle items-center w-full max-w-md">
+            <span>Grand Total</span>
+            <span>₹ 1300.00</span>
+          </div>
+        </div> */}
         <div className="grid grid-cols-4 gap-2 w-full">
           <ButtonToolTip
             label="Draft Order"
-            icon="RiDraftFill"
+            icon="IoPrint"
             variant={"outline"}
           />
           <ButtonToolTip
             label="Place Order"
-            icon="GiCampCookingPot"
+            icon="MdPendingActions"
             variant={"outline"}
           />
 

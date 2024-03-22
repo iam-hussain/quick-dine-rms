@@ -9,6 +9,7 @@ function ProductCard({
   image,
   deck,
   formattedPrice,
+  onClick,
 }: {
   id: string;
   shortId: string;
@@ -30,6 +31,7 @@ function ProductCard({
       type: string;
     } | null;
   };
+  onClick?: React.MouseEventHandler<HTMLLIElement> | undefined;
 }) {
   return (
     <li
@@ -40,6 +42,7 @@ function ProductCard({
           "justify-start": image.primary?.id,
         }
       )}
+      onClick={onClick}
     >
       {image.primary?.id && (
         <AspectRatio ratio={5 / 3} className="h-full">
