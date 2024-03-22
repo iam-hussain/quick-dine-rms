@@ -44,7 +44,7 @@ export default function POS() {
           products={(products as any) || []}
         />
       </div>
-      {/* <CartSummary className="md:col-span-4 col-span-12 h-full overflow-scroll" /> */}
+      <CartSummary className="flex flex-col gap-1 md:w-4/12 w-full h-full py-4 px-2" />
     </div>
   );
 }

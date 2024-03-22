@@ -88,10 +88,8 @@ const pendingProducts = [
 
 function CartSummary({ className }: { className?: string }) {
   return (
-    <div
-      className={clsx("w-full h-screen cart-grid gap-4 bg-paper", className)}
-    >
-      <div className="grid grid-cols-4 md:grid-cols-6 py-2 px-4 gap-2 bg-background">
+    <div className={clsx("flex gap-2 bg-paper", className)}>
+      {/* <div className="grid grid-cols-4 md:grid-cols-6 py-2 px-4 gap-2 bg-background">
         <ButtonToolTip
           label="Link Customer"
           icon="IoPersonAddSharp"
@@ -115,16 +113,31 @@ function CartSummary({ className }: { className?: string }) {
           variant={"destructive"}
           className="md:col-start-6"
         />
-      </div>
+      </div> */}
 
-      <div className="flex flex-col justify-between align-middle items-center py-2 px-4 bg-background gap-2">
-        <div className="flex text-base flex-row justify-between w-full font-medium">
-          <p>ID: JJ782328</p>
-          <p>Today {new Date().toLocaleTimeString()}</p>
+      <div className="flex flex-col justify-between align-middle items-center bg-background gap-2 px-4 py-2">
+        <div className="flex text-sm flex-row justify-between w-full">
+          <div>
+            <p className="font-medium">Daniel Amir</p>
+            <p className="text-foreground/80">Order: #JJ782328 / Table</p>
+          </div>
+          <div className="flex justify-between align-middle items-center gap-2">
+            <ButtonToolTip
+              label="Link Customer"
+              icon="IoPersonAddSharp"
+              variant="outline"
+            />
+            <ButtonToolTip
+              label="Select Table"
+              icon="MdTableRestaurant"
+              variant={"outline"}
+              // swapText="T5"
+            />
+          </div>
         </div>
       </div>
-      <ScrollArea className="w-full flex justify-end grow bg-background scroll-area__large">
-        <div className="flex flex-col py-2 px-4">
+      <ScrollArea className="w-full flex justify-end grow bg-background  px-4 py-2">
+        <div className="flex flex-col">
           {products.map((each, i) => (
             <React.Fragment key={`pd_${i}`}>
               <div className="flex justify-center items-center align-middle gap-4 rounded-md text-sm font-medium text-inactive">
@@ -164,7 +177,7 @@ function CartSummary({ className }: { className?: string }) {
             </div>
           </div>
 
-          {preparing.map((each, i) => (
+          {[...preparing, ...preparing, ...preparing].map((each, i) => (
             <React.Fragment key={`PE_${i}`}>
               <div className="flex justify-center items-center align-middle gap-4 rounded-md text-sm font-medium">
                 <span className="grow">{each.name}</span>
@@ -226,73 +239,77 @@ function CartSummary({ className }: { className?: string }) {
           ))}
         </div>
       </ScrollArea>
-      <div className="p-4 flex justify-center align-middle items-center gap-4 flex-col text-sm bg-background select-none">
-        <div className="grid grid-cols-4 gap-2 w-full md:px-10">
+      <div className="flex justify-center align-middle items-center gap-2 flex-col text-sm bg-background select-none h-auto px-4 py-2">
+        {/* <div className="flex gap-4">
           <ButtonToolTip
             label="Add Discount"
             icon="TbDiscount2"
-            variant={"secondary"}
+            variant={"outline"}
+            className="max-w-20 m-auto"
           />
 
           <ButtonToolTip
             label="Add Package Charge"
             icon="PiPackageFill"
-            variant={"secondary"}
+            variant={"outline"}
+            className="max-w-20 m-auto"
           />
 
           <ButtonToolTip
             label="Add Delivery Charge"
             icon="TbMotorbike"
-            variant={"secondary"}
+            variant={"outline"}
+            className="max-w-20 m-auto"
           />
 
           <ButtonToolTip
             label="Add Payment"
             icon="MdOutlinePayments"
-            variant={"secondary"}
+            variant={"outline"}
+            className="max-w-20 m-auto"
           />
-        </div>
-        <div className="flex flex-col w-full gap-2 text-base">
-          <div className="flex gap-2 justify-between align-middle items-center w-full md:px-10">
+        </div> */}
+        {/* <div className="flex flex-col justify-center align-middle items-center w-full gap-2 text-base">
+          <div className="flex gap-2 justify-between align-middle items-center w-full max-w-md">
             <span>Subtotal</span>
             <span>₹ 1030.00</span>
           </div>
 
-          <div className="flex gap-2 justify-between align-middle items-center w-full md:px-10">
+          <div className="flex gap-2 justify-between align-middle items-center w-full max-w-md">
             <span>Packing Charge</span>
             <span>₹ 0.00</span>
           </div>
 
-          <div className="flex gap-2 justify-between align-middle items-center w-full md:px-10">
+          <div className="flex gap-2 justify-between align-middle items-center w-full max-w-md">
             <span>Delivery Charge</span>
             <span>₹ 0.00</span>
           </div>
-          <div className="flex gap-2 justify-between align-middle items-center w-full md:px-10">
+          <div className="flex gap-2 justify-between align-middle items-center w-full max-w-md">
             <span>Tax</span>
             <span>₹ 199.00</span>
           </div>
-          <div className="flex gap-2 justify-between align-middle items-center w-full md:px-10">
+          <div className="flex gap-2 justify-between align-middle items-center w-full max-w-md">
             <span>Discount</span>
             <span>₹ 0.00</span>
           </div>
-          <div className="flex gap-2 justify-between align-middle items-center w-full md:px-10">
+          <div className="flex gap-2 justify-between align-middle items-center w-full max-w-md">
             <span>Grand Total</span>
             <span>₹ 1300.00</span>
           </div>
-        </div>
-        <div className="grid grid-cols-4 gap-2 w-full md:px-10">
+        </div> */}
+        <div className="grid grid-cols-4 gap-2 w-full">
           <ButtonToolTip
-            label="Hold Order"
-            icon="MdPendingActions"
-            variant={"destructive"}
-          />
-          <ButtonToolTip
-            label="Print Duplicate Bill"
+            label="Draft Order"
             icon="IoPrint"
             variant={"outline"}
           />
+          <ButtonToolTip
+            label="Place Order"
+            icon="MdPendingActions"
+            variant={"outline"}
+          />
 
-          <Button className="w-full col-span-2">Place Order</Button>
+          <Button className="w-full col-span-2">Complete Order</Button>
         </div>
       </div>
     </div>

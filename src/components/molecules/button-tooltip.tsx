@@ -12,9 +12,15 @@ import {
 type ButtonToolTip = {
   label: string;
   icon: IconKey;
+  swapText?: string;
 } & ButtonProps;
 
-function ButtonToolTip({ label, icon, ...buttonProps }: ButtonToolTip) {
+function ButtonToolTip({
+  label,
+  icon,
+  swapText,
+  ...buttonProps
+}: ButtonToolTip) {
   return (
     <TooltipProvider>
       <Tooltip>
@@ -24,7 +30,11 @@ function ButtonToolTip({ label, icon, ...buttonProps }: ButtonToolTip) {
             className={clsx("flex justify-center gap-2 font-normal text-lg")}
             {...buttonProps}
           >
-            <Icon name={icon} className="h-5 w-5" />
+            {swapText ? (
+              <p className="font-bold text-base">{swapText}</p>
+            ) : (
+              <Icon name={icon} className="h-5 w-5" />
+            )}
           </Button>
         </TooltipTrigger>
         <TooltipContent className="bg-bw-foreground text-bw">
