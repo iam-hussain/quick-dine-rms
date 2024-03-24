@@ -148,7 +148,7 @@ function CartSummary({
                 <span className="grow">{item.title}</span>
                 <div className="flex justify-center align-middle items-center text-center border border-paper">
                   <Button
-                    className="p-1"
+                    // className="p-1"
                     variant={"ghost"}
                     disabled={item.quantity === 1}
                     onClick={() =>
@@ -159,7 +159,7 @@ function CartSummary({
                   </Button>
                   <span className="min-w-6 select-none">{item.quantity}</span>
                   <Button
-                    className="p-1"
+                    // className="p-1"
                     variant={"ghost"}
                     disabled={item.quantity > 10000}
                     onClick={() =>
@@ -285,7 +285,12 @@ function CartSummary({
         </div>
       </ScrollArea>
       <div className="flex justify-center align-middle items-center gap-2 flex-col text-sm bg-background select-none h-auto px-4 py-2">
-        <div className="grid grid-cols-4 gap-2 w-full">
+        <div className="grid grid-cols-5 gap-2 w-full">
+          <ButtonToolTip
+            label="View Summary"
+            icon="MdSummarize"
+            variant={"outline"}
+          />
           <ButtonToolTip
             label="Draft Order"
             icon="RiDraftFill"

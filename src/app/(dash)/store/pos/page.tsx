@@ -13,18 +13,60 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/atoms/button";
 import { FieldArrayWithId, useFieldArray, useForm } from "react-hook-form";
 import schemas, { CartSchemaValues } from "@/validations";
+import { Form } from "@/components/atoms/form";
+import { useEffect, useState } from "react";
 
 export default function POS() {
-  const { data: categories } = useQuery({
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [categories, setCategories] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
+
+  const { data: categoriesData } = useQuery({
     queryKey: ["categories"],
-    queryFn: () => instance.get("/store/categories"),
+    queryFn: () => instance.get("/store/categories") as unknown as any[],
   });
 
-  const { data: products } = useQuery({
+  const { data: productsData } = useQuery({
     queryKey: ["products"],
-    queryFn: () => instance.get("/store/products"),
+    queryFn: () => instance.get("/store/products") as unknown as any[],
   });
+
+  useEffect(() => {
+    if (
+      categoriesData &&
+      Array.isArray(categoriesData) &&
+      categoriesData.length
+    ) {
+      setCategories(
+        categoriesData.filter((e) => Boolean(e.productsConnected)) as any
+      );
+    }
+  }, [categoriesData]);
+
+  useEffect(() => {
+    if (productsData && Array.isArray(productsData) && productsData.length) {
+      setProducts(productsData as any);
+    }
+  }, [productsData]);
+
+  useEffect(() => {
+    if (productsData && Array.isArray(productsData) && productsData.length) {
+      if (selectedCategory) {
+        setProducts(
+          productsData.filter((e) => e.categoryId === selectedCategory)
+        );
+      } else {
+        setProducts(productsData);
+      }
+    }
+  }, [productsData, selectedCategory]);
+
   const defaultValues: Partial<CartSchemaValues> = {};
+  const form = useForm<CartSchemaValues>({
+    resolver: zodResolver(schemas.cart),
+    defaultValues,
+    mode: "onSubmit",
+  });
 
   const {
     register,
@@ -34,11 +76,7 @@ export default function POS() {
     reset,
     trigger,
     setError,
-  } = useForm<CartSchemaValues>({
-    resolver: zodResolver(schemas.cart),
-    defaultValues,
-    mode: "onSubmit",
-  });
+  } = form;
   const { fields, append, remove, update } = useFieldArray({
     control,
     name: "items",
@@ -61,42 +99,45 @@ export default function POS() {
 
   return (
     <div className="flex md:flex-row flex-col w-full h-full">
-      <form
-        className="flex md:flex-row flex-col w-full h-full"
-        onSubmit={handleSubmit((data) => console.log(data))}
-      >
-        <div className="flex flex-col gap-2 md:w-8/12 w-full h-full py-4">
-          <div className="flex flex-col gap-3 px-4">
-            <div className="flex justify-between">
-              <SearchBar className="" />
-              <div className="gap-2 flex">
-                <Button className="flex gap-2" variant={"accent"}>
-                  <Icon className="h-5 w-5" name="IoMdAdd" />
-                  New Order
-                </Button>
-                <Button variant={"outline"}>Order List</Button>
+      <Form {...form}>
+        <form
+          className="flex md:flex-row flex-col w-full h-full"
+          onSubmit={handleSubmit((data) => console.log(data))}
+        >
+          <div className="flex flex-col gap-2 md:w-8/12 w-full h-full py-4">
+            <div className="flex flex-col gap-3 px-4">
+              <div className="flex justify-between">
+                <SearchBar className="" />
+                <div className="gap-2 flex">
+                  <Button className="flex gap-2" variant={"accent"}>
+                    <Icon className="h-5 w-5" name="IoMdAdd" />
+                    New Order
+                  </Button>
+                  <Button variant={"outline"}>Order List</Button>
+                </div>
               </div>
+              <CategoriesSlide
+                categories={categories || []}
+                onEachClick={(e) => setSelectedCategory(e.shortId || "")}
+              />
             </div>
-            <CategoriesSlide
-              categories={(categories as never as any[]) || []}
+            <ProductList
+              className="flex grow flex-col px-4"
+              products={products || []}
+              append={appendItem}
             />
           </div>
-          <ProductList
-            className="flex grow flex-col px-4"
-            products={(products as any) || []}
-            append={appendItem}
+          <CartSummary
+            className="flex flex-col gap-1 md:w-4/12 w-full h-full py-4 px-4"
+            fields={fields}
+            register={register}
+            remove={remove}
+            control={control}
+            setValue={setValue}
+            update={update}
           />
-        </div>
-        <CartSummary
-          className="flex flex-col gap-1 md:w-4/12 w-full h-full py-4 px-4"
-          fields={fields}
-          register={register}
-          remove={remove}
-          control={control}
-          setValue={setValue}
-          update={update}
-        />
-      </form>
+        </form>
+      </Form>
     </div>
   );
 }

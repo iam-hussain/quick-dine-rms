@@ -53,6 +53,7 @@ import { BiHide } from "react-icons/bi";
 import { FaSave } from "react-icons/fa";
 import { GiCampCookingPot } from "react-icons/gi";
 import { RiDraftFill } from "react-icons/ri";
+import { MdSummarize } from "react-icons/md";
 
 const icons = {
   BiRestaurant,
@@ -109,6 +110,7 @@ const icons = {
   FaSave,
   GiCampCookingPot,
   RiDraftFill,
+  MdSummarize,
 };
 
 export type IconKey = keyof typeof icons;

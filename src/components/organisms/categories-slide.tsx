@@ -8,9 +8,11 @@ import clsx from "clsx";
 export function CategoriesSlide({
   className,
   categories,
+  onEachClick,
 }: {
   className?: string;
   categories: { name: string; shortId: string }[];
+  onEachClick: (e: any) => void;
 }) {
   return (
     <ScrollArea
@@ -21,11 +23,15 @@ export function CategoriesSlide({
     >
       <Container className="flex w-full space-x-2 pb-3 text-bg-foreground">
         <div className="shrink-0">
-          <CategoryCard name="All" active={true} />
+          <CategoryCard
+            name="All"
+            active={true}
+            onClick={() => onEachClick({})}
+          />
         </div>
         {categories.map((category, index) => (
           <div key={`cat_${index}`} className="shrink-0">
-            <CategoryCard {...category} />
+            <CategoryCard {...category} onClick={() => onEachClick(category)} />
           </div>
         ))}
       </Container>

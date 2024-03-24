@@ -8,12 +8,17 @@ import { Button } from "@/components/atoms/button";
 function CategoryCard({
   name,
   active = false,
+  onClick,
 }: {
   name: string;
   active?: Boolean;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 }) {
   return (
-    <div className="flex bg-bw rounded-lg h-full w-full justify-start align-middle items-center gap-2 select-none">
+    <div
+      className="flex bg-bw rounded-lg h-full w-full justify-start align-middle items-center gap-2 select-none"
+      onClick={onClick}
+    >
       <Button variant={active ? "secondary" : "outline"}>{name}</Button>
     </div>
   );
