@@ -54,6 +54,7 @@ import { FaSave } from "react-icons/fa";
 import { GiCampCookingPot } from "react-icons/gi";
 import { RiDraftFill } from "react-icons/ri";
 import { MdSummarize } from "react-icons/md";
+import { IoCaretDownOutline } from "react-icons/io5";
 
 const icons = {
   BiRestaurant,
@@ -111,6 +112,7 @@ const icons = {
   GiCampCookingPot,
   RiDraftFill,
   MdSummarize,
+  IoCaretDownOutline,
 };
 
 export type IconKey = keyof typeof icons;

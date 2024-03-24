@@ -9,10 +9,12 @@ export function CategoriesSlide({
   className,
   categories,
   onEachClick,
+  selectedCategory,
 }: {
   className?: string;
   categories: { name: string; shortId: string }[];
   onEachClick: (e: any) => void;
+  selectedCategory: string;
 }) {
   return (
     <ScrollArea
@@ -25,13 +27,17 @@ export function CategoriesSlide({
         <div className="shrink-0">
           <CategoryCard
             name="All"
-            active={true}
+            active={!selectedCategory}
             onClick={() => onEachClick({})}
           />
         </div>
         {categories.map((category, index) => (
           <div key={`cat_${index}`} className="shrink-0">
-            <CategoryCard {...category} onClick={() => onEachClick(category)} />
+            <CategoryCard
+              {...category}
+              onClick={() => onEachClick(category)}
+              active={selectedCategory === category.shortId}
+            />
           </div>
         ))}
       </Container>

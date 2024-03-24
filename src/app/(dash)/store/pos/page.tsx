@@ -119,6 +119,7 @@ export default function POS() {
               <CategoriesSlide
                 categories={categories || []}
                 onEachClick={(e) => setSelectedCategory(e.shortId || "")}
+                selectedCategory={selectedCategory}
               />
             </div>
             <ProductList

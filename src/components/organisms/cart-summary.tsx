@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/atoms/button";
 import Icon from "@/components/atoms/icon";
 import { Separator } from "@/components/atoms/separator";
@@ -13,17 +12,23 @@ import {
   UseFieldArrayUpdate,
   UseFormRegister,
   UseFormSetValue,
-  useFieldArray,
-  useForm,
 } from "react-hook-form";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "@/components/atoms/input-otp";
 import schemas, { CartSchemaValues } from "@/validations";
-import { FormControl, FormField, FormItem } from "../atoms/form";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/atoms/accordion";
+import { Input } from "@/components/atoms/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+  FormLabel,
+} from "@/components/atoms/form";
 
 const products: any[] = [];
 
@@ -134,7 +139,92 @@ function CartSummary({
       </div>
       <ScrollArea className="w-full flex justify-end grow bg-background  px-4 py-2">
         <div className="flex flex-col">
-          <ul className="flex flex-col gap-2">
+          <Accordion type="single" collapsible>
+            {fields.map((item, index) => (
+              <AccordionItem value={`item-${item.id}`} key={item.id}>
+                <AccordionTrigger className="py-2 no-underline hover:no-underline">
+                  <div className="flex justify-center items-center align-middle gap-4 rounded-md text-sm font-medium text-inactive w-full pr-2">
+                    <span className="grow text-left">{item.title}</span>
+                    <div className="flex justify-center align-middle items-center text-center border border-paper">
+                      <Button
+                        className="p-2"
+                        variant={"ghost"}
+                        disabled={item.quantity === 1}
+                        onClick={() =>
+                          update(index, {
+                            ...item,
+                            quantity: item.quantity - 1,
+                          })
+                        }
+                      >
+                        <Icon name="RiSubtractFill" />
+                      </Button>
+                      <span className="min-w-6 select-none px-[2px]">
+                        {item.quantity}
+                      </span>
+                      <Button
+                        className="p-2"
+                        variant={"ghost"}
+                        disabled={item.quantity > 10000}
+                        onClick={() =>
+                          update(index, {
+                            ...item,
+                            quantity: item.quantity + 1,
+                          })
+                        }
+                      >
+                        <Icon name="IoMdAdd" />
+                      </Button>
+                    </div>
+                    <span className="min-w-16 flex justify-end">
+                      ₹ {item.price * item.quantity}
+                    </span>
+                    {/* <Button
+                    variant={"transparent"}
+                    className="p-2"
+                    // onClick={() => remove(index)}
+                  >
+                    <Icon name="IoCaretDownOutline" className="h-6 w-6" />
+                  </Button> */}
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  Yes. It adheres to the WAI-ARIA design pattern.
+                  <FormField
+                    control={control}
+                    name={`items.${index}.title`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={control}
+                    name={`items.${index}.quantity`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Quantity</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Quantity"
+                            type="number"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+          {/* <ul className="flex flex-col gap-2">
             {fields.map((item, index) => (
               <li
                 key={item.id}
@@ -177,11 +267,11 @@ function CartSummary({
                   className="p-2"
                   onClick={() => remove(index)}
                 >
-                  <Icon name="TiDelete" className="h-6 w-6 text-destructive" />
+                  <Icon name="IoCaretDownOutline" className="h-6 w-6" />
                 </Button>
               </li>
             ))}
-          </ul>
+          </ul> */}
 
           {products.map((each, i) => (
             <React.Fragment key={`pd_${i}`}>
