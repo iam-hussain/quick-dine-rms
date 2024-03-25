@@ -23,22 +23,23 @@ const quantity = number({ min: 1, max: 10000 });
 const price = number({ min: 0, max: 10000 });
 const type = z.nativeEnum(FoodType);
 
+const cartItem = z.object({
+  title,
+  note,
+  price,
+  quantity,
+  productId,
+});
+
 const schemas = {
   login: z.object({ email, password }),
   register: z.object({ email, username, password }),
   product: z.object({ name, deck, price, type, categoryId }),
   category: z.object({ name, deck, position }),
   cart: z.object({
-    items: z.array(
-      z.object({
-        title,
-        note,
-        price,
-        quantity,
-        productId,
-      })
-    ),
+    items: z.array(cartItem),
   }),
+  cartItem,
 };
 
 export type RegisterSchemaValues = z.infer<typeof schemas.register>;
@@ -46,5 +47,6 @@ export type LoginSchemaValues = z.infer<typeof schemas.login>;
 export type ProductSchemaValues = z.infer<typeof schemas.product>;
 export type CategorySchemaValues = z.infer<typeof schemas.category>;
 export type CartSchemaValues = z.infer<typeof schemas.cart>;
+export type CartItemSchemaValues = z.infer<typeof schemas.cartItem>;
 
 export default schemas;
