@@ -39,7 +39,7 @@ function CartItem({
         </p>
       </div>
 
-      <div className="grid grid-cols-3">
+      <div className="grid grid-cols-3 min-w-[90px]">
         <Button
           className="p-2 rounded-none rounded-tl-lg rounded-bl-lg"
           variant={"default"}

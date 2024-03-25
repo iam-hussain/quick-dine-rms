@@ -1,10 +1,8 @@
 import { Button } from "@/components/atoms/button";
-import Icon from "@/components/atoms/icon";
-import { Separator } from "@/components/atoms/separator";
 import { ScrollArea } from "@/components/atoms/scroll-area";
 import clsx from "clsx";
 import ButtonToolTip from "@/components/molecules/button-tooltip";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   Control,
   FieldArrayWithId,
@@ -13,31 +11,8 @@ import {
   UseFormRegister,
   UseFormSetValue,
 } from "react-hook-form";
-import schemas, { CartSchemaValues } from "@/validations";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/atoms/accordion";
-import { Input } from "@/components/atoms/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-  FormLabel,
-} from "@/components/atoms/form";
-import CartItem from "../molecules/cart-item";
-
-const products: any[] = [];
-
-const preparing: any[] = [];
-
-const pendingProducts: any[] = [];
-
-const defaultValues: Partial<CartSchemaValues> = {};
+import CartItem from "@/components/molecules/cart-item";
+import { ToggleGroup, ToggleGroupItem } from "@/components/atoms/toggle-group";
 
 function CartSummary({
   className,
@@ -115,9 +90,54 @@ function CartSummary({
     "items"
   >;
 }) {
+  const subTotal = useMemo(() => {
+    return fields.map((e) => e.quantity * e.price).reduce((a, b) => a + b);
+  }, [fields]);
+
+  const taxValue = useMemo(() => {
+    return subTotal * 0.05;
+  }, [subTotal]);
+
+  const grandTotal = useMemo(() => {
+    return subTotal + taxValue;
+  }, [subTotal, taxValue]);
+
   return (
     <div className={clsx("flex gap-2", className)}>
-      <div className="flex flex-col justify-between align-middle items-center bg-background gap-2 px-4 py-2">
+      <div className="flex flex-col justify-between align-middle items-center bg-background gap-4 px-4 py-2">
+        <ToggleGroup
+          type="single"
+          className="grid grid-cols-4 w-full select-none"
+        >
+          <ToggleGroupItem
+            value="express"
+            aria-label="Express Order"
+            variant={"outline"}
+          >
+            <p>Express</p>
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="dineIn"
+            aria-label="Dine In Order"
+            variant={"outline"}
+          >
+            <p>Dine In</p>
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="takeAway"
+            aria-label="Take Away Order"
+            variant={"outline"}
+          >
+            <p>Pickup</p>
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="delivery"
+            aria-label="Delivery Order"
+            variant={"outline"}
+          >
+            <p>Delivery</p>
+          </ToggleGroupItem>
+        </ToggleGroup>
         <div className="flex text-sm flex-row justify-between w-full">
           <div>
             <p className="font-medium">Daniel Amir</p>
@@ -169,12 +189,56 @@ function CartSummary({
           </div> */}
         </div>
       </ScrollArea>
-      <div className="flex justify-center align-middle items-center gap-2 flex-col text-sm bg-background select-none h-auto px-4 py-2">
+      <div className="flex justify-center align-middle items-center gap-4 flex-col text-sm bg-background select-none h-auto px-4 py-2">
+        <div className="flex flex-col justify-center align-middle items-center w-full text-sm text-foreground/80">
+          <div className="flex gap-2 justify-between align-middle items-center w-full">
+            <span>Subtotal</span>
+            <span>
+              {Number(subTotal).toLocaleString("en-IN", {
+                style: "currency",
+                currency: "INR",
+              })}
+            </span>
+          </div>
+
+          {/* <div className="flex gap-2 justify-between align-middle items-center w-full">
+            <span>Packing Charge</span>
+            <span>₹ 0.00</span>
+          </div>
+
+          <div className="flex gap-2 justify-between align-middle items-center w-full">
+            <span>Delivery Charge</span>
+            <span>₹ 0.00</span>
+          </div> */}
+          <div className="flex gap-2 justify-between align-middle items-center w-full">
+            <span>Tax</span>
+            <span>
+              {Number(taxValue).toLocaleString("en-IN", {
+                style: "currency",
+                currency: "INR",
+              })}
+            </span>
+          </div>
+          {/* <div className="flex gap-2 justify-between align-middle items-center w-full">
+            <span>Discount</span>
+            <span>₹ 0.00</span>
+          </div> */}
+          <div className="flex gap-2 justify-between align-middle items-center w-full text-base text-foreground">
+            <span>Grand Total</span>
+            <span className="font-medium">
+              {Number(grandTotal).toLocaleString("en-IN", {
+                style: "currency",
+                currency: "INR",
+              })}
+            </span>
+          </div>
+        </div>
         <div className="grid grid-cols-5 gap-2 w-full">
           <ButtonToolTip
-            label="View Summary"
-            icon="MdSummarize"
+            label="Discord/Cancel"
+            icon="MdDeleteOutline"
             variant={"outline"}
+            className="text-destructive"
           />
           <ButtonToolTip
             label="Draft Order"

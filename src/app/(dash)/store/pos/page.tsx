@@ -129,7 +129,7 @@ export default function POS() {
             />
           </div>
           <CartSummary
-            className="flex flex-col gap-1 md:w-4/12 w-full h-full py-4 px-4"
+            className="flex flex-col gap-1 md:w-4/12 w-full h-full py-4 md:py-2 px-1 bg-background"
             fields={fields}
             register={register}
             remove={remove}
