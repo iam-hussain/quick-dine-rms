@@ -61,7 +61,9 @@ export default function POS() {
     }
   }, [productsData, selectedCategory]);
 
-  const defaultValues: Partial<CartSchemaValues> = {};
+  const defaultValues: Partial<CartSchemaValues> = {
+    type: "EXPRESS",
+  };
   const form = useForm<CartSchemaValues>({
     resolver: zodResolver(schemas.cart),
     defaultValues,

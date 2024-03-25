@@ -7,6 +7,15 @@ enum FoodType {
   VEGAN = "VEGAN",
 }
 
+enum OrderType {
+  PRE_DINING = "PRE_DINING",
+  DINING = "DINING",
+  TAKE_AWAY = "TAKE_AWAY",
+  PICK_UP = "PICK_UP",
+  DELIVERY = "DELIVERY",
+  PLATFORM = "PLATFORM",
+}
+
 const email = string({ type: "email" });
 const username = string({ type: "username", length: "4-20" });
 const password = string({ length: "6-20" });
@@ -21,7 +30,8 @@ const id = string();
 const position = number({ min: 0, max: 10000 });
 const quantity = number({ min: 1, max: 10000 });
 const price = number({ min: 0, max: 10000 });
-const type = z.nativeEnum(FoodType);
+const foodType = z.nativeEnum(FoodType);
+const orderType = z.nativeEnum(OrderType);
 
 const cartItem = z.object({
   title,
@@ -34,9 +44,10 @@ const cartItem = z.object({
 const schemas = {
   login: z.object({ email, password }),
   register: z.object({ email, username, password }),
-  product: z.object({ name, deck, price, type, categoryId }),
+  product: z.object({ name, deck, price, type: foodType, categoryId }),
   category: z.object({ name, deck, position }),
   cart: z.object({
+    type: orderType,
     items: z.array(cartItem),
   }),
   cartItem,

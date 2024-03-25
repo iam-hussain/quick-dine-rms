@@ -1,3 +1,12 @@
+enum OrderType {
+  PRE_DINING = "PRE_DINING",
+  DINING = "DINING",
+  TAKE_AWAY = "TAKE_AWAY",
+  PICK_UP = "PICK_UP",
+  DELIVERY = "DELIVERY",
+  PLATFORM = "PLATFORM",
+}
+
 export interface ProductAPI {
   id: string;
   shortId: string;
@@ -27,4 +36,9 @@ export type CartItemType = {
   note: string;
   quantity: number;
   productId: string;
+};
+
+export type CartFormType = {
+  type: OrderType;
+  items: CartItemType[];
 };

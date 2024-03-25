@@ -5,6 +5,7 @@ import ButtonToolTip from "@/components/molecules/button-tooltip";
 import React, { useMemo } from "react";
 import {
   Control,
+  Controller,
   FieldArrayWithId,
   UseFieldArrayRemove,
   UseFieldArrayUpdate,
@@ -14,7 +15,15 @@ import {
 import CartItem from "@/components/molecules/cart-item";
 import { Separator } from "@/components/atoms/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/atoms/toggle-group";
-import { CartItemType } from "@/types";
+import { CartFormType } from "@/types";
+import { RadioGroup, RadioGroupItem } from "@/components/atoms/radio-group";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../atoms/form";
 
 function CartSummary({
   className,
@@ -27,34 +36,11 @@ function CartSummary({
 }: {
   className?: string;
   remove: UseFieldArrayRemove;
-  register: UseFormRegister<{
-    items: CartItemType[];
-  }>;
-  fields: FieldArrayWithId<
-    {
-      items: CartItemType[];
-    },
-    "items",
-    "id"
-  >[];
-  control: Control<
-    {
-      items: CartItemType[];
-    },
-    any,
-    {
-      items: CartItemType[];
-    }
-  >;
-  setValue: UseFormSetValue<{
-    items: CartItemType[];
-  }>;
-  update: UseFieldArrayUpdate<
-    {
-      items: CartItemType[];
-    },
-    "items"
-  >;
+  register: UseFormRegister<CartFormType>;
+  fields: FieldArrayWithId<CartFormType, "items", "id">[];
+  control: Control<CartFormType, any, CartFormType>;
+  setValue: UseFormSetValue<CartFormType>;
+  update: UseFieldArrayUpdate<CartFormType, "items">;
 }) {
   const subTotal = useMemo(() => {
     const priceList = fields.map((e) => e.quantity * e.price);
@@ -71,43 +57,50 @@ function CartSummary({
 
   return (
     <div className={clsx("flex gap-2", className)}>
-      <div className="flex flex-col justify-between align-middle items-center bg-background gap-3 px-4 py-2">
-        <ToggleGroup
-          type="single"
-          className="grid grid-cols-4 w-full select-none"
-        >
-          <ToggleGroupItem
-            value="express"
-            aria-label="Express Order"
-            variant={"outline"}
-          >
-            <p>Express</p>
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="dineIn"
-            aria-label="Dine In Order"
-            variant={"outline"}
-          >
-            <p>Dine In</p>
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="takeAway"
-            aria-label="Take Away Order"
-            variant={"outline"}
-          >
-            <p>Pickup</p>
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="delivery"
-            aria-label="Delivery Order"
-            variant={"outline"}
-          >
-            <p>Delivery</p>
-          </ToggleGroupItem>
-        </ToggleGroup>
-
+      <FormField
+        control={control}
+        name="type"
+        render={({ field }) => (
+          <FormItem className="space-y-3 py-2 select-none">
+            <FormControl>
+              <RadioGroup
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                className="grid grid-cols-4"
+              >
+                <FormItem className="flex items-center space-x-2 space-y-0 justify-center align-middle">
+                  <FormControl>
+                    <RadioGroupItem value="PICK_UP" />
+                  </FormControl>
+                  <FormLabel className="font-normal">Express</FormLabel>
+                </FormItem>
+                <FormItem className="flex items-center space-x-2 space-y-0 justify-center align-middle">
+                  <FormControl>
+                    <RadioGroupItem value="DINING" />
+                  </FormControl>
+                  <FormLabel className="font-normal">Dine In</FormLabel>
+                </FormItem>
+                <FormItem className="flex items-center space-x-2 space-y-0 justify-center align-middle">
+                  <FormControl>
+                    <RadioGroupItem value="TAKE_AWAY" />
+                  </FormControl>
+                  <FormLabel className="font-normal">Pick Up</FormLabel>
+                </FormItem>
+                <FormItem className="flex items-center space-x-2 space-y-0 justify-center align-middle">
+                  <FormControl>
+                    <RadioGroupItem value="DELIVERY" />
+                  </FormControl>
+                  <FormLabel className="font-normal">Delivery</FormLabel>
+                </FormItem>
+              </RadioGroup>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <div className="flex flex-col px-4">
         <Separator />
-        <div className="flex text-sm flex-row justify-between w-full">
+        <div className="flex text-sm flex-row justify-between w-full py-2">
           <div>
             <p className="font-medium">Daniel Amir</p>
             <p className="text-foreground/80">Order: #JJ782328 / Table</p>
@@ -126,8 +119,8 @@ function CartSummary({
             />
           </div>
         </div>
+        <Separator />
       </div>
-      <Separator />
       <ScrollArea className="w-full flex justify-end grow bg-background px-4 py-2">
         <div className="flex flex-col">
           <ul className="flex flex-col gap-4">
