@@ -24,7 +24,7 @@ function ProductCard({ product, ...props }: ProductCardProps) {
       whileTap="pressed"
       variants={animateVariation}
       className={clsx(
-        "flex flex-col h-full w-full align-middle items-center rounded-lg p-4 bg-background cursor-pointer text-center select-none",
+        "flex flex-row md:flex-col h-full w-full align-middle items-center rounded-lg p-2 md:p-4 bg-background cursor-pointer text-center select-none",
         {
           "justify-center": !product?.image.primary?.id,
           "justify-start": product?.image.primary?.id,
@@ -33,21 +33,25 @@ function ProductCard({ product, ...props }: ProductCardProps) {
       {...props}
     >
       {product?.image.primary?.id && (
-        <AspectRatio ratio={4 / 3} className="h-full">
-          <Image
-            src={product?.image.primary?.content}
-            alt={product?.image.primary?.altText}
-            fill
-            className="rounded-md object-cover"
-          />
-        </AspectRatio>
+        <div className="w-5/12 md:w-full rounded-lg">
+          <AspectRatio ratio={4 / 3} className="h-full">
+            <Image
+              src={product?.image.primary?.content}
+              alt={product?.image.primary?.altText}
+              fill
+              className="rounded-md object-cover"
+            />
+          </AspectRatio>
+        </div>
       )}
-      <div className="w-full flex h-full justify-center align-middle items-center flex-col">
-        <h5 className="text-base font-semibold text-foreground">
+      <div className="w-full flex h-full justify-center text-right md:text-center flex-col px-2 md:px-0">
+        <h5 className="text-sm md:text-base font-semibold text-foreground">
           {product?.name || ""}
         </h5>
-        {/* {deck && <p className="text-sm text-one-line">{deck}</p>} */}
-        <p className="text-md font-medium text-primary">
+        {product?.deck && (
+          <p className="text-sm text-one-line md:hidden">{product?.deck}</p>
+        )}
+        <p className="text-sm md:text-md font-medium text-primary">
           {product?.formattedPrice}
         </p>
       </div>

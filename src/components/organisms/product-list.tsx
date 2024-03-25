@@ -18,7 +18,7 @@ function ProductList({
 }) {
   return (
     <ScrollArea className={clsx("w-full h-full", className)}>
-      <Container className="grid md:grid-cols-5 grid-cols-2 gap-4 place-items-stretch place-content-around">
+      <Container className="grid md:grid-cols-5 grid-cols-1 gap-4 place-items-stretch place-content-around">
         {products.map((product, index) => (
           <ul key={index} className="shrink-0">
             <ProductCard
