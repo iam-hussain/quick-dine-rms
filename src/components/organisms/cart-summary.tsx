@@ -14,6 +14,7 @@ import {
 import CartItem from "@/components/molecules/cart-item";
 import { Separator } from "@/components/atoms/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/atoms/toggle-group";
+import { CartItemType } from "@/types";
 
 function CartSummary({
   className,
@@ -27,66 +28,30 @@ function CartSummary({
   className?: string;
   remove: UseFieldArrayRemove;
   register: UseFormRegister<{
-    items: {
-      price: number;
-      title: string;
-      note: string;
-      quantity: number;
-      productId: string;
-    }[];
+    items: CartItemType[];
   }>;
   fields: FieldArrayWithId<
     {
-      items: {
-        price: number;
-        title: string;
-        note: string;
-        quantity: number;
-        productId: string;
-      }[];
+      items: CartItemType[];
     },
     "items",
     "id"
   >[];
   control: Control<
     {
-      items: {
-        price: number;
-        title: string;
-        note: string;
-        quantity: number;
-        productId: string;
-      }[];
+      items: CartItemType[];
     },
     any,
     {
-      items: {
-        price: number;
-        title: string;
-        note: string;
-        quantity: number;
-        productId: string;
-      }[];
+      items: CartItemType[];
     }
   >;
   setValue: UseFormSetValue<{
-    items: {
-      price: number;
-      title: string;
-      note: string;
-      quantity: number;
-      productId: string;
-    }[];
+    items: CartItemType[];
   }>;
   update: UseFieldArrayUpdate<
     {
-      items: {
-        price: number;
-        title: string;
-        note: string;
-        quantity: number;
-        productId: string;
-      }[];
+      items: CartItemType[];
     },
     "items"
   >;

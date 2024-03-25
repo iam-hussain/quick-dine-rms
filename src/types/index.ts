@@ -21,7 +21,7 @@ export interface ProductAPI {
   };
 }
 
-export type CartItem = {
+export type CartItemType = {
   price: number;
   title: string;
   note: string;

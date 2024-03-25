@@ -3,7 +3,7 @@ import { ScrollArea, ScrollBar } from "@/components/atoms/scroll-area";
 import ProductCard from "@/components/molecules/product-card";
 import { Container } from "@/components/atoms/container";
 import clsx from "clsx";
-import { CartItem, ProductAPI } from "@/types";
+import { CartItemType, ProductAPI } from "@/types";
 
 function ProductList({
   className,
@@ -12,7 +12,7 @@ function ProductList({
 }: {
   className?: string;
   products: ProductAPI[];
-  append: (data: CartItem) => void;
+  append: (data: CartItemType) => void;
 }) {
   return (
     <ScrollArea className={clsx("w-full h-full", className)}>
