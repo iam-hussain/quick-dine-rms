@@ -104,8 +104,8 @@ export default function POS() {
           className="flex md:flex-row flex-col w-full h-full"
           onSubmit={handleSubmit((data) => console.log(data))}
         >
-          <div className="flex flex-col gap-2 md:w-8/12 w-full h-full py-4">
-            <div className="flex flex-col gap-3 px-4">
+          <div className="flex flex-col gap-4 md:w-8/12 w-full h-full py-4">
+            <div className="flex flex-col gap-4 px-4">
               <div className="flex justify-between">
                 <SearchBar className="" />
                 <div className="gap-2 flex">

@@ -19,11 +19,11 @@ export function CategoriesSlide({
   return (
     <ScrollArea
       className={clsx(
-        "w-auto min-w-full h-auto whitespace-nowrap rounded-md",
+        "w-auto min-w-full h-auto whitespace-nowrap border-b-2 border-secondary",
         className
       )}
     >
-      <Container className="flex w-full space-x-2 pb-3 text-bg-foreground">
+      <Container className="flex w-full space-x-2 pb-2 text-bg-foreground">
         <div className="shrink-0">
           <CategoryCard
             name="All"
@@ -31,15 +31,17 @@ export function CategoriesSlide({
             onClick={() => onEachClick({})}
           />
         </div>
-        {categories.map((category, index) => (
-          <div key={`cat_${index}`} className="shrink-0">
-            <CategoryCard
-              {...category}
-              onClick={() => onEachClick(category)}
-              active={selectedCategory === category.shortId}
-            />
-          </div>
-        ))}
+        {[...categories, ...categories, ...categories].map(
+          (category, index) => (
+            <div key={`cat_${index}`} className="shrink-0">
+              <CategoryCard
+                {...category}
+                onClick={() => onEachClick(category)}
+                active={selectedCategory === category.shortId}
+              />
+            </div>
+          )
+        )}
       </Container>
       <ScrollBar orientation="horizontal" />
     </ScrollArea>

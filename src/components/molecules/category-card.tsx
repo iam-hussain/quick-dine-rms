@@ -12,15 +12,12 @@ function CategoryCard({
 }: {
   name: string;
   active?: Boolean;
-  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }) {
   return (
-    <div
-      className="flex bg-bw rounded-lg h-full w-full justify-start align-middle items-center gap-2 select-none"
-      onClick={onClick}
-    >
-      <Button variant={active ? "secondary" : "outline"}>{name}</Button>
-    </div>
+    <Button onClick={onClick} variant={active ? "secondary" : "transparent"}>
+      {name}
+    </Button>
   );
 }
 

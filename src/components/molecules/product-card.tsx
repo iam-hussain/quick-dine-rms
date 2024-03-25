@@ -36,7 +36,7 @@ function ProductCard({
   return (
     <li
       className={clsx(
-        "flex flex-col h-full w-full align-middle items-center rounded-lg p-4 bg-bw cursor-pointer text-center select-none hover:border-foreground active:border-accent-foreground border-2 border-bw",
+        "flex flex-col h-full w-full align-middle items-center rounded-lg p-4 bg-bw cursor-pointer text-center select-none hover-hover:border-secondary active-hover:border-accent-foreground border-2 border-bw",
         {
           "justify-center": !image.primary?.id,
           "justify-start": image.primary?.id,
