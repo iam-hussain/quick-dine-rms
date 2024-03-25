@@ -68,7 +68,7 @@ function CartItem({
       </span>
       <Button
         variant={"ghost"}
-        className="p-2"
+        className="p-1"
         onClick={() => onRemoveClick(index)}
       >
         <Icon name="RiDeleteBinLine" className="h-4 w-4 text-destructive" />

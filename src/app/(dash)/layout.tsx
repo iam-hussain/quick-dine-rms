@@ -11,7 +11,7 @@ export default function POS({ children }: { children: React.ReactNode }) {
   return (
     <div className="main-wrapper">
       <SideMenu />
-      <main className={"page-main bg-foreground/10"}>
+      <main className={"page-main bg-paper"}>
         <TopMenu
           className="block z-30 fixed bg-background w-full"
           isHidden={isTopBarHidden}

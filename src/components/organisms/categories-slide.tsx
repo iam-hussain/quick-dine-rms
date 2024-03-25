@@ -31,17 +31,15 @@ export function CategoriesSlide({
             onClick={() => onEachClick({})}
           />
         </div>
-        {[...categories, ...categories, ...categories].map(
-          (category, index) => (
-            <div key={`cat_${index}`} className="shrink-0">
-              <CategoryCard
-                {...category}
-                onClick={() => onEachClick(category)}
-                active={selectedCategory === category.shortId}
-              />
-            </div>
-          )
-        )}
+        {categories.map((category, index) => (
+          <div key={`cat_${index}`} className="shrink-0">
+            <CategoryCard
+              {...category}
+              onClick={() => onEachClick(category)}
+              active={selectedCategory === category.shortId}
+            />
+          </div>
+        ))}
       </Container>
       <ScrollBar orientation="horizontal" />
     </ScrollArea>

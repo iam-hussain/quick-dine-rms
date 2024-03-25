@@ -1,7 +1,14 @@
 import React from "react";
 import clsx from "clsx";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { AspectRatio } from "@/components/atoms/aspect-ratio";
+
+const animateVariation = {
+  initial: { scale: 1 },
+  hover: { scale: 1.05 },
+  pressed: { scale: 0.9 },
+};
 
 function ProductCard({
   id,
@@ -34,9 +41,13 @@ function ProductCard({
   onClick?: React.MouseEventHandler<HTMLLIElement> | undefined;
 }) {
   return (
-    <li
+    <motion.li
+      initial="initial"
+      whileHover="hover"
+      whileTap="pressed"
+      variants={animateVariation}
       className={clsx(
-        "flex flex-col h-full w-full align-middle items-center rounded-lg p-4 bg-bw cursor-pointer text-center select-none hover-hover:border-secondary active-hover:border-accent-foreground border-2 border-bw",
+        "flex flex-col h-full w-full align-middle items-center rounded-lg p-4 bg-background cursor-pointer text-center select-none",
         {
           "justify-center": !image.primary?.id,
           "justify-start": image.primary?.id,
@@ -61,7 +72,7 @@ function ProductCard({
         {/* {deck && <p className="text-sm text-one-line">{deck}</p>} */}
         <p className="text-md font-medium text-primary">{formattedPrice}</p>
       </div>
-    </li>
+    </motion.li>
   );
 }
 
