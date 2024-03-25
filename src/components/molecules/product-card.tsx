@@ -36,7 +36,7 @@ function ProductCard({
   return (
     <li
       className={clsx(
-        "flex flex-col h-full w-full align-middle items-center rounded-lg p-2 bg-bw cursor-pointer text-center select-none hover:text-accent-foreground hover:bg-accent/30 hover:border-accent active:border-accent-foreground border-2 border-bw",
+        "flex flex-col h-full w-full align-middle items-center rounded-lg p-4 bg-bw cursor-pointer text-center select-none hover:border-foreground active:border-accent-foreground border-2 border-bw",
         {
           "justify-center": !image.primary?.id,
           "justify-start": image.primary?.id,
@@ -45,7 +45,7 @@ function ProductCard({
       onClick={onClick}
     >
       {image.primary?.id && (
-        <AspectRatio ratio={5 / 3} className="h-full">
+        <AspectRatio ratio={4 / 3} className="h-full">
           <Image
             src={image.primary.content}
             alt={image.primary.altText}
@@ -59,7 +59,7 @@ function ProductCard({
           {name || ""}
         </h5>
         {/* {deck && <p className="text-sm text-one-line">{deck}</p>} */}
-        <p className="text-md">{formattedPrice}</p>
+        <p className="text-md font-medium text-primary">{formattedPrice}</p>
       </div>
     </li>
   );

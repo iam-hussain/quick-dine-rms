@@ -91,7 +91,8 @@ function CartSummary({
   >;
 }) {
   const subTotal = useMemo(() => {
-    return fields.map((e) => e.quantity * e.price).reduce((a, b) => a + b);
+    const priceList = fields.map((e) => e.quantity * e.price);
+    return priceList.length ? priceList.reduce((a, b) => a + b) : 0;
   }, [fields]);
 
   const taxValue = useMemo(() => {
