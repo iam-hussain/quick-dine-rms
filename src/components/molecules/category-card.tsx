@@ -15,7 +15,14 @@ function CategoryCard({
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }) {
   return (
-    <Button onClick={onClick} variant={active ? "secondary" : "transparent"}>
+    <Button
+      className={clsx("rounded-none border-t-2 grow", {
+        "border-secondary": active,
+        "border-accent": !active,
+      })}
+      onClick={onClick}
+      variant={active ? "transparent" : "transparent"}
+    >
       {name}
     </Button>
   );

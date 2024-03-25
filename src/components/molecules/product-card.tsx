@@ -24,7 +24,7 @@ function ProductCard({ product, ...props }: ProductCardProps) {
       whileTap="pressed"
       variants={animateVariation}
       className={clsx(
-        "flex flex-row md:flex-col h-full w-full align-middle items-center rounded-lg p-2 md:p-4 bg-background cursor-pointer text-center select-none",
+        "flex flex-row h-full w-full align-middle items-center rounded-lg p-3 bg-background cursor-pointer text-center select-none gap-2 border border-accent ",
         {
           "justify-center": !product?.image.primary?.id,
           "justify-start": product?.image.primary?.id,
@@ -33,7 +33,7 @@ function ProductCard({ product, ...props }: ProductCardProps) {
       {...props}
     >
       {product?.image.primary?.id && (
-        <div className="w-5/12 md:w-full rounded-lg">
+        <div className="w-5/12 rounded-lg">
           <AspectRatio ratio={4 / 3} className="h-full">
             <Image
               src={product?.image.primary?.content}
@@ -44,12 +44,17 @@ function ProductCard({ product, ...props }: ProductCardProps) {
           </AspectRatio>
         </div>
       )}
-      <div className="w-full flex h-full justify-center text-right md:text-center flex-col px-2 md:px-0">
-        <h5 className="text-sm md:text-base font-semibold text-foreground">
+      <div
+        className={clsx("flex-col", {
+          "text-left w-7/12": product?.image.primary?.id,
+          "text-center w-auto": !product?.image.primary?.id,
+        })}
+      >
+        <h5 className="text-sm md:text-base truncate overflow-hidden font-semibold text-foreground text-one-line">
           {product?.name || ""}
         </h5>
         {product?.deck && (
-          <p className="text-sm text-one-line md:hidden">{product?.deck}</p>
+          <p className="text-sm truncate overflow-hidden">{product?.deck}</p>
         )}
         <p className="text-sm md:text-md font-medium text-primary">
           {product?.formattedPrice}

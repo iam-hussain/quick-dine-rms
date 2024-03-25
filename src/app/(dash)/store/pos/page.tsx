@@ -123,7 +123,7 @@ export default function POS() {
               />
             </div>
             <ProductList
-              className="flex grow flex-col px-4"
+              className="flex grow flex-col"
               products={products || []}
               append={appendItem}
             />
