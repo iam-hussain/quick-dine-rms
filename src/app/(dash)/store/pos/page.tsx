@@ -104,17 +104,11 @@ export default function POS() {
           className="flex md:flex-row flex-col w-full h-full"
           onSubmit={handleSubmit((data) => console.log(data))}
         >
-          <div className="flex flex-col gap-4 md:w-8/12 w-full h-full py-4">
+          <div className="flex flex-col md:w-8/12 w-full h-full py-4">
             <div className="flex flex-col gap-4 px-4">
-              <div className="flex justify-between">
+              <div className="flex justify-between align-middle items-center gap-4">
                 <SearchBar className="" />
-                <div className="gap-2 flex">
-                  <Button className="flex gap-2" variant={"accent"}>
-                    <Icon className="h-5 w-5" name="IoMdAdd" />
-                    New Order
-                  </Button>
-                  <Button variant={"outline"}>Order List</Button>
-                </div>
+                <Button>Order List</Button>
               </div>
               <CategoriesSlide
                 categories={categories || []}

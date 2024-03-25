@@ -23,23 +23,21 @@ export function CategoriesSlide({
         className
       )}
     >
-      <Container className="flex w-full text-bg-foreground">
-        {/* <div className="shrink-2"> */}
+      <Container className="flex w-full text-bg-foreground relative select-none pb-2">
+        <div className="border-b-2 border-accent w-full absolute"></div>
+
         <CategoryCard
           name="All"
           active={!selectedCategory}
           onClick={() => onEachClick({})}
         />
-        {/* </div> */}
         {categories.map((category, index) => (
-          // <div key={`cat_${index}`} className="shrink-2">
           <CategoryCard
             key={`cat_${index}`}
             {...category}
             onClick={() => onEachClick(category)}
             active={selectedCategory === category.shortId}
           />
-          // </div>
         ))}
       </Container>
       <ScrollBar orientation="horizontal" />

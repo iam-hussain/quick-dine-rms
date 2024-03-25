@@ -9,22 +9,27 @@ function CategoryCard({
   name,
   active = false,
   onClick,
+  className,
 }: {
   name: string;
   active?: Boolean;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  className?: string;
 }) {
   return (
-    <Button
-      className={clsx("rounded-none border-t-2 grow", {
-        "border-secondary": active,
-        "border-accent": !active,
-      })}
+    <div
+      className={clsx(
+        "rounded-none border-t-4 z-10 text-sm text-center font-medium px-4 py-2 cursor-pointer",
+        className,
+        {
+          "border-primary": active,
+          "border-transparent": !active,
+        }
+      )}
       onClick={onClick}
-      variant={active ? "transparent" : "transparent"}
     >
       {name}
-    </Button>
+    </div>
   );
 }
 
