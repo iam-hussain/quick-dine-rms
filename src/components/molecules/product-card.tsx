@@ -1,8 +1,9 @@
-import React from "react";
+import React, { AnimationEventHandler } from "react";
 import clsx from "clsx";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { AspectRatio } from "@/components/atoms/aspect-ratio";
+import { ProductAPI } from "@/types";
 
 const animateVariation = {
   initial: { scale: 1 },
@@ -10,38 +11,14 @@ const animateVariation = {
   pressed: { scale: 0.9 },
 };
 
-function ProductCard({
-  id,
-  name,
-  image,
-  deck,
-  formattedPrice,
-  onClick,
-}: {
-  id: string;
-  shortId: string;
-  name: string;
-  deck?: string;
-  price: number;
-  formattedPrice: string;
-  foodType: string;
-  type: string;
-  categoryName: string;
-  categoryId: string;
-  image: {
-    primary: {
-      id: string;
-      shortId: string;
-      caption: string;
-      altText: string;
-      content: string;
-      type: string;
-    } | null;
-  };
-  onClick?: React.MouseEventHandler<HTMLLIElement> | undefined;
-}) {
+export interface ProductCardProps {
+  product: ProductAPI;
+  onClick: () => void;
+}
+
+function ProductCard({ product, ...props }: ProductCardProps) {
   return (
-    <motion.li
+    <motion.div
       initial="initial"
       whileHover="hover"
       whileTap="pressed"
@@ -49,17 +26,17 @@ function ProductCard({
       className={clsx(
         "flex flex-col h-full w-full align-middle items-center rounded-lg p-4 bg-background cursor-pointer text-center select-none",
         {
-          "justify-center": !image.primary?.id,
-          "justify-start": image.primary?.id,
+          "justify-center": !product?.image.primary?.id,
+          "justify-start": product?.image.primary?.id,
         }
       )}
-      onClick={onClick}
+      {...props}
     >
-      {image.primary?.id && (
+      {product?.image.primary?.id && (
         <AspectRatio ratio={4 / 3} className="h-full">
           <Image
-            src={image.primary.content}
-            alt={image.primary.altText}
+            src={product?.image.primary?.content}
+            alt={product?.image.primary?.altText}
             fill
             className="rounded-md object-cover"
           />
@@ -67,12 +44,14 @@ function ProductCard({
       )}
       <div className="w-full flex h-full justify-center align-middle items-center flex-col">
         <h5 className="text-base font-semibold text-foreground">
-          {name || ""}
+          {product?.name || ""}
         </h5>
         {/* {deck && <p className="text-sm text-one-line">{deck}</p>} */}
-        <p className="text-md font-medium text-primary">{formattedPrice}</p>
+        <p className="text-md font-medium text-primary">
+          {product?.formattedPrice}
+        </p>
       </div>
-    </motion.li>
+    </motion.div>
   );
 }
 

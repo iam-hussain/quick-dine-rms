@@ -5,6 +5,7 @@ import { Container } from "@/components/atoms/container";
 import clsx from "clsx";
 import { LargeNumberLike } from "crypto";
 import { UseFieldArrayAppend } from "react-hook-form";
+import { CartItem, ProductAPI } from "@/types";
 
 function ProductList({
   className,
@@ -12,35 +13,8 @@ function ProductList({
   append,
 }: {
   className?: string;
-  products: {
-    id: string;
-    shortId: string;
-    name: string;
-    deck?: string;
-    price: number;
-    formattedPrice: string;
-    foodType: string;
-    type: string;
-    categoryName: string;
-    categoryId: string;
-    image: {
-      primary: {
-        id: string;
-        shortId: string;
-        caption: string;
-        altText: string;
-        content: string;
-        type: string;
-      } | null;
-    };
-  }[];
-  append: (data: {
-    price: number;
-    title: string;
-    note: string;
-    quantity: number;
-    productId: string;
-  }) => void;
+  products: ProductAPI[];
+  append: (data: CartItem) => void;
 }) {
   return (
     <ScrollArea className={clsx("w-full h-full", className)}>
@@ -48,7 +22,7 @@ function ProductList({
         {products.map((product, index) => (
           <ul key={index} className="shrink-0">
             <ProductCard
-              {...product}
+              product={product}
               onClick={() =>
                 append({
                   price: product.price,
