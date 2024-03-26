@@ -23,7 +23,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../atoms/form";
+  FormDescription,
+} from "@/components/atoms/form";
+import {
+  Select,
+  SelectLabel,
+  SelectGroup,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/atoms/select";
 
 function CartSummary({
   className,
@@ -57,7 +67,40 @@ function CartSummary({
 
   return (
     <div className={clsx("flex gap-2", className)}>
-      <FormField
+      <div className="flex px-4">
+        <FormField
+          // className="w-auto"
+          control={control}
+          name="type"
+          render={({ field }) => (
+            <FormItem className="min-w-32">
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger className="text-sm">
+                  <SelectValue placeholder="Select a order type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Order Type</SelectLabel>
+                    <SelectItem value="PICK_UP">Express</SelectItem>
+                    <SelectItem value="DINING">Dine In</SelectItem>
+                    <SelectItem value="TAKE_AWAY">Take Away</SelectItem>
+                    <SelectItem value="DELIVERY">Delivery</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {/* <FormDescription>
+                You can manage email addresses in your{" "}
+              </FormDescription> */}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="text-sm text-right w-full">
+          <p className="">Unsaved</p>
+          <p className="text-foreground/80">Jan 10, 2022 10:44 AM</p>
+        </div>
+      </div>
+      {/* <FormField
         control={control}
         name="type"
         render={({ field }) => (
@@ -97,7 +140,7 @@ function CartSummary({
             <FormMessage />
           </FormItem>
         )}
-      />
+      /> */}
       <div className="flex flex-col px-4">
         <Separator />
         <div className="flex text-sm flex-row justify-between w-full py-2">
