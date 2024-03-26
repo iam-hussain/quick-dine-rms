@@ -12,7 +12,7 @@ import instance from "@/lib/instance";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/atoms/button";
 import { FieldArrayWithId, useFieldArray, useForm } from "react-hook-form";
-import schemas, { CartSchemaValues } from "@/validations";
+import schemas, { CartSchemaValues, OrderType } from "@/validations";
 import { Form } from "@/components/atoms/form";
 import { useEffect, useState } from "react";
 
@@ -62,7 +62,7 @@ export default function POS() {
   }, [productsData, selectedCategory]);
 
   const defaultValues: Partial<CartSchemaValues> = {
-    type: "EXPRESS",
+    type: OrderType.PICK_UP,
   };
   const form = useForm<CartSchemaValues>({
     resolver: zodResolver(schemas.cart),

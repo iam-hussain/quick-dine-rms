@@ -1,13 +1,13 @@
 import * as z from "zod";
 import { string, number } from "./elements";
 
-enum FoodType {
+export enum FoodType {
   NON_VEG = "NON_VEG",
   VEG = "VEG",
   VEGAN = "VEGAN",
 }
 
-enum OrderType {
+export enum OrderType {
   PRE_DINING = "PRE_DINING",
   DINING = "DINING",
   TAKE_AWAY = "TAKE_AWAY",
