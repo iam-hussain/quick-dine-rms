@@ -55,7 +55,7 @@ function CartSummary({
   update: UseFieldArrayUpdate<CartFormType, "items">;
 }) {
   const { discounts, tax, delivery, packing } = useStoreStore(
-    (state) => state.additional
+    (state: { additional: any }) => state.additional
   );
 
   const subTotal = useMemo(() => {
@@ -80,13 +80,13 @@ function CartSummary({
   }, [delivering, packaging, subTotal]);
 
   const taxValue = useMemo(() => {
-    return tax.map((e) =>
+    return tax.map((e: { type: string; value: number }) =>
       e.type === "PERCENTAGE" ? percentage(e.value, total) : Number(e.value)
     );
   }, [total, tax]);
 
   const grandTotal = useMemo(() => {
-    return total + taxValue.reduce((a, b) => a + b, 0);
+    return total + taxValue.reduce((a: any, b: any) => a + b, 0);
   }, [total, taxValue]);
 
   return (
@@ -262,20 +262,40 @@ function CartSummary({
           )}
 
           {tax &&
-            tax.map((e, i) => (
-              <div
-                className="flex gap-2 justify-between align-middle items-center w-full"
-                key={e.key}
-              >
-                <span>{e.name}</span>
-                <span>
-                  {Number(taxValue[i]).toLocaleString("en-IN", {
-                    style: "currency",
-                    currency: "INR",
-                  })}
-                </span>
-              </div>
-            ))}
+            tax.map(
+              (
+                e: {
+                  key: React.Key | null | undefined;
+                  name:
+                    | string
+                    | number
+                    | boolean
+                    | React.ReactElement<
+                        any,
+                        string | React.JSXElementConstructor<any>
+                      >
+                    | Iterable<React.ReactNode>
+                    | React.ReactPortal
+                    | React.PromiseLikeOfReactNode
+                    | null
+                    | undefined;
+                },
+                i: string | number
+              ) => (
+                <div
+                  className="flex gap-2 justify-between align-middle items-center w-full"
+                  key={e.key}
+                >
+                  <span>{e.name}</span>
+                  <span>
+                    {Number(taxValue[i]).toLocaleString("en-IN", {
+                      style: "currency",
+                      currency: "INR",
+                    })}
+                  </span>
+                </div>
+              )
+            )}
 
           {/* <div className="flex gap-2 justify-between align-middle items-center w-full">
             <span>Discount</span>
