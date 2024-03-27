@@ -109,8 +109,8 @@ function CartSummary({
             <ButtonToolTip
               label="Select Table"
               icon="MdTableRestaurant"
-              variant={"outline"}
-              // swapText="T5"
+              variant={"accent"}
+              swapText="T5"
             />
           </div>
         </div>

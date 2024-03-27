@@ -26,7 +26,7 @@ function ButtonToolTip({
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            variant={"ghost"}
+            variant={"default"}
             className={clsx("flex justify-center gap-2 font-normal text-lg")}
             {...buttonProps}
           >
