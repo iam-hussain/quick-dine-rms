@@ -1,3 +1,4 @@
+import { ChargesType } from "@/types";
 import { SortingFnOption } from "@tanstack/react-table";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -43,4 +44,24 @@ export const zeroLastSortMethod = (
 
 export function percentage(percent: number, total: number) {
   return (percent / 100) * total;
+}
+
+export function getChargesValue(
+  type: ChargesType,
+  value: number,
+  total: number,
+  count: number
+) {
+  if (type === "PERCENTAGE") {
+    return percentage(value, total);
+  }
+  if (type === "VALUE") {
+    return value;
+  }
+
+  if (type === "VALUE_COUNT") {
+    return value * count;
+  }
+
+  return 0;
 }

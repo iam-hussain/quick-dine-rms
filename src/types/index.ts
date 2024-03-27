@@ -43,7 +43,7 @@ export type CartFormType = {
   items: CartItemType[];
 };
 
-type NumberType = "VALUE" | "PERCENTAGE";
+export type ChargesType = "VALUE" | "PERCENTAGE" | "VALUE_COUNT";
 
 export type StoreAdditionalType = {
   table: {
@@ -58,21 +58,21 @@ export type StoreAdditionalType = {
     printName: string;
     value: number;
     position: number;
-    type: NumberType;
+    type: ChargesType;
   }[];
   discounts: {
     key: string;
     name: string;
     printName: string;
     value: number;
-    type: NumberType;
+    type: ChargesType;
   }[];
   packing: {
     value: number;
-    type: NumberType;
+    type: ChargesType;
   };
   delivery: {
     value: number;
-    type: NumberType;
+    type: ChargesType;
   };
 };

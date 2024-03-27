@@ -2,11 +2,11 @@ import { Button } from "@/components/atoms/button";
 import { ScrollArea } from "@/components/atoms/scroll-area";
 import clsx from "clsx";
 import ButtonToolTip from "@/components/molecules/button-tooltip";
-import React, { useMemo } from "react";
+import React from "react";
 import { useStoreStore } from "@/stores/storeSlice";
 import {
   Control,
-  Controller,
+  useFieldArray,
   FieldArrayWithId,
   UseFieldArrayRemove,
   UseFieldArrayUpdate,
@@ -15,17 +15,8 @@ import {
 } from "react-hook-form";
 import CartItem from "@/components/molecules/cart-item";
 import { Separator } from "@/components/atoms/separator";
-import { ToggleGroup, ToggleGroupItem } from "@/components/atoms/toggle-group";
 import { CartFormType } from "@/types";
-import { RadioGroup, RadioGroupItem } from "@/components/atoms/radio-group";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from "@/components/atoms/form";
+import { FormField, FormItem, FormMessage } from "@/components/atoms/form";
 import {
   Select,
   SelectLabel,
@@ -35,65 +26,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select";
-import { percentage } from "@/lib/utils";
+import useCart from "@/hooks/useCart";
 
 function CartSummary({
   className,
-  remove,
-  register,
-  fields,
   control,
-  setValue,
-  update,
 }: {
   className?: string;
-  remove: UseFieldArrayRemove;
-  register: UseFormRegister<CartFormType>;
-  fields: FieldArrayWithId<CartFormType, "items", "id">[];
   control: Control<CartFormType, any, CartFormType>;
-  setValue: UseFormSetValue<CartFormType>;
-  update: UseFieldArrayUpdate<CartFormType, "items">;
 }) {
-  const { discounts, tax, delivery, packing } = useStoreStore(
-    (state: { additional: any }) => state.additional
-  );
+  const {
+    shouldAddPackingCharge,
+    shouldAddDeliveryCharge,
+    subTotal,
+    deliveryCharge,
+    packagingCharge,
+    items,
+    chargesValue,
+    grandTotal,
+  } = useCart({ control });
 
-  const subTotal = useMemo(() => {
-    const priceList = fields.map((e) => e.quantity * e.price);
-    return priceList.length ? priceList.reduce((a, b) => a + b) : 0;
-  }, [fields]);
+  const { remove, update } = useFieldArray({
+    control,
+    name: "items",
+  });
 
-  const packaging = useMemo(() => {
-    return packing.type === "PERCENTAGE"
-      ? percentage(packing.value, subTotal)
-      : Number(packing.value);
-  }, [packing.type, packing.value, subTotal]);
-
-  const delivering = useMemo(() => {
-    return delivery.type === "PERCENTAGE"
-      ? percentage(delivery.value, subTotal)
-      : Number(delivery.value);
-  }, [delivery.type, delivery.value, subTotal]);
-
-  const total = useMemo(() => {
-    return subTotal ? subTotal + packaging + delivering : subTotal;
-  }, [delivering, packaging, subTotal]);
-
-  const taxValue = useMemo(() => {
-    return tax.map((e: { type: string; value: number }) =>
-      e.type === "PERCENTAGE" ? percentage(e.value, total) : Number(e.value)
-    );
-  }, [total, tax]);
-
-  const grandTotal = useMemo(() => {
-    return total + taxValue.reduce((a: any, b: any) => a + b, 0);
-  }, [total, taxValue]);
+  const handleQuantityClick = (type: "ADD" | "SUB" = "ADD", index: number) => {
+    if (type === "SUB" && items[index].quantity === 0) {
+      return;
+    }
+    update(index, {
+      ...items[index],
+      quantity:
+        type == "ADD" ? items[index].quantity + 1 : items[index].quantity - 1,
+    });
+  };
 
   return (
     <div className={clsx("flex gap-2", className)}>
       <div className="flex px-4">
         <FormField
-          // className="w-auto"
           control={control}
           name="type"
           render={({ field }) => (
@@ -112,9 +84,6 @@ function CartSummary({
                   </SelectGroup>
                 </SelectContent>
               </Select>
-              {/* <FormDescription>
-                You can manage email addresses in your{" "}
-              </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
@@ -124,47 +93,6 @@ function CartSummary({
           <p className="text-foreground/80">Jan 10, 2022 10:44 AM</p>
         </div>
       </div>
-      {/* <FormField
-        control={control}
-        name="type"
-        render={({ field }) => (
-          <FormItem className="space-y-3 py-2 select-none">
-            <FormControl>
-              <RadioGroup
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                className="grid grid-cols-4"
-              >
-                <FormItem className="flex items-center space-x-2 space-y-0 justify-center align-middle">
-                  <FormControl>
-                    <RadioGroupItem value="PICK_UP" />
-                  </FormControl>
-                  <FormLabel className="font-normal">Express</FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-2 space-y-0 justify-center align-middle">
-                  <FormControl>
-                    <RadioGroupItem value="DINING" />
-                  </FormControl>
-                  <FormLabel className="font-normal">Dine In</FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-2 space-y-0 justify-center align-middle">
-                  <FormControl>
-                    <RadioGroupItem value="TAKE_AWAY" />
-                  </FormControl>
-                  <FormLabel className="font-normal">Pick Up</FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-2 space-y-0 justify-center align-middle">
-                  <FormControl>
-                    <RadioGroupItem value="DELIVERY" />
-                  </FormControl>
-                  <FormLabel className="font-normal">Delivery</FormLabel>
-                </FormItem>
-              </RadioGroup>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      /> */}
       <div className="flex flex-col px-4">
         <Separator />
         <div className="flex text-sm flex-row justify-between w-full py-2">
@@ -191,22 +119,18 @@ function CartSummary({
       <ScrollArea className="w-full flex justify-end grow bg-background px-4 py-2">
         <div className="flex flex-col">
           <ul className="flex flex-col gap-4">
-            {fields.length === 0 && (
+            {items.length === 0 && (
               <li className="text-sm text-foreground/80 text-center w-full">
                 No items found
               </li>
             )}
-            {fields.map((item, index) => (
+            {items.map((item, index) => (
               <CartItem
                 item={item}
                 index={index}
                 key={`cart_item_${index}`}
-                onAddClick={(index, element) =>
-                  update(index, { ...element, quantity: element.quantity + 1 })
-                }
-                onSubClick={(index, element) =>
-                  update(index, { ...element, quantity: element.quantity - 1 })
-                }
+                onAddClick={(index) => handleQuantityClick("ADD", index)}
+                onSubClick={(index) => handleQuantityClick("SUB", index)}
                 onRemoveClick={(index) => remove(index)}
               />
             ))}
@@ -237,11 +161,11 @@ function CartSummary({
             </span>
           </div>
 
-          {packaging && (
+          {shouldAddPackingCharge && (
             <div className="flex gap-2 justify-between align-middle items-center w-full">
-              <span>Packing Charge</span>
+              <span>Packaging</span>
               <span>
-                {Number(packaging).toLocaleString("en-IN", {
+                {Number(packagingCharge).toLocaleString("en-IN", {
                   style: "currency",
                   currency: "INR",
                 })}
@@ -249,11 +173,11 @@ function CartSummary({
             </div>
           )}
 
-          {delivering && (
+          {shouldAddDeliveryCharge && (
             <div className="flex gap-2 justify-between align-middle items-center w-full">
-              <span>Delivery Charge</span>
+              <span>Delivery</span>
               <span>
-                {Number(delivering).toLocaleString("en-IN", {
+                {Number(deliveryCharge).toLocaleString("en-IN", {
                   style: "currency",
                   currency: "INR",
                 })}
@@ -261,46 +185,22 @@ function CartSummary({
             </div>
           )}
 
-          {tax &&
-            tax.map(
-              (
-                e: {
-                  key: React.Key | null | undefined;
-                  name:
-                    | string
-                    | number
-                    | boolean
-                    | React.ReactElement<
-                        any,
-                        string | React.JSXElementConstructor<any>
-                      >
-                    | Iterable<React.ReactNode>
-                    | React.ReactPortal
-                    | React.PromiseLikeOfReactNode
-                    | null
-                    | undefined;
-                },
-                i: string | number
-              ) => (
-                <div
-                  className="flex gap-2 justify-between align-middle items-center w-full"
-                  key={e.key}
-                >
-                  <span>{e.name}</span>
-                  <span>
-                    {Number(taxValue[i]).toLocaleString("en-IN", {
-                      style: "currency",
-                      currency: "INR",
-                    })}
-                  </span>
-                </div>
-              )
-            )}
+          {chargesValue &&
+            chargesValue.map((e, i) => (
+              <div
+                className="flex gap-2 justify-between align-middle items-center w-full"
+                key={e.key}
+              >
+                <span>{e.name}</span>
+                <span>
+                  {Number(e.amount).toLocaleString("en-IN", {
+                    style: "currency",
+                    currency: "INR",
+                  })}
+                </span>
+              </div>
+            ))}
 
-          {/* <div className="flex gap-2 justify-between align-middle items-center w-full">
-            <span>Discount</span>
-            <span>₹ 0.00</span>
-          </div> */}
           <div className="flex gap-2 justify-between align-middle items-center w-full text-base text-foreground">
             <span>Grand Total</span>
             <span className="font-medium">
