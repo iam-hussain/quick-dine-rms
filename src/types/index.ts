@@ -42,3 +42,37 @@ export type CartFormType = {
   type: OrderType;
   items: CartItemType[];
 };
+
+type NumberType = "VALUE" | "PERCENTAGE";
+
+export type StoreAdditionalType = {
+  table: {
+    key: string;
+    name: string;
+    printName: string;
+    position: number;
+  }[];
+  tax: {
+    key: string;
+    name: string;
+    printName: string;
+    value: number;
+    position: number;
+    type: NumberType;
+  }[];
+  discounts: {
+    key: string;
+    name: string;
+    printName: string;
+    value: number;
+    type: NumberType;
+  }[];
+  packing: {
+    value: number;
+    type: NumberType;
+  };
+  delivery: {
+    value: number;
+    type: NumberType;
+  };
+};

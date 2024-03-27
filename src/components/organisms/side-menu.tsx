@@ -8,10 +8,9 @@ import UserBadge from "../molecules/user-badge";
 import { useMedia } from "react-use";
 import { motion } from "framer-motion";
 import clsx from "clsx";
-import instance from "@/lib/instance";
-import { useQuery } from "@tanstack/react-query";
 import { Separator } from "../atoms/separator";
 import { useEffect } from "react";
+import { useStoreStore } from "@/stores/storeSlice";
 
 type Menu = {
   icon: IconKey;
@@ -167,14 +166,9 @@ const decorator = {
 
 function SideMenu({ className }: { className?: string }) {
   const isSmallDevice = useMedia("(max-width: 767px)", false);
+  const store = useStoreStore((state) => state.store);
   const minimize = useActionStore((state) => state.isSideBarMinimized);
   const setMinimize = useActionStore((state) => state.setSideBarMinimize);
-  const { data, isLoading } = useQuery({
-    queryKey: ["store"],
-    queryFn: () => instance.get("/store") as any,
-    refetchOnMount: false,
-    refetchOnReconnect: true,
-  });
 
   useEffect(() => {
     if (minimize) {
@@ -281,11 +275,11 @@ function SideMenu({ className }: { className?: string }) {
           animate={"show"}
           variants={hideShow}
         >
-          {isLoading && <p>Loading</p>}
-          {!isLoading && (
+          {!store && <p>Loading</p>}
+          {store && (
             <div className={"text-center m-auto w-full px-4"}>
               <p className="text-md font-semibold pb-1 text-foreground/90">
-                {data?.name || ""}
+                {store?.name || ""}
               </p>
               <p className="text-xs text-foreground/90">
                 1234 NW Bobcat Lane, St. Robert, MO 65584-5678

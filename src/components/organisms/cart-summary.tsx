@@ -3,6 +3,7 @@ import { ScrollArea } from "@/components/atoms/scroll-area";
 import clsx from "clsx";
 import ButtonToolTip from "@/components/molecules/button-tooltip";
 import React, { useMemo } from "react";
+import { useStoreStore } from "@/stores/storeSlice";
 import {
   Control,
   Controller,
@@ -34,6 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select";
+import { percentage } from "@/lib/utils";
 
 function CartSummary({
   className,
@@ -52,18 +54,40 @@ function CartSummary({
   setValue: UseFormSetValue<CartFormType>;
   update: UseFieldArrayUpdate<CartFormType, "items">;
 }) {
+  const { discounts, tax, delivery, packing } = useStoreStore(
+    (state) => state.additional
+  );
+
   const subTotal = useMemo(() => {
     const priceList = fields.map((e) => e.quantity * e.price);
     return priceList.length ? priceList.reduce((a, b) => a + b) : 0;
   }, [fields]);
 
+  const packaging = useMemo(() => {
+    return packing.type === "PERCENTAGE"
+      ? percentage(packing.value, subTotal)
+      : Number(packing.value);
+  }, [packing.type, packing.value, subTotal]);
+
+  const delivering = useMemo(() => {
+    return delivery.type === "PERCENTAGE"
+      ? percentage(delivery.value, subTotal)
+      : Number(delivery.value);
+  }, [delivery.type, delivery.value, subTotal]);
+
+  const total = useMemo(() => {
+    return subTotal ? subTotal + packaging + delivering : subTotal;
+  }, [delivering, packaging, subTotal]);
+
   const taxValue = useMemo(() => {
-    return subTotal * 0.05;
-  }, [subTotal]);
+    return tax.map((e) =>
+      e.type === "PERCENTAGE" ? percentage(e.value, total) : Number(e.value)
+    );
+  }, [total, tax]);
 
   const grandTotal = useMemo(() => {
-    return subTotal + taxValue;
-  }, [subTotal, taxValue]);
+    return total + taxValue.reduce((a, b) => a + b);
+  }, [total, taxValue]);
 
   return (
     <div className={clsx("flex gap-2", className)}>
@@ -213,24 +237,46 @@ function CartSummary({
             </span>
           </div>
 
-          {/* <div className="flex gap-2 justify-between align-middle items-center w-full">
-            <span>Packing Charge</span>
-            <span>₹ 0.00</span>
-          </div>
+          {packaging && (
+            <div className="flex gap-2 justify-between align-middle items-center w-full">
+              <span>Packing Charge</span>
+              <span>
+                {Number(packaging).toLocaleString("en-IN", {
+                  style: "currency",
+                  currency: "INR",
+                })}
+              </span>
+            </div>
+          )}
 
-          <div className="flex gap-2 justify-between align-middle items-center w-full">
-            <span>Delivery Charge</span>
-            <span>₹ 0.00</span>
-          </div> */}
-          <div className="flex gap-2 justify-between align-middle items-center w-full">
-            <span>Tax</span>
-            <span>
-              {Number(taxValue).toLocaleString("en-IN", {
-                style: "currency",
-                currency: "INR",
-              })}
-            </span>
-          </div>
+          {delivering && (
+            <div className="flex gap-2 justify-between align-middle items-center w-full">
+              <span>Delivery Charge</span>
+              <span>
+                {Number(delivering).toLocaleString("en-IN", {
+                  style: "currency",
+                  currency: "INR",
+                })}
+              </span>
+            </div>
+          )}
+
+          {tax &&
+            tax.map((e, i) => (
+              <div
+                className="flex gap-2 justify-between align-middle items-center w-full"
+                key={e.key}
+              >
+                <span>{e.name}</span>
+                <span>
+                  {Number(taxValue[i]).toLocaleString("en-IN", {
+                    style: "currency",
+                    currency: "INR",
+                  })}
+                </span>
+              </div>
+            ))}
+
           {/* <div className="flex gap-2 justify-between align-middle items-center w-full">
             <span>Discount</span>
             <span>₹ 0.00</span>

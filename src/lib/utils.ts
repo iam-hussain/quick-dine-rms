@@ -40,3 +40,7 @@ export const zeroLastSortMethod = (
     return desc ? a + b : a - b;
   }
 };
+
+export function percentage(percent: number, total: number) {
+  return (percent / 100) * total;
+}

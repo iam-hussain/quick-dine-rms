@@ -1,12 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SideMenu from "@/components/organisms/side-menu";
 import TopMenu from "@/components/organisms/top-menu";
+import { useStoreStore } from "@/stores/storeSlice";
+import instance from "@/lib/instance";
+import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 
 export default function POS({ children }: { children: React.ReactNode }) {
   const [isTopBarHidden, setHideTopBar] = useState(false);
+  const setStoreData = useStoreStore((state) => state.setStoreData);
+
+  const { data } = useQuery({
+    queryKey: ["store"],
+    queryFn: () => instance.get("/store") as any,
+    refetchOnMount: false,
+    refetchOnReconnect: true,
+  });
+
+  useEffect(() => {
+    if (data) {
+      setStoreData(data);
+    }
+  }, [data, setStoreData]);
 
   return (
     <div className="main-wrapper">
