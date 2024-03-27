@@ -86,7 +86,7 @@ function CartSummary({
   }, [total, tax]);
 
   const grandTotal = useMemo(() => {
-    return total + taxValue.reduce((a, b) => a + b);
+    return total + taxValue.reduce((a, b) => a + b, 0);
   }, [total, taxValue]);
 
   return (
