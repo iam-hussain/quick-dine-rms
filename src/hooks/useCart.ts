@@ -48,30 +48,20 @@ function useCart({ control }: UseCartType) {
     if (!shouldAddPackingCharge && PACKING) {
       return 0;
     }
-    console.log({ PACKING });
-    return 10;
-    // return getChargesValue(PACKING.type, PACKING.rate, subTotal, items.length);
-  }, [shouldAddPackingCharge, PACKING]);
+    return getChargesValue(PACKING.type, PACKING.rate, subTotal, items.length);
+  }, [shouldAddPackingCharge, PACKING, subTotal, items.length]);
 
-  const deliveryCharge = 0;
-
-  // useMemo(() => {
-  //   if (!shouldAddDeliveryCharge) {
-  //     return 0;
-  //   }
-  //   return getChargesValue(
-  //     DELIVERY.type,
-  //     DELIVERY.rate,
-  //     subTotal,
-  //     items.length
-  //   );
-  // }, [
-  //   shouldAddDeliveryCharge,
-  //   DELIVERY.type,
-  //   DELIVERY.rate,
-  //   subTotal,
-  //   items.length,
-  // ]);
+  const deliveryCharge = useMemo(() => {
+    if (!shouldAddDeliveryCharge && DELIVERY) {
+      return 0;
+    }
+    return getChargesValue(
+      DELIVERY.type,
+      DELIVERY.rate,
+      subTotal,
+      items.length
+    );
+  }, [shouldAddDeliveryCharge, DELIVERY, subTotal, items.length]);
 
   const total = useMemo(() => {
     let value = subTotal;

@@ -282,14 +282,15 @@ function SideMenu({ className }: { className?: string }) {
                 {store?.name || ""}
               </p>
               <div>
-                {store.printDeck.map((e: string, i: number) => (
-                  <p
-                    className="text-xs text-foreground/90"
-                    key={`printDeck_${i}`}
-                  >
-                    {e}
-                  </p>
-                ))}
+                {store?.printDeck &&
+                  store?.printDeck?.map((e: string, i: number) => (
+                    <p
+                      className="text-xs text-foreground/90"
+                      key={`printDeck_${i}`}
+                    >
+                      {e}
+                    </p>
+                  ))}
               </div>
             </div>
           )}

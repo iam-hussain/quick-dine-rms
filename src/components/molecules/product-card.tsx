@@ -47,7 +47,7 @@ function ProductCard({ product, ...props }: ProductCardProps) {
       {!product?.image.primary?.value && (
         <div className="w-5/12 rounded-lg">
           <AspectRatio ratio={4 / 3} className="h-full">
-            <div className="rounded-md object-cover h-full w-full bg-accent">
+            <div className="flex justify-center align-middle items-center rounded-md object-cover h-full w-full bg-accent text-2xl font-bold">
               H
             </div>
           </AspectRatio>
