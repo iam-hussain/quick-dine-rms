@@ -26,7 +26,7 @@ function ProductList({
   });
 
   const handleOnClick = (product: ProductAPI) => {
-    const index = items.findIndex((e) => e.productId === product.shortId);
+    const index = items.findIndex((e) => e.productId === product.id);
     if (index >= 0) {
       update(index, { ...items[index], quantity: items[index].quantity + 1 });
     } else {
@@ -35,7 +35,7 @@ function ProductList({
         title: product.name,
         note: "",
         quantity: 1,
-        productId: product.shortId,
+        productId: product.id,
       });
     }
   };

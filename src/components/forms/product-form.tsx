@@ -33,7 +33,7 @@ type ProductFormProps = {
     }
   >;
   onSuccess?: () => void;
-  categories?: { id: string; shortId: string; name: string }[];
+  categories?: { id: string; id: string; name: string }[];
 };
 
 function ProductForm({
@@ -69,12 +69,10 @@ function ProductForm({
       });
       if (id) {
         toast.success(
-          `Product ID ${data.shortId} has been successfully updated! 🚀`
+          `Product ID ${data.id} has been successfully updated! 🚀`
         );
       } else {
-        toast.success(
-          `A new product with ID ${data.shortId} has been created! 🌟`
-        );
+        toast.success(`A new product with ID ${data.id} has been created! 🌟`);
       }
     },
     onError: (err) => {
@@ -186,7 +184,7 @@ function ProductForm({
                   <SelectGroup>
                     <SelectLabel>Category</SelectLabel>
                     {categories?.map((e) => (
-                      <SelectItem key={e.id} value={e.shortId}>
+                      <SelectItem key={e.id} value={e.id}>
                         {e.name}
                       </SelectItem>
                     ))}

@@ -20,7 +20,6 @@ export interface ProductAPI {
   categoryId: string;
   image: {
     primary: {
-      shortId: string;
       caption: string;
       altText: string;
       value: string;

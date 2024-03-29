@@ -31,9 +31,9 @@ const columns: ColumnDef<any>[] = [
     size: 100,
     minSize: 100,
     maxSize: 100,
-    accessorKey: "shortId",
+    accessorKey: "id",
     header: () => <div className="text-left">ID</div>,
-    cell: ({ row }) => <div className="">{row.getValue("shortId")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("id")}</div>,
   },
   {
     size: 250,

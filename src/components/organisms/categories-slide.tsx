@@ -12,7 +12,7 @@ export function CategoriesSlide({
   selected,
 }: {
   className?: string;
-  categories: { name: string; shortId: string }[];
+  categories: { name: string; id: string }[];
   onItemClick: (e: any) => void;
   selected: string;
 }) {
@@ -36,7 +36,7 @@ export function CategoriesSlide({
             key={`cat_${index}`}
             {...category}
             onClick={() => onItemClick(category)}
-            active={selected === category.shortId}
+            active={selected === category.id}
           />
         ))}
       </Container>

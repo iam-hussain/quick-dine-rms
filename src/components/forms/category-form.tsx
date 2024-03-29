@@ -59,12 +59,10 @@ function CategoryForm({
       });
       if (id) {
         toast.success(
-          `Category ID ${data.shortId} has been successfully updated! 🚀`
+          `Category ID ${data.id} has been successfully updated! 🚀`
         );
       } else {
-        toast.success(
-          `A new category with ID ${data.shortId} has been created! 🌟`
-        );
+        toast.success(`A new category with ID ${data.id} has been created! 🌟`);
       }
     },
     onError: (err) => {

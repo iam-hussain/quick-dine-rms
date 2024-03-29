@@ -82,12 +82,10 @@ export default function Dashboard() {
       size: 155,
       minSize: 155,
       maxSize: 155,
-      accessorKey: "shortId",
+      accessorKey: "id",
       header: () => <div className="text-left">ID</div>,
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-left">
-          {row.getValue("shortId")}
-        </div>
+        <div className="text-foreground/70 text-left">{row.getValue("id")}</div>
       ),
     },
     {
@@ -294,7 +292,7 @@ export default function Dashboard() {
               className="p-1 px-1 py-1"
               onClick={() => {
                 setValue({
-                  id: row.getValue("shortId"),
+                  id: row.getValue("id"),
                   name: row.getValue("name") || "",
                   deck: row.getValue("deck") || "",
                   price: row.getValue("price") || 0,
@@ -313,7 +311,7 @@ export default function Dashboard() {
               className="p-1"
               onClick={() => {
                 setValue({
-                  id: row.getValue("shortId"),
+                  id: row.getValue("id"),
                   name: row.getValue("name") || "",
                   deck: row.getValue("deck") || "",
                   price: row.getValue("price") || 0,
