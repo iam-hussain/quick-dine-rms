@@ -26,31 +26,41 @@ function ProductCard({ product, ...props }: ProductCardProps) {
       className={clsx(
         "flex flex-row h-full w-full align-middle items-center rounded-lg p-3 bg-background cursor-pointer text-center select-none gap-2 border border-accent ",
         {
-          "justify-center": !product?.image.primary?.id,
-          "justify-start": product?.image.primary?.id,
+          "justify-center": !product?.image.primary?.value,
+          "justify-start": product?.image.primary?.value,
         }
       )}
       {...props}
     >
-      {product?.image.primary?.id && (
+      {product?.image.primary?.value && (
         <div className="w-5/12 rounded-lg">
           <AspectRatio ratio={4 / 3} className="h-full">
             <Image
-              src={product?.image.primary?.content}
-              alt={product?.image.primary?.altText}
+              src={product?.image.primary?.value}
+              alt={product?.image.primary?.value}
               fill
               className="rounded-md object-cover"
             />
           </AspectRatio>
         </div>
       )}
+      {!product?.image.primary?.value && (
+        <div className="w-5/12 rounded-lg">
+          <AspectRatio ratio={4 / 3} className="h-full">
+            <div className="rounded-md object-cover h-full w-full bg-accent">
+              H
+            </div>
+          </AspectRatio>
+        </div>
+      )}
+
       <div
         className={clsx("flex-col", {
-          "text-left w-7/12": product?.image.primary?.id,
-          "text-center w-auto": !product?.image.primary?.id,
+          "text-left w-7/12": product?.image.primary?.value,
+          "text-center w-full": !product?.image.primary?.value,
         })}
       >
-        <h5 className="text-sm md:text-base truncate overflow-hidden font-semibold text-foreground text-one-line">
+        <h5 className="text-sm md:text-base break-words font-semibold text-foreground text-one-line">
           {product?.name || ""}
         </h5>
         {product?.deck && (

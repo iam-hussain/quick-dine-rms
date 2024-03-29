@@ -4,7 +4,7 @@ import { devtools, persist } from "zustand/middleware";
 
 interface ActionState {
   store: any;
-  additional: StoreAdditionalType;
+  settings: StoreAdditionalType;
   tags: any[];
   products: any[];
   categories: any[];
@@ -17,18 +17,33 @@ export const useStoreStore = create<ActionState>()(
     persist(
       (set) => ({
         store: {},
-        additional: {
-          table: [],
-          tax: [],
-          discounts: [],
-          delivery: { value: 0, type: "VALUE" },
-          packing: { value: 0, type: "VALUE" },
+        settings: {
+          tables: [],
+          fees: {
+            PACKING: {
+              key: "PACKING",
+              name: "PACKING",
+              rate: 0,
+              type: "VALUE",
+              position: 1,
+              printName: "Packing",
+            },
+            DELIVERY: {
+              key: "DELIVERY",
+              name: "DELIVERY",
+              rate: 35,
+              type: "VALUE",
+              position: 2,
+              printName: "Delivery",
+            },
+          },
+          taxes: [],
         },
         tags: [],
         products: [],
         categories: [],
-        setStoreData: ({ additional, ...store }) =>
-          set((e) => ({ ...e, store, additional })),
+        setStoreData: ({ tables, fees, taxes, ...store }) =>
+          set((e) => ({ ...e, store, settings: { tables, fees, taxes } })),
         setTagsData: (tags) => set((e) => ({ ...e, tags })),
       }),
       {

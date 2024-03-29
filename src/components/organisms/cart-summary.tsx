@@ -42,7 +42,7 @@ function CartSummary({
     deliveryCharge,
     packagingCharge,
     items,
-    chargesValue,
+    taxesValue,
     grandTotal,
   } = useCart({ control });
 
@@ -185,21 +185,23 @@ function CartSummary({
             </div>
           )}
 
-          {chargesValue &&
-            chargesValue.map((e, i) => (
-              <div
-                className="flex gap-2 justify-between align-middle items-center w-full"
-                key={e.key}
-              >
-                <span>{e.name}</span>
-                <span>
-                  {Number(e.amount).toLocaleString("en-IN", {
-                    style: "currency",
-                    currency: "INR",
-                  })}
-                </span>
-              </div>
-            ))}
+          {taxesValue &&
+            taxesValue.map(
+              (e: { key: string; name: string; amount: any }, i: any) => (
+                <div
+                  className="flex gap-2 justify-between align-middle items-center w-full"
+                  key={e.key}
+                >
+                  <span>{e.name}</span>
+                  <span>
+                    {Number(e.amount).toLocaleString("en-IN", {
+                      style: "currency",
+                      currency: "INR",
+                    })}
+                  </span>
+                </div>
+              )
+            )}
 
           <div className="flex gap-2 justify-between align-middle items-center w-full text-base text-foreground">
             <span>Grand Total</span>

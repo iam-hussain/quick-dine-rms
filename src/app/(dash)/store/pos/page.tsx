@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import schemas, { CartSchemaValues, OrderType } from "@/validations";
 import { Form } from "@/components/atoms/form";
 import { useEffect, useState } from "react";
+import { isValidArray } from "@/lib/utils";
 
 export default function POS() {
   const [selectedCat, setSelectedCat] = useState("");
@@ -29,11 +30,7 @@ export default function POS() {
   });
 
   useEffect(() => {
-    if (
-      categoriesData &&
-      Array.isArray(categoriesData) &&
-      categoriesData.length
-    ) {
+    if (categoriesData && isValidArray(categoriesData)) {
       setCategories(
         categoriesData.filter((e) => Boolean(e.productsConnected)) as any
       );
@@ -41,13 +38,13 @@ export default function POS() {
   }, [categoriesData]);
 
   useEffect(() => {
-    if (productsData && Array.isArray(productsData) && productsData.length) {
+    if (isValidArray(productsData)) {
       setProducts(productsData as any);
     }
   }, [productsData]);
 
   useEffect(() => {
-    if (productsData && Array.isArray(productsData) && productsData.length) {
+    if (productsData && isValidArray(productsData)) {
       if (selectedCat) {
         setProducts(productsData.filter((e) => e.categoryId === selectedCat));
       } else {
@@ -94,7 +91,7 @@ export default function POS() {
           onSubmit={handleSubmit((data) => console.log(data))}
         >
           <CartSummary
-            className="flex flex-col gap-1 w-full  h-full py-4 md:py-2 px-1 bg-background"
+            className="flex flex-col gap-1 w-full h-full py-4 md:py-2 px-1 bg-background"
             control={control}
           />
         </form>

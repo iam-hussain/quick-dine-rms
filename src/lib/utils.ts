@@ -65,3 +65,7 @@ export function getChargesValue(
 
   return 0;
 }
+
+export function isValidArray(input: any) {
+  return input && Array.isArray(input) && input.length;
+}

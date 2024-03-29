@@ -281,9 +281,16 @@ function SideMenu({ className }: { className?: string }) {
               <p className="text-md font-semibold pb-1 text-foreground/90">
                 {store?.name || ""}
               </p>
-              <p className="text-xs text-foreground/90">
-                1234 NW Bobcat Lane, St. Robert, MO 65584-5678
-              </p>
+              <div>
+                {store.printDeck.map((e: string, i: number) => (
+                  <p
+                    className="text-xs text-foreground/90"
+                    key={`printDeck_${i}`}
+                  >
+                    {e}
+                  </p>
+                ))}
+              </div>
             </div>
           )}
 

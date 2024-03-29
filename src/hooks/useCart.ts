@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useStoreStore } from "@/stores/storeSlice";
 import { Control, useWatch } from "react-hook-form";
 import { CartFormType, StoreAdditionalType } from "@/types";
@@ -10,8 +10,11 @@ type UseCartType = {
 };
 
 function useCart({ control }: UseCartType) {
-  const { tax, delivery, packing } = useStoreStore(
-    (state: { additional: StoreAdditionalType }) => state.additional
+  const {
+    taxes,
+    fees: { DELIVERY, PACKING },
+  } = useStoreStore(
+    (state: { settings: StoreAdditionalType }) => state.settings
   );
 
   const items = useWatch({
@@ -42,35 +45,33 @@ function useCart({ control }: UseCartType) {
   }, [items]);
 
   const packagingCharge = useMemo(() => {
-    if (!shouldAddPackingCharge) {
+    if (!shouldAddPackingCharge && PACKING) {
       return 0;
     }
-    return getChargesValue(packing.type, packing.value, subTotal, items.length);
-  }, [
-    subTotal,
-    items.length,
-    packing.type,
-    packing.value,
-    shouldAddPackingCharge,
-  ]);
+    console.log({ PACKING });
+    return 10;
+    // return getChargesValue(PACKING.type, PACKING.rate, subTotal, items.length);
+  }, [shouldAddPackingCharge, PACKING]);
 
-  const deliveryCharge = useMemo(() => {
-    if (!shouldAddDeliveryCharge) {
-      return 0;
-    }
-    return getChargesValue(
-      delivery.type,
-      delivery.value,
-      subTotal,
-      items.length
-    );
-  }, [
-    shouldAddDeliveryCharge,
-    delivery.type,
-    delivery.value,
-    subTotal,
-    items.length,
-  ]);
+  const deliveryCharge = 0;
+
+  // useMemo(() => {
+  //   if (!shouldAddDeliveryCharge) {
+  //     return 0;
+  //   }
+  //   return getChargesValue(
+  //     DELIVERY.type,
+  //     DELIVERY.rate,
+  //     subTotal,
+  //     items.length
+  //   );
+  // }, [
+  //   shouldAddDeliveryCharge,
+  //   DELIVERY.type,
+  //   DELIVERY.rate,
+  //   subTotal,
+  //   items.length,
+  // ]);
 
   const total = useMemo(() => {
     let value = subTotal;
@@ -92,16 +93,16 @@ function useCart({ control }: UseCartType) {
     subTotal,
   ]);
 
-  const chargesValue = useMemo(() => {
-    return tax.map((e) => ({
+  const taxesValue = useMemo(() => {
+    return taxes.map((e) => ({
       ...e,
-      amount: getChargesValue(e.type, e.value, subTotal, items.length),
+      amount: getChargesValue(e.type, e.rate, subTotal, items.length),
     }));
-  }, [tax, subTotal, items.length]);
+  }, [taxes, subTotal, items.length]);
 
   const grandTotal = useMemo(() => {
-    return total + chargesValue.reduce((a, b) => a + b.amount, 0);
-  }, [total, chargesValue]);
+    return total + taxesValue.reduce((a, b) => a + b.amount, 0);
+  }, [total, taxesValue]);
 
   return {
     shouldAddPackingCharge,
@@ -112,7 +113,7 @@ function useCart({ control }: UseCartType) {
     type,
     items,
     total,
-    chargesValue,
+    taxesValue,
     grandTotal,
   };
 }

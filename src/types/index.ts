@@ -20,11 +20,10 @@ export interface ProductAPI {
   categoryId: string;
   image: {
     primary: {
-      id: string;
       shortId: string;
       caption: string;
       altText: string;
-      content: string;
+      value: string;
       type: string;
     } | null;
   };
@@ -46,33 +45,36 @@ export type CartFormType = {
 export type ChargesType = "VALUE" | "PERCENTAGE" | "VALUE_COUNT";
 
 export type StoreAdditionalType = {
-  table: {
+  tables: {
     key: string;
     name: string;
     printName: string;
     position: number;
   }[];
-  tax: {
+  taxes: {
     key: string;
     name: string;
     printName: string;
-    value: number;
+    rate: number;
     position: number;
     type: ChargesType;
   }[];
-  discounts: {
-    key: string;
-    name: string;
-    printName: string;
-    value: number;
-    type: ChargesType;
-  }[];
-  packing: {
-    value: number;
-    type: ChargesType;
-  };
-  delivery: {
-    value: number;
-    type: ChargesType;
+  fees: {
+    DELIVERY: {
+      key: string;
+      name: string;
+      printName: string;
+      rate: number;
+      position: number;
+      type: ChargesType;
+    };
+    PACKING: {
+      key: string;
+      name: string;
+      printName: string;
+      rate: number;
+      position: number;
+      type: ChargesType;
+    };
   };
 };
