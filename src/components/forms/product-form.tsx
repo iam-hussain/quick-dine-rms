@@ -33,7 +33,7 @@ type ProductFormProps = {
     }
   >;
   onSuccess?: () => void;
-  categories?: { id: string; id: string; name: string }[];
+  categories?: { id: string; name: string }[];
 };
 
 function ProductForm({
