@@ -57,6 +57,7 @@
     "jsonwebtoken": "^9.0.2",
     "next": "14.0.3",
     "next-themes": "^0.2.1",
+    "qd-app-copilot": "^1.0.15",
     "react": "^18",
     "react-dom": "^18",
     "react-full-screen": "^1.1.1",

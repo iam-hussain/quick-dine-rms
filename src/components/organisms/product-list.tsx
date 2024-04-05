@@ -3,8 +3,9 @@ import { ScrollArea, ScrollBar } from "@/components/atoms/scroll-area";
 import ProductCard from "@/components/molecules/product-card";
 import { Container } from "@/components/atoms/container";
 import clsx from "clsx";
-import { CartFormType, CartItemType, ProductAPI } from "@/types";
+import { ProductAPI } from "@/types";
 import { Control, useFieldArray, useWatch } from "react-hook-form";
+import { CartSchemaValues } from "@/validations";
 
 function ProductList({
   className,
@@ -13,7 +14,7 @@ function ProductList({
 }: {
   className?: string;
   products: ProductAPI[];
-  control: Control<CartFormType, any, CartFormType>;
+  control: Control<CartSchemaValues, any, CartSchemaValues>;
 }) {
   const { append, update } = useFieldArray({
     control,
@@ -35,7 +36,9 @@ function ProductList({
         title: product.name,
         note: "",
         quantity: 1,
+        position: items.length + 1,
         productId: product.id,
+        type: product.type,
       });
     }
   };

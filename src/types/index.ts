@@ -1,10 +1,32 @@
-enum OrderType {
+export enum PRODUCT_TYPE {
+  NON_VEG = "NON_VEG",
+  VEG = "VEG",
+  VEGAN = "VEGAN",
+}
+
+export enum ORDER_TYPE {
   PRE_DINING = "PRE_DINING",
   DINING = "DINING",
   TAKE_AWAY = "TAKE_AWAY",
   PICK_UP = "PICK_UP",
   DELIVERY = "DELIVERY",
   PLATFORM = "PLATFORM",
+}
+
+export enum ORDER_STATUS {
+  DRAFT = "DRAFT",
+  PLACED = "PLACED",
+  ACCEPTED = "ACCEPTED",
+  PROGRESS = "PROGRESS",
+  READY = "READY",
+  OUT_FOR_DELIVERY = "OUT_FOR_DELIVERY",
+  COMPLETED = "COMPLETED",
+}
+
+export enum CALC_VALUE_TYPE {
+  VALUE = "VALUE",
+  PERCENTAGE = "PERCENTAGE",
+  VALUE_COUNT = "VALUE_COUNT",
 }
 
 export interface ProductAPI {
@@ -15,7 +37,7 @@ export interface ProductAPI {
   price: number;
   formattedPrice: string;
   foodType: string;
-  type: string;
+  type: PRODUCT_TYPE;
   categoryName: string;
   categoryId: string;
   image: {
@@ -27,19 +49,6 @@ export interface ProductAPI {
     } | null;
   };
 }
-
-export type CartItemType = {
-  price: number;
-  title: string;
-  note: string;
-  quantity: number;
-  productId: string;
-};
-
-export type CartFormType = {
-  type: OrderType;
-  items: CartItemType[];
-};
 
 export type ChargesType = "VALUE" | "PERCENTAGE" | "VALUE_COUNT";
 
@@ -56,7 +65,7 @@ export type StoreAdditionalType = {
     printName: string;
     rate: number;
     position: number;
-    type: ChargesType;
+    type: CALC_VALUE_TYPE;
   }[];
   fees: {
     DELIVERY: {
@@ -65,7 +74,7 @@ export type StoreAdditionalType = {
       printName: string;
       rate: number;
       position: number;
-      type: ChargesType;
+      type: CALC_VALUE_TYPE;
     };
     PACKING: {
       key: string;
@@ -73,7 +82,7 @@ export type StoreAdditionalType = {
       printName: string;
       rate: number;
       position: number;
-      type: ChargesType;
+      type: CALC_VALUE_TYPE;
     };
   };
 };

@@ -15,7 +15,6 @@ import {
 } from "react-hook-form";
 import CartItem from "@/components/molecules/cart-item";
 import { Separator } from "@/components/atoms/separator";
-import { CartFormType } from "@/types";
 import { FormField, FormItem, FormMessage } from "@/components/atoms/form";
 import {
   Select,
@@ -27,13 +26,14 @@ import {
   SelectValue,
 } from "@/components/atoms/select";
 import useCart from "@/hooks/useCart";
+import { CartSchemaValues } from "@/validations";
 
 function CartSummary({
   className,
   control,
 }: {
   className?: string;
-  control: Control<CartFormType, any, CartFormType>;
+  control: Control<CartSchemaValues, any, CartSchemaValues>;
 }) {
   const {
     shouldAddPackingCharge,

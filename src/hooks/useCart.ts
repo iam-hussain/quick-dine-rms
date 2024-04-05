@@ -1,12 +1,12 @@
 import { useEffect, useMemo } from "react";
 import { useStoreStore } from "@/stores/storeSlice";
 import { Control, useWatch } from "react-hook-form";
-import { CartFormType, StoreAdditionalType } from "@/types";
+import { StoreAdditionalType } from "@/types";
 import { getChargesValue } from "@/lib/utils";
-import { OrderType } from "@/validations";
+import { CartSchemaValues, ORDER_TYPE } from "@/validations";
 
 type UseCartType = {
-  control: Control<CartFormType, any, CartFormType>;
+  control: Control<CartSchemaValues, any, CartSchemaValues>;
 };
 
 function useCart({ control }: UseCartType) {
@@ -26,16 +26,16 @@ function useCart({ control }: UseCartType) {
   const type = useWatch({
     control,
     name: "type",
-    defaultValue: OrderType.PICK_UP,
+    defaultValue: ORDER_TYPE.PICK_UP as any,
   });
 
-  const shouldAddPackingCharge = [
-    OrderType.DELIVERY,
-    OrderType.PLATFORM,
-    OrderType.TAKE_AWAY,
-  ].includes(type);
+  const shouldAddPackingCharge =
+    type &&
+    [ORDER_TYPE.DELIVERY, ORDER_TYPE.PLATFORM, ORDER_TYPE.TAKE_AWAY].includes(
+      type
+    );
 
-  const shouldAddDeliveryCharge = type === OrderType.DELIVERY;
+  const shouldAddDeliveryCharge = type === ORDER_TYPE.DELIVERY;
 
   const subTotal = useMemo(() => {
     if (!items.length) {
