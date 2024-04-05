@@ -1,20 +1,13 @@
 import React from "react";
 import Icon from "@/components/atoms/icon";
 import { Button } from "@/components/atoms/button";
-
-type Item = {
-  price: number;
-  title: string;
-  note: string;
-  quantity: number;
-  productId: string;
-};
+import { CartItemSchemaValues } from "@/validations";
 
 type CartItemProps = {
   index: number;
-  item: Item;
-  onAddClick: (i: number, item: Item) => void;
-  onSubClick: (i: number, item: Item) => void;
+  item: CartItemSchemaValues;
+  onAddClick: (i: number) => void;
+  onSubClick: (i: number) => void;
   onRemoveClick: (i: number) => void;
 };
 
@@ -44,7 +37,7 @@ function CartItem({
           className="p-2 rounded-none rounded-tl-lg rounded-bl-lg"
           variant={"default"}
           disabled={item.quantity === 1}
-          onClick={() => onSubClick(index, item)}
+          onClick={() => onSubClick(index)}
         >
           <Icon name="RiSubtractFill" />
         </Button>
@@ -55,7 +48,7 @@ function CartItem({
           className="p-2 rounded-none rounded-tr-lg rounded-br-lg shadow-none"
           variant={"default"}
           disabled={item.quantity > 10000}
-          onClick={() => onAddClick(index, item)}
+          onClick={() => onAddClick(index)}
         >
           <Icon name="IoMdAdd" />
         </Button>

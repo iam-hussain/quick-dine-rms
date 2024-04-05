@@ -1,7 +1,7 @@
 import * as z from "zod";
 import messages from "./messages";
 
-export const number = (options?: { min?: number; max?: number }) => {
+export const number = (options?: { min?: number; max?: number }): any => {
   let numberSchema = z.number({
     required_error: messages.required,
   });

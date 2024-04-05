@@ -3,16 +3,7 @@ import { ScrollArea } from "@/components/atoms/scroll-area";
 import clsx from "clsx";
 import ButtonToolTip from "@/components/molecules/button-tooltip";
 import React from "react";
-import { useStoreStore } from "@/stores/storeSlice";
-import {
-  Control,
-  useFieldArray,
-  FieldArrayWithId,
-  UseFieldArrayRemove,
-  UseFieldArrayUpdate,
-  UseFormRegister,
-  UseFormSetValue,
-} from "react-hook-form";
+import { Control, useFieldArray } from "react-hook-form";
 import CartItem from "@/components/molecules/cart-item";
 import { Separator } from "@/components/atoms/separator";
 import { FormField, FormItem, FormMessage } from "@/components/atoms/form";
@@ -231,7 +222,9 @@ function CartSummary({
             variant={"outline"}
           />
 
-          <Button className="w-full col-span-2">Complete Order</Button>
+          <Button className="w-full col-span-2" type="submit">
+            Complete Order
+          </Button>
         </div>
       </div>
     </div>

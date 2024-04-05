@@ -9,15 +9,20 @@ import instance from "@/lib/instance";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/atoms/button";
 import { useForm } from "react-hook-form";
-import schemas, { CartSchemaValues, OrderType } from "@/validations";
+import schemas, { CartSchemaValues, ORDER_TYPE } from "@/validations";
 import { Form } from "@/components/atoms/form";
 import { useEffect, useState } from "react";
 import { isValidArray } from "@/lib/utils";
+import { useStoreStore } from "@/stores/storeSlice";
+import { StoreAdditionalType } from "@/types";
 
 export default function POS() {
   const [selectedCat, setSelectedCat] = useState("");
   const [categories, setCategories] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
+  const { taxes } = useStoreStore(
+    (state: { settings: StoreAdditionalType }) => state.settings
+  );
 
   const { data: categoriesData } = useQuery({
     queryKey: ["categories"],
@@ -54,7 +59,11 @@ export default function POS() {
   }, [productsData, selectedCat]);
 
   const defaultValues: Partial<CartSchemaValues> = {
-    type: OrderType.PICK_UP,
+    type: ORDER_TYPE.PICK_UP,
+    items: [],
+    fees: [],
+    table: [],
+    taxes: taxes,
   };
 
   const form = useForm<CartSchemaValues>({
@@ -63,7 +72,18 @@ export default function POS() {
     mode: "onSubmit",
   });
 
-  const { control, handleSubmit } = form;
+  const {
+    control,
+    formState: { errors },
+  } = form;
+
+  useEffect(() => {
+    console.log({ errors });
+  }, [errors]);
+
+  async function onSubmit(variables: CartSchemaValues) {
+    console.log({ variables });
+  }
 
   return (
     <div className="flex md:flex-row flex-col w-full h-full">
@@ -88,7 +108,7 @@ export default function POS() {
       <Form {...form}>
         <form
           className="flex md:flex-row flex-col md:w-4/12 w-full h-full"
-          onSubmit={handleSubmit((data) => console.log(data))}
+          onSubmit={form.handleSubmit(onSubmit)}
         >
           <CartSummary
             className="flex flex-col gap-1 w-full h-full py-4 md:py-2 px-1 bg-background"

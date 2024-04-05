@@ -37,7 +37,6 @@ function TagForm({}: TagFormProps) {
   const mutation = useMutation({
     mutationFn: (variables) => instance.post("/store/a-canteen/tag", variables),
     onSuccess: async (data: any) => {
-      console.log({ data });
       await queryClient.invalidateQueries({ queryKey: ["tags"] });
       form.reset({
         name: "",
@@ -56,7 +55,6 @@ function TagForm({}: TagFormProps) {
   });
 
   async function onSubmit(variables: CategorySchemaValues) {
-    console.log({ variables });
     return await mutation.mutateAsync(variables as any);
   }
 
