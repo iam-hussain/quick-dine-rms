@@ -106,7 +106,7 @@ const schemas = {
     completedAt: optionalDate,
     deliveredAt: optionalDate,
     fees: z.array(fees),
-    table: z.array(table),
+    table: table.optional(),
     taxes: z.array(taxes),
   }),
   cartItem,

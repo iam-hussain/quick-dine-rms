@@ -20,7 +20,7 @@ export default function POS() {
   const [selectedCat, setSelectedCat] = useState("");
   const [categories, setCategories] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
-  const { taxes } = useStoreStore(
+  const { taxes, fees } = useStoreStore(
     (state: { settings: StoreAdditionalType }) => state.settings
   );
 
@@ -62,7 +62,6 @@ export default function POS() {
     type: ORDER_TYPE.PICK_UP,
     items: [],
     fees: [],
-    table: [],
     taxes: taxes,
   };
 
@@ -74,6 +73,7 @@ export default function POS() {
 
   const {
     control,
+    setValue,
     formState: { errors },
   } = form;
 
@@ -84,6 +84,10 @@ export default function POS() {
   async function onSubmit(variables: CartSchemaValues) {
     console.log({ variables });
   }
+
+  const setTable = (table: any) => {
+    setValue("table", table);
+  };
 
   return (
     <div className="flex md:flex-row flex-col w-full h-full">

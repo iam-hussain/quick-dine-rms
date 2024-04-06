@@ -4,15 +4,17 @@ import { useEffect, useState } from "react";
 import SideMenu from "@/components/organisms/side-menu";
 import TopMenu from "@/components/organisms/top-menu";
 import { useStoreStore } from "@/stores/storeSlice";
+import { Skeleton } from "@/components/atoms/skeleton";
 import instance from "@/lib/instance";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
+import { cookieNames, deleteCookie } from "@/lib/cookies";
 
 export default function POS({ children }: { children: React.ReactNode }) {
   const [isTopBarHidden, setHideTopBar] = useState(false);
   const setStoreData = useStoreStore((state) => state.setStoreData);
 
-  const { data } = useQuery({
+  const { data, isLoading, isError, isSuccess } = useQuery({
     queryKey: ["store"],
     queryFn: () => instance.get("/store") as any,
     refetchOnMount: false,
@@ -24,6 +26,23 @@ export default function POS({ children }: { children: React.ReactNode }) {
       setStoreData(data);
     }
   }, [data, setStoreData]);
+
+  if (isError) {
+    deleteCookie(cookieNames.access_token);
+    window.location.href = "/";
+  }
+
+  if (isLoading || !isSuccess) {
+    return (
+      <div className="flex flex-col space-y-3">
+        <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="main-wrapper">
