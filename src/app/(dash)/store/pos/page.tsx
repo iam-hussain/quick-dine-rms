@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { isValidArray } from "@/lib/utils";
 import { useStoreStore } from "@/stores/storeSlice";
 import { StoreAdditionalType } from "@/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function POS() {
   const [selectedCat, setSelectedCat] = useState("");
@@ -73,7 +74,6 @@ export default function POS() {
 
   const {
     control,
-    setValue,
     formState: { errors },
   } = form;
 
@@ -81,8 +81,25 @@ export default function POS() {
     console.log({ errors });
   }, [errors]);
 
+  const mutation = useMutation({
+    mutationFn: (variables) => instance.post("/store/order", variables),
+    onSuccess: async (data: any) => {
+      // await queryClient.invalidateQueries({ queryKey: ["products"] });
+      // if (id) {
+      //   toast.success(
+      //     `Product ID ${data.id} has been successfully updated! 🚀`
+      //   );
+      // } else {
+      //   toast.success(`A new product with ID ${data.id} has been created! 🌟`);
+      // }
+      console.log({ data });
+    },
+    onError: console.error,
+  });
+
   async function onSubmit(variables: CartSchemaValues) {
     console.log({ variables });
+    return await mutation.mutateAsync(variables as any);
   }
 
   return (

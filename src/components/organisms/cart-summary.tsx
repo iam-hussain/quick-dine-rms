@@ -33,6 +33,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/atoms/dialog";
+import Icon from "@/components/atoms/icon";
 import { StoreAdditionalType } from "@/types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/atoms/toggle-group";
 
@@ -135,12 +136,18 @@ function CartSummary({
 
             <Dialog open={openTable} onOpenChange={setOpenTable}>
               <DialogTrigger asChild>
-                <ButtonToolTip
-                  label="Select Table"
-                  icon="MdTableRestaurant"
+                <Button
                   variant={table?.key ? "accent" : "outline"}
-                  swapText={table?.name}
-                />
+                  className={clsx(
+                    "flex justify-center gap-2 font-normal text-lg"
+                  )}
+                >
+                  {table?.name ? (
+                    <p className="font-bold text-base">{table?.name}</p>
+                  ) : (
+                    <Icon name={"MdTableRestaurant"} className="h-5 w-5" />
+                  )}
+                </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

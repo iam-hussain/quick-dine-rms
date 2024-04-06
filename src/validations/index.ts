@@ -108,8 +108,8 @@ const schemas = {
     fees: z.array(fees),
     table: z
       .object({
-        key,
-        name,
+        key: string({ length: "2-40" }).optional(),
+        name: string({ length: "2-40" }).optional(),
         printName,
         position: position.optional(),
       })
