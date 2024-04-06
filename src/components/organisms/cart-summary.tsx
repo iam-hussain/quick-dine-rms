@@ -62,7 +62,7 @@ function CartSummary({
   const table = useWatch({
     control,
     name: "table",
-    defaultValue: {},
+    defaultValue: undefined,
   });
 
   const {
@@ -138,7 +138,7 @@ function CartSummary({
                 <ButtonToolTip
                   label="Select Table"
                   icon="MdTableRestaurant"
-                  variant={"accent"}
+                  variant={table?.key ? "accent" : "outline"}
                   swapText={table?.name}
                 />
               </DialogTrigger>
@@ -150,7 +150,7 @@ function CartSummary({
                   <ToggleGroup
                     type="single"
                     variant="outline"
-                    className="flex items-center gap-4 justify-center"
+                    className="flex items-center gap-4 justify-center flex-wrap"
                     value={table?.key || ""}
                   >
                     <ToggleGroupItem
@@ -162,7 +162,7 @@ function CartSummary({
                         setOpenTable(false);
                       }}
                     >
-                      <div>None</div>
+                      <div>--</div>
                     </ToggleGroupItem>
                     {tables.map((e, i) => (
                       <ToggleGroupItem

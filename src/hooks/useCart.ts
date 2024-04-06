@@ -105,7 +105,7 @@ function useCart({ control }: UseCartType) {
 
   const packagingCharge = useMemo(() => {
     const packing = fees[packagingIndex];
-    if (packagingIndex >= 0 || !packing) {
+    if (packagingIndex < 0 || !packing) {
       return 0;
     }
     return getChargesValue(
@@ -118,7 +118,7 @@ function useCart({ control }: UseCartType) {
 
   const deliveryCharge = useMemo(() => {
     const delivery = fees[deliveryIndex];
-    if (deliveryIndex || !delivery) {
+    if (deliveryIndex < 0 || !delivery) {
       return 0;
     }
     return getChargesValue(

@@ -85,10 +85,6 @@ export default function POS() {
     console.log({ variables });
   }
 
-  const setTable = (table: any) => {
-    setValue("table", table);
-  };
-
   return (
     <div className="flex md:flex-row flex-col w-full h-full">
       <div className="flex flex-col md:w-8/12 w-full h-full py-4">
