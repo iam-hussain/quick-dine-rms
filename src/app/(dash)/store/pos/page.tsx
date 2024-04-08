@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CategoriesSlide } from "@/components/organisms/categories-slide";
 import ProductList from "@/components/organisms/product-list";
@@ -8,7 +9,7 @@ import SearchBar from "@/components/organisms/search-bar";
 import instance from "@/lib/instance";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/atoms/button";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import schemas, { CartSchemaValues, ORDER_TYPE } from "@/validations";
 import { Form } from "@/components/atoms/form";
 import { useEffect, useState } from "react";
@@ -18,10 +19,13 @@ import { StoreAdditionalType } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function POS() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const [order, setOrder] = useState<any>(null);
   const [selectedCat, setSelectedCat] = useState("");
   const [categories, setCategories] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
-  const { taxes, fees } = useStoreStore(
+  const { taxes } = useStoreStore(
     (state: { settings: StoreAdditionalType }) => state.settings
   );
 
@@ -34,6 +38,15 @@ export default function POS() {
     queryKey: ["products"],
     queryFn: () => instance.get("/store/products") as unknown as any[],
   });
+
+  useEffect(() => {
+    if (id && !order) {
+      instance.get(`/store/order/${id}`).then((e) => {
+        setOrder(e as any);
+        console.log({ e });
+      });
+    }
+  }, [id, order]);
 
   useEffect(() => {
     if (categoriesData && isValidArray(categoriesData)) {
@@ -74,8 +87,14 @@ export default function POS() {
 
   const {
     control,
+    setValue,
     formState: { errors },
   } = form;
+
+  const shortId = useWatch({
+    control,
+    name: "shortId",
+  });
 
   useEffect(() => {
     console.log({ errors });
@@ -84,6 +103,10 @@ export default function POS() {
   const mutation = useMutation({
     mutationFn: (variables) => instance.post("/store/order", variables),
     onSuccess: async (data: any) => {
+      if (!shortId || shortId !== data?.shortId) {
+        setValue("shortId", data.shortId);
+        history.pushState({}, "", `/store/pos?id=${data.shortId}`);
+      }
       // await queryClient.invalidateQueries({ queryKey: ["products"] });
       // if (id) {
       //   toast.success(

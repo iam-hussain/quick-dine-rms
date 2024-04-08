@@ -22,10 +22,8 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import ProductForm from "@/components/forms/product-form";
-// import calendar from "dayjs/plugin/calendar";
 
 dayjs.extend(relativeTime);
-// dayjs.extend(calendar);
 
 const typeMap = {
   VEG: "Veg",
