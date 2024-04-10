@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import instance from "@/lib/instance";
 import { useMutation } from "@tanstack/react-query";
 import { cookieNames, setCookie } from "@/lib/cookies";
-import { getValidationMessage } from "@/validations/messages";
+import { formValidationSetter } from "@iam-hussain/qd-copilot";
 
 const defaultValues: Partial<LoginSchemaValues> = {};
 
@@ -48,14 +48,7 @@ function LoginForm({ redirect }: LoginFormProps) {
         }
       }
     },
-    onError: (err) => {
-      if (typeof err === "string") {
-        const { name, error } = getValidationMessage(err);
-        if (name && error) {
-          setError(name as any, error);
-        }
-      }
-    },
+    onError: (err) => formValidationSetter(err, setError),
   });
 
   async function onSubmit(variables: LoginSchemaValues) {

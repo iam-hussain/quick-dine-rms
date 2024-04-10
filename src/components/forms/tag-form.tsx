@@ -16,8 +16,7 @@ import schemas, { CategorySchemaValues } from "@/validations";
 import { useRouter } from "next/navigation";
 import instance from "@/lib/instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getValidationMessage } from "@/validations/messages";
-import { useEffect } from "react";
+import { formValidationSetter } from "@iam-hussain/qd-copilot";
 
 const defaultValues: Partial<CategorySchemaValues> = {};
 
@@ -44,14 +43,7 @@ function TagForm({}: TagFormProps) {
       });
       toast.success("Tag created!");
     },
-    onError: (err) => {
-      if (typeof err === "string") {
-        const { name, error } = getValidationMessage(err);
-        if (name && error) {
-          setError(name as any, error);
-        }
-      }
-    },
+    onError: (err) => formValidationSetter(err, setError),
   });
 
   async function onSubmit(variables: CategorySchemaValues) {

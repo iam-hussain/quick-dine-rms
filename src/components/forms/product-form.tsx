@@ -15,7 +15,7 @@ import { Input } from "@/components/atoms/input";
 import schemas, { ProductSchemaValues } from "@/validations";
 import instance from "@/lib/instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getValidationMessage } from "@/validations/messages";
+import { formValidationSetter } from "@iam-hussain/qd-copilot";
 import {
   Select,
   SelectContent,
@@ -76,20 +76,16 @@ function ProductForm({
       }
     },
     onError: (err) => {
-      if (typeof err === "string") {
-        const { name, error } = getValidationMessage(err);
-        if (name && error) {
-          setError(name as any, error);
+      const errors = formValidationSetter(err, setError);
+      if (!errors.length) {
+        if (id) {
+          toast.error(
+            `Unable to update product with ID ${id}. Please review the entered information and try again. If the issue persists, contact support for further assistance.`
+          );
         } else {
-          if (id) {
-            toast.error(
-              `Unable to update product with ID ${id}. Please review the entered information and try again. If the issue persists, contact support for further assistance.`
-            );
-          } else {
-            toast.error(
-              `Failed to create product. Please verify the provided details and attempt again. If the problem persists, reach out to support for additional help.`
-            );
-          }
+          toast.error(
+            `Failed to create product. Please verify the provided details and attempt again. If the problem persists, reach out to support for additional help.`
+          );
         }
       }
     },
