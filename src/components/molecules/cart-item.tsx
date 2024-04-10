@@ -2,10 +2,11 @@ import React from "react";
 import Icon from "@/components/atoms/icon";
 import { Button } from "@/components/atoms/button";
 import { CartItemSchemaValues } from "@/validations";
+import { ItemCreateSchemaType } from "@iam-hussain/qd-copilot";
 
 type CartItemProps = {
   index: number;
-  item: CartItemSchemaValues;
+  item: ItemCreateSchemaType;
   onAddClick: (i: number) => void;
   onSubClick: (i: number) => void;
   onRemoveClick: (i: number) => void;

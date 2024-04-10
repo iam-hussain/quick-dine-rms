@@ -36,13 +36,16 @@ import {
 import Icon from "@/components/atoms/icon";
 import { StoreAdditionalType } from "@/types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/atoms/toggle-group";
+import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 
 function CartSummary({
   className,
   control,
+  order,
 }: {
+  order: any;
   className?: string;
-  control: Control<CartSchemaValues, any, CartSchemaValues>;
+  control: Control<OrderUpsertSchemaType, any, OrderUpsertSchemaType>;
 }) {
   const {
     shouldAddPackingCharge,
@@ -53,7 +56,8 @@ function CartSummary({
     items,
     taxesValue,
     grandTotal,
-  } = useCart({ control });
+    orderedItems,
+  } = useCart({ control, order });
   const [openTable, setOpenTable] = React.useState(false);
 
   const { tables } = useStoreStore(
@@ -196,8 +200,49 @@ function CartSummary({
       <ScrollArea className="w-full flex justify-end grow bg-background px-4 py-2">
         <div className="flex flex-col">
           <ul className="flex flex-col gap-4">
+            {orderedItems.map((item: any) => (
+              <li
+                key={item.id}
+                className="flex justify-center items-center align-middle gap-2 rounded-md text-sm font-medium text-inactive w-full"
+              >
+                <div className="grow">
+                  <p className=" text-left text-foreground">{item.title}</p>
+                </div>
+
+                <div className="flex justify-center align-middle items-center gap-2 min-w-[90px]">
+                  <span className="text-xs">
+                    {Number(item.price).toLocaleString("en-IN", {
+                      style: "currency",
+                      currency: "INR",
+                    })}
+                  </span>
+                  <span>x</span>
+                  <span className="select-none text-foreground text-center">
+                    {item.quantity}
+                  </span>
+                </div>
+                <span className="min-w-20 flex justify-end text-foreground">
+                  {Number(item.price * item.quantity).toLocaleString("en-IN", {
+                    style: "currency",
+                    currency: "INR",
+                  })}
+                </span>
+              </li>
+            ))}
+            {orderedItems.length && (
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    Current Order
+                  </span>
+                </div>
+              </div>
+            )}
             {items.length === 0 && (
-              <li className="text-sm text-foreground/80 text-center w-full">
+              <li className="text-sm text-foreground/80 text-center w-full py-6">
                 No items found
               </li>
             )}
@@ -212,17 +257,6 @@ function CartSummary({
               />
             ))}
           </ul>
-
-          {/* <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                Kitchen Pending
-              </span>
-            </div>
-          </div> */}
         </div>
       </ScrollArea>
       <Separator />

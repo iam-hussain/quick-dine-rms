@@ -3,13 +3,19 @@ import { useStoreStore } from "@/stores/storeSlice";
 import { Control, useWatch, useFieldArray } from "react-hook-form";
 import { StoreAdditionalType } from "@/types";
 import { getChargesValue } from "@/lib/utils";
-import { CartSchemaValues, ORDER_TYPE } from "@/validations";
+import { CartSchemaValues } from "@/validations";
+import {
+  ORDER_STATUS,
+  ORDER_TYPE,
+  OrderUpsertSchemaType,
+} from "@iam-hussain/qd-copilot";
 
 type UseCartType = {
-  control: Control<CartSchemaValues, any, CartSchemaValues>;
+  order: any;
+  control: Control<OrderUpsertSchemaType, any, OrderUpsertSchemaType>;
 };
 
-function useCart({ control }: UseCartType) {
+function useCart({ control, order }: UseCartType) {
   const {
     taxes,
     fees: { DELIVERY, PACKING },
@@ -22,7 +28,7 @@ function useCart({ control }: UseCartType) {
     name: "fees",
   });
 
-  const items = useWatch({
+  const currentItems = useWatch({
     control,
     name: "items",
     defaultValue: [],
@@ -31,7 +37,7 @@ function useCart({ control }: UseCartType) {
   const type = useWatch({
     control,
     name: "type",
-    defaultValue: ORDER_TYPE.PICK_UP as any,
+    defaultValue: ORDER_TYPE.Values.PICK_UP as any,
   });
 
   const fees = useWatch({
@@ -40,34 +46,41 @@ function useCart({ control }: UseCartType) {
     defaultValue: [],
   });
 
+  const items = useMemo(
+    () => [...(order?.items || []), ...currentItems],
+    [currentItems, order?.items]
+  );
+
   const deliveryIndex = useMemo(
-    () => fees.findIndex((e) => e.key === "DELIVERY"),
+    () => fees && fees.findIndex((e) => e.key === "DELIVERY"),
     [fees]
   );
   const packagingIndex = useMemo(
-    () => fees.findIndex((e) => e.key === "PACKING"),
+    () => fees && fees.findIndex((e) => e.key === "PACKING"),
     [fees]
   );
 
   useEffect(() => {
     if (
       type &&
-      [ORDER_TYPE.DELIVERY, ORDER_TYPE.PLATFORM, ORDER_TYPE.TAKE_AWAY].includes(
-        type
-      )
+      [
+        ORDER_TYPE.Values.DELIVERY,
+        ORDER_TYPE.Values.PLATFORM,
+        ORDER_TYPE.Values.TAKE_AWAY,
+      ].includes(type as any)
     ) {
-      if (packagingIndex < 0) {
+      if (packagingIndex && packagingIndex < 0) {
         append(PACKING);
       }
-    } else if (packagingIndex >= 0) {
+    } else if (packagingIndex && packagingIndex >= 0) {
       remove(packagingIndex);
     }
 
-    if (type && type === ORDER_TYPE.DELIVERY) {
-      if (deliveryIndex < 0) {
+    if (type && type === ORDER_TYPE.Values.DELIVERY) {
+      if (deliveryIndex && deliveryIndex < 0) {
         append(DELIVERY);
       }
-    } else if (deliveryIndex >= 0) {
+    } else if (deliveryIndex && deliveryIndex >= 0) {
       remove(deliveryIndex);
     }
   }, [
@@ -83,11 +96,13 @@ function useCart({ control }: UseCartType) {
 
   const shouldAddPackingCharge =
     type &&
-    [ORDER_TYPE.DELIVERY, ORDER_TYPE.PLATFORM, ORDER_TYPE.TAKE_AWAY].includes(
-      type
-    );
+    [
+      ORDER_TYPE.Values.DELIVERY,
+      ORDER_TYPE.Values.PLATFORM,
+      ORDER_TYPE.Values.TAKE_AWAY,
+    ].includes(type as any);
 
-  const shouldAddDeliveryCharge = type === ORDER_TYPE.DELIVERY;
+  const shouldAddDeliveryCharge = type === ORDER_TYPE.Values.DELIVERY;
 
   const subTotal = useMemo(() => {
     if (!items.length) {
@@ -104,8 +119,8 @@ function useCart({ control }: UseCartType) {
   }, [items]);
 
   const packagingCharge = useMemo(() => {
-    const packing = fees[packagingIndex];
-    if (packagingIndex < 0 || !packing) {
+    const packing = fees && packagingIndex && fees[packagingIndex];
+    if ((packagingIndex && packagingIndex < 0) || !packing) {
       return 0;
     }
     return getChargesValue(
@@ -117,8 +132,8 @@ function useCart({ control }: UseCartType) {
   }, [packagingIndex, fees, subTotal, totalItems]);
 
   const deliveryCharge = useMemo(() => {
-    const delivery = fees[deliveryIndex];
-    if (deliveryIndex < 0 || !delivery) {
+    const delivery = fees && deliveryIndex && fees[deliveryIndex];
+    if ((deliveryIndex && deliveryIndex < 0) || !delivery) {
       return 0;
     }
     return getChargesValue(
@@ -151,7 +166,9 @@ function useCart({ control }: UseCartType) {
     deliveryCharge,
     packagingCharge,
     type,
-    items,
+    orderedItems: (order?.items || []) as any[],
+    allItems: items,
+    items: currentItems,
     total,
     taxesValue,
     grandTotal,

@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { ProductAPI } from "@/types";
 import { Control, useFieldArray, useWatch } from "react-hook-form";
 import { CartSchemaValues } from "@/validations";
+import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 
 function ProductList({
   className,
@@ -14,7 +15,7 @@ function ProductList({
 }: {
   className?: string;
   products: ProductAPI[];
-  control: Control<CartSchemaValues, any, CartSchemaValues>;
+  control: Control<OrderUpsertSchemaType, any, OrderUpsertSchemaType>;
 }) {
   const { append, update } = useFieldArray({
     control,

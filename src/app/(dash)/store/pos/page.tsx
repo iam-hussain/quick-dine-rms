@@ -17,6 +17,7 @@ import { isValidArray } from "@/lib/utils";
 import { useStoreStore } from "@/stores/storeSlice";
 import { StoreAdditionalType } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 
 export default function POS() {
   const searchParams = useSearchParams();
@@ -38,15 +39,6 @@ export default function POS() {
     queryKey: ["products"],
     queryFn: () => instance.get("/store/products") as unknown as any[],
   });
-
-  useEffect(() => {
-    if (id && !order) {
-      instance.get(`/store/order/${id}`).then((e) => {
-        setOrder(e as any);
-        console.log({ e });
-      });
-    }
-  }, [id, order]);
 
   useEffect(() => {
     if (categoriesData && isValidArray(categoriesData)) {
@@ -72,14 +64,14 @@ export default function POS() {
     }
   }, [productsData, selectedCat]);
 
-  const defaultValues: Partial<CartSchemaValues> = {
+  const defaultValues: Partial<OrderUpsertSchemaType> = {
     type: ORDER_TYPE.PICK_UP,
     items: [],
     fees: [],
     taxes: taxes,
   };
 
-  const form = useForm<CartSchemaValues>({
+  const form = useForm<OrderUpsertSchemaType>({
     resolver: zodResolver(schemas.cart),
     defaultValues,
     mode: "onSubmit",
@@ -88,6 +80,7 @@ export default function POS() {
   const {
     control,
     setValue,
+    resetField,
     formState: { errors },
   } = form;
 
@@ -97,15 +90,49 @@ export default function POS() {
   });
 
   useEffect(() => {
-    console.log({ errors });
-  }, [errors]);
+    if (id && !order) {
+      instance.get(`/store/order/${id}`).then((e: any) => {
+        setOrder(e as any);
+        setValue("items", []);
+        setValue("shortId", e.shortId);
+        setValue("type", e.type);
+        setValue("status", e.status);
+        // setValue("note", e.note);
+        // setValue("customerId", e.customerId);
+        // setValue("completedAt", e.completedAt);
+        // setValue("deliveredAt", e.deliveredAt);
+        setValue("fees", e.fees);
+        setValue("table", e.table);
+        setValue("taxes", e.taxes);
+
+        console.log({ e });
+      });
+    }
+  }, [id, order, resetField, setValue]);
+
+  useEffect(() => {
+    console.log({ errors, order });
+  }, [errors, order]);
 
   const mutation = useMutation({
     mutationFn: (variables) => instance.post("/store/order", variables),
     onSuccess: async (data: any) => {
-      if (!shortId || shortId !== data?.shortId) {
+      if (shortId) {
+        setOrder(data as any);
         setValue("shortId", data.shortId);
         history.pushState({}, "", `/store/pos?id=${data.shortId}`);
+
+        setValue("items", []);
+        setValue("shortId", data.shortId);
+        setValue("type", data.type);
+        setValue("status", data.status);
+        // setValue("note", e.note);
+        // setValue("customerId", e.customerId);
+        // setValue("completedAt", e.completedAt);
+        // setValue("deliveredAt", e.deliveredAt);
+        setValue("fees", data.fees);
+        setValue("table", data.table);
+        setValue("taxes", data.taxes);
       }
       // await queryClient.invalidateQueries({ queryKey: ["products"] });
       // if (id) {
@@ -115,12 +142,11 @@ export default function POS() {
       // } else {
       //   toast.success(`A new product with ID ${data.id} has been created! 🌟`);
       // }
-      console.log({ data });
     },
     onError: console.error,
   });
 
-  async function onSubmit(variables: CartSchemaValues) {
+  async function onSubmit(variables: OrderUpsertSchemaType) {
     console.log({ variables });
     return await mutation.mutateAsync(variables as any);
   }
@@ -153,6 +179,7 @@ export default function POS() {
           <CartSummary
             className="flex flex-col gap-1 w-full h-full py-4 md:py-2 px-1 bg-background"
             control={control}
+            order={order}
           />
         </form>
       </Form>
