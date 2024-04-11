@@ -15,7 +15,7 @@ function ProductList({
 }: {
   className?: string;
   products: ProductAPI[];
-  control: Control<OrderUpsertSchemaType, any, OrderUpsertSchemaType>;
+  control: Control<OrderUpsertSchemaType>;
 }) {
   const { append, update } = useFieldArray({
     control,
