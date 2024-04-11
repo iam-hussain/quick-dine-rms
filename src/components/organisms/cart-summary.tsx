@@ -45,7 +45,7 @@ function CartSummary({
 }: {
   order: any;
   className?: string;
-  control: Control<OrderUpsertSchemaType, any, OrderUpsertSchemaType>;
+  control: Control<OrderUpsertSchemaType>;
 }) {
   const {
     shouldAddPackingCharge,

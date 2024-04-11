@@ -12,7 +12,7 @@ import {
 
 type UseCartType = {
   order: any;
-  control: Control<OrderUpsertSchemaType, any, OrderUpsertSchemaType>;
+  control: Control<OrderUpsertSchemaType>;
 };
 
 function useCart({ control, order }: UseCartType) {
