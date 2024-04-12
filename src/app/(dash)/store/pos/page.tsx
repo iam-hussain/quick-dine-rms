@@ -68,7 +68,7 @@ export default function POS() {
     type: ORDER_TYPE.PICK_UP,
     items: [],
     fees: [],
-    taxes: taxes,
+    taxes: taxes
   };
 
   const form = useForm<OrderUpsertSchemaType>({
@@ -80,75 +80,53 @@ export default function POS() {
   const {
     control,
     setValue,
-    resetField,
     formState: { errors },
   } = form;
 
-  const shortId = useWatch({
-    control,
-    name: "shortId",
-  });
 
-  useEffect(() => {
-    if (id && !order) {
-      instance.get(`/store/order/${id}`).then((e: any) => {
-        setOrder(e as any);
-        setValue("items", []);
-        setValue("shortId", e.shortId);
-        setValue("type", e.type);
-        setValue("status", e.status);
-        // setValue("note", e.note);
-        // setValue("customerId", e.customerId);
-        // setValue("completedAt", e.completedAt);
-        // setValue("deliveredAt", e.deliveredAt);
-        setValue("fees", e.fees);
-        setValue("table", e.table);
-        setValue("taxes", e.taxes);
-
-        console.log({ e });
-      });
-    }
-  }, [id, order, resetField, setValue]);
-
-  useEffect(() => {
-    console.log({ errors, order });
-  }, [errors, order]);
-
-  const mutation = useMutation({
-    mutationFn: (variables) => instance.post("/store/order", variables),
+  const fetchOrder = useMutation({
+    mutationFn: (variables) => instance.get(`/store/order/${variables.shortId}`),
     onSuccess: async (data: any) => {
-      if (shortId) {
-        setOrder(data as any);
-        setValue("shortId", data.shortId);
-        history.pushState({}, "", `/store/pos?id=${data.shortId}`);
-
-        setValue("items", []);
-        setValue("shortId", data.shortId);
-        setValue("type", data.type);
-        setValue("status", data.status);
-        // setValue("note", e.note);
-        // setValue("customerId", e.customerId);
-        // setValue("completedAt", e.completedAt);
-        // setValue("deliveredAt", e.deliveredAt);
-        setValue("fees", data.fees);
-        setValue("table", data.table);
-        setValue("taxes", data.taxes);
-      }
-      // await queryClient.invalidateQueries({ queryKey: ["products"] });
-      // if (id) {
-      //   toast.success(
-      //     `Product ID ${data.id} has been successfully updated! 🚀`
-      //   );
-      // } else {
-      //   toast.success(`A new product with ID ${data.id} has been created! 🌟`);
-      // }
+      history.pushState({}, "", `/store/pos?id=${data.shortId}`);
+      setOrder(data as any);
+      setValue("shortId", data.shortId);
+      setValue("items", []);
+      setValue("shortId", data.shortId);
+      setValue("type", data.type);
+      setValue("status", data.status);
+      // setValue("note", e.note);
+      // setValue("customerId", e.customerId);
+      // setValue("completedAt", e.completedAt);
+      // setValue("deliveredAt", e.deliveredAt);
+      setValue("fees", data.fees);
+      setValue("table", data.table);
+      setValue("taxes", data.taxes);
     },
     onError: console.error,
   });
 
-  async function onSubmit(variables: OrderUpsertSchemaType) {
+
+
+  useEffect(() => {
+    if (id && !order) {
+      fetchOrder.mutate({ shortId: id })
+    }
+  }, [fetchOrder, id, order]);
+
+
+  const mutation = useMutation({
+    mutationFn: (variables) => instance.post("/store/order", variables),
+    onSuccess: async (data: any) =>  fetchOrder.mutate({ shortId: data.shortId }),
+    onError: console.error,
+  });
+
+  async function onSubmit({table,  ...variables}: OrderUpsertSchemaType) {
     console.log({ variables });
-    return await mutation.mutateAsync(variables as any);
+    
+    return await mutation.mutateAsync({
+      ...variables,
+      ...(table?.key ? { table }: {})
+    } as any);
   }
 
   return (

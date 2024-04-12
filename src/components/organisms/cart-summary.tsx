@@ -120,8 +120,8 @@ function CartSummary({
           )}
         />
         <div className="text-sm text-right w-full">
-          <p className="">Unsaved</p>
-          <p className="text-foreground/80">Jan 10, 2022 10:44 AM</p>
+          <p className=''>{order.status || "Unsaved"}</p>
+          {order.updatedId && <p className="text-foreground/80">{new Date(order.updatedAt).toLocaleString()}</p>}
         </div>
       </div>
       <div className="flex flex-col px-4">
@@ -129,7 +129,7 @@ function CartSummary({
         <div className="flex text-sm flex-row justify-between w-full py-2">
           <div>
             <p className="font-medium">Daniel Amir</p>
-            <p className="text-foreground/80">Order: #JJ782328 / Table</p>
+            <p className="text-foreground/80">Order: #{order.shortId}{order?.table?.key ? ` / ${order?.table?.key}` : ''}</p>
           </div>
           <div className="flex justify-between align-middle items-center gap-2">
             <ButtonToolTip
@@ -199,11 +199,42 @@ function CartSummary({
       </div>
       <ScrollArea className="w-full flex justify-end grow bg-background px-4 py-2">
         <div className="flex flex-col">
-          <ul className="flex flex-col gap-4">
-            {orderedItems.map((item: any) => (
+          <ul className="flex flex-col gap-2">
+           
+           
+            {items.length === 0 ? (
+              <li className="text-sm text-foreground/80 text-center w-full py-6">
+                No items found
+              </li>
+            ): <></>}
+            {items.map((item, index) => (
+              <CartItem
+                item={item}
+                index={index}
+                key={`cart_item_${index}`}
+                onAddClick={(index) => handleQuantityClick("ADD", index)}
+                onSubClick={(index) => handleQuantityClick("SUB", index)}
+                onRemoveClick={(index) => remove(index)}
+              />
+            ))}
+
+{orderedItems.length ? (
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    Cooking
+                  </span>
+                </div>
+              </div>
+            ) : <></>}
+
+{orderedItems.map((item: any) => (
               <li
                 key={item.id}
-                className="flex justify-center items-center align-middle gap-2 rounded-md text-sm font-medium text-inactive w-full"
+                className="flex justify-center items-center align-middle gap-2 text-sm font-medium text-inactive w-full"
               >
                 <div className="grow">
                   <p className=" text-left text-foreground">{item.title}</p>
@@ -229,32 +260,50 @@ function CartSummary({
                 </span>
               </li>
             ))}
-            {orderedItems.length && (
+
+
+{orderedItems.length ? (
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
                   <span className="bg-background px-2 text-muted-foreground">
-                    Current Order
+                    Completed
                   </span>
                 </div>
               </div>
-            )}
-            {items.length === 0 && (
-              <li className="text-sm text-foreground/80 text-center w-full py-6">
-                No items found
+            ) : <></>}
+
+
+{orderedItems.map((item: any) => (
+              <li
+                key={item.id}
+                className="flex justify-center items-center align-middle gap-2 text-sm font-medium text-inactive w-full"
+              >
+                <div className="grow">
+                  <p className=" text-left text-foreground">{item.title}</p>
+                </div>
+
+                <div className="flex justify-center align-middle items-center gap-2 min-w-[90px]">
+                  <span className="text-xs">
+                    {Number(item.price).toLocaleString("en-IN", {
+                      style: "currency",
+                      currency: "INR",
+                    })}
+                  </span>
+                  <span>x</span>
+                  <span className="select-none text-foreground text-center">
+                    {item.quantity}
+                  </span>
+                </div>
+                <span className="min-w-20 flex justify-end text-foreground">
+                  {Number(item.price * item.quantity).toLocaleString("en-IN", {
+                    style: "currency",
+                    currency: "INR",
+                  })}
+                </span>
               </li>
-            )}
-            {items.map((item, index) => (
-              <CartItem
-                item={item}
-                index={index}
-                key={`cart_item_${index}`}
-                onAddClick={(index) => handleQuantityClick("ADD", index)}
-                onSubClick={(index) => handleQuantityClick("SUB", index)}
-                onRemoveClick={(index) => remove(index)}
-              />
             ))}
           </ul>
         </div>
