@@ -120,8 +120,8 @@ function CartSummary({
           )}
         />
         <div className="text-sm text-right w-full">
-          <p className=''>{order.status || "Unsaved"}</p>
-          {order.updatedId && <p className="text-foreground/80">{new Date(order.updatedAt).toLocaleString()}</p>}
+          <p className=''>{order?.status || "Unsaved"}</p>
+          {order?.updatedId && <p className="text-foreground/80">{new Date(order.updatedAt).toLocaleString()}</p>}
         </div>
       </div>
       <div className="flex flex-col px-4">
@@ -129,7 +129,7 @@ function CartSummary({
         <div className="flex text-sm flex-row justify-between w-full py-2">
           <div>
             <p className="font-medium">Daniel Amir</p>
-            <p className="text-foreground/80">Order: #{order.shortId}{order?.table?.key ? ` / ${order?.table?.key}` : ''}</p>
+            {order?.shortId && <p className="text-foreground/80">Order: #{order?.shortId}{order?.table?.key ? ` / ${order?.table?.key}` : ''}</p>}
           </div>
           <div className="flex justify-between align-middle items-center gap-2">
             <ButtonToolTip
