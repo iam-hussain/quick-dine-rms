@@ -218,7 +218,7 @@ function CartSummary({
               />
             ))}
 
-{orderedItems.length ? (
+          {orderedItems.length ? (
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
@@ -231,7 +231,7 @@ function CartSummary({
               </div>
             ) : <></>}
 
-{orderedItems.map((item: any) => (
+          {orderedItems.slice(1).map((item: any) => (
               <li
                 key={item.id}
                 className="flex justify-center items-center align-middle gap-2 text-sm font-medium text-inactive w-full"
@@ -262,7 +262,7 @@ function CartSummary({
             ))}
 
 
-{orderedItems.length ? (
+{         orderedItems.length ? (
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
@@ -276,7 +276,7 @@ function CartSummary({
             ) : <></>}
 
 
-{orderedItems.map((item: any) => (
+            {orderedItems.slice(0, 1).map((item: any) => (
               <li
                 key={item.id}
                 className="flex justify-center items-center align-middle gap-2 text-sm font-medium text-inactive w-full"

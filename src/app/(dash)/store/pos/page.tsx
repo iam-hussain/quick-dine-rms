@@ -90,7 +90,7 @@ export default function POS() {
       history.pushState({}, "", `/store/pos?id=${data.shortId}`);
       setOrder(data as any);
       setValue("shortId", data.shortId);
-      setValue("items", []);
+    
       setValue("shortId", data.shortId);
       setValue("type", data.type);
       setValue("status", data.status);
@@ -108,7 +108,7 @@ export default function POS() {
 
 
   useEffect(() => {
-    if (id && !order) {
+    if (id && !order?.shortId) {
       fetchOrder.mutate({ shortId: id })
     }
   }, [fetchOrder, id, order]);
@@ -116,7 +116,7 @@ export default function POS() {
 
   const mutation = useMutation({
     mutationFn: (variables) => instance.post("/store/order", variables),
-    onSuccess: async (data: any) =>  fetchOrder.mutate({ shortId: data.shortId }),
+    onSuccess: async (data: any) =>  {  fetchOrder.mutate({ shortId: data.shortId }); setValue("items", []);} ,
     onError: console.error,
   });
 

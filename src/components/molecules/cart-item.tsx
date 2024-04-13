@@ -39,6 +39,7 @@ function CartItem({
           variant={"default"}
           disabled={item.quantity === 1}
           onClick={() => onSubClick(index)}
+          type="button"
         >
           <Icon name="RiSubtractFill" />
         </Button>
@@ -50,6 +51,7 @@ function CartItem({
           variant={"default"}
           disabled={item.quantity > 10000}
           onClick={() => onAddClick(index)}
+          type="button"
         >
           <Icon name="IoMdAdd" />
         </Button>
@@ -64,6 +66,7 @@ function CartItem({
         variant={"ghost"}
         className="p-1"
         onClick={() => onRemoveClick(index)}
+        type="button"
       >
         <Icon name="RiDeleteBinLine" className="h-4 w-4 text-destructive" />
       </Button>
