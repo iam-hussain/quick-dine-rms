@@ -1,4 +1,5 @@
 import { StoreAdditionalType } from "@/types";
+import { defaultFeatureFlags, FeatureFlagsType } from "@iam-hussain/qd-copilot";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -8,6 +9,7 @@ interface ActionState {
   tags: any[];
   products: any[];
   categories: any[];
+  featureFlag: FeatureFlagsType;
   setStoreData: (store: any) => void;
   setTagsData: (store: [any]) => void;
 }
@@ -42,8 +44,14 @@ export const useStoreStore = create<ActionState>()(
         tags: [],
         products: [],
         categories: [],
-        setStoreData: ({ tables, fees, taxes, ...store }) =>
-          set((e) => ({ ...e, store, settings: { tables, fees, taxes } })),
+        featureFlag: defaultFeatureFlags,
+        setStoreData: ({ tables, fees, taxes, featureFlag, ...store }) =>
+          set((e) => ({
+            ...e,
+            store,
+            featureFlag,
+            settings: { tables, fees, taxes },
+          })),
         setTagsData: (tags) => set((e) => ({ ...e, tags })),
       }),
       {

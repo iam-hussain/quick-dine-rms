@@ -69,6 +69,11 @@ const SettingMenus: Menu[] = [
     label: "Category",
     link: "/store/category",
   },
+  {
+    icon: "FaSave",
+    label: "Settings",
+    link: "/store/settings",
+  },
 ];
 
 const variants = {

@@ -82,7 +82,6 @@ function CategoryForm({
   });
 
   async function onSubmit(variables: CategorySchemaValues) {
-    console.log({ variables });
     return await mutation.mutateAsync(variables as any);
   }
 

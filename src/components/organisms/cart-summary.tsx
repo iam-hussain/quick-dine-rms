@@ -95,42 +95,35 @@ function CartSummary({
 
   return (
     <div className={clsx("flex gap-2", className)}>
-      <div className="flex px-4">
-        <FormField
-          control={control}
-          name="type"
-          render={({ field }) => (
-            <FormItem className="min-w-32">
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="text-sm">
-                  <SelectValue placeholder="Select a order type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Order Type</SelectLabel>
-                    <SelectItem value="PICK_UP">Express</SelectItem>
-                    <SelectItem value="DINING">Dine In</SelectItem>
-                    <SelectItem value="TAKE_AWAY">Take Away</SelectItem>
-                    <SelectItem value="DELIVERY">Delivery</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="text-sm text-right w-full">
-          <p className=''>{order?.status || "Unsaved"}</p>
-          {order?.updatedId && <p className="text-foreground/80">{new Date(order.updatedAt).toLocaleString()}</p>}
-        </div>
-      </div>
       <div className="flex flex-col px-4">
-        <Separator />
-        <div className="flex text-sm flex-row justify-between w-full py-2">
-          <div>
-            <p className="font-medium">Daniel Amir</p>
-            {order?.shortId && <p className="text-foreground/80">Order: #{order?.shortId}{order?.table?.key ? ` / ${order?.table?.key}` : ''}</p>}
-          </div>
+        <div className="flex justify-between gap-4 py-2">
+          <FormField
+            control={control}
+            name="type"
+            render={({ field }) => (
+              <FormItem className="min-w-32">
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="text-sm">
+                    <SelectValue placeholder="Select a order type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Order Type</SelectLabel>
+                      <SelectItem value="PICK_UP">Express</SelectItem>
+                      <SelectItem value="DINING">Dine In</SelectItem>
+                      <SelectItem value="TAKE_AWAY">Take Away</SelectItem>
+                      <SelectItem value="DELIVERY">Delivery</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <div className="flex justify-between align-middle items-center gap-2">
             <ButtonToolTip
               label="Link Customer"
@@ -196,17 +189,39 @@ function CartSummary({
           </div>
         </div>
         <Separator />
+        <div className="flex gap-2 text-sm flex-row justify-between w-full py-2">
+          <div>
+            <p className="font-medium">Daniel Amir</p>
+            {order?.shortId && (
+              <p className="text-foreground/80">
+                Order: #{order?.shortId}
+                {order?.table?.key ? ` / ${order?.table?.key}` : ""}
+              </p>
+            )}
+          </div>
+
+          <div className="text-sm text-right">
+            <p className="">{order?.status || "Unsaved"}</p>
+            {order?.updatedAt && (
+              <p className="text-foreground/80">
+                {new Date(order.updatedAt).toLocaleString()}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <Separator />
       </div>
       <ScrollArea className="w-full flex justify-end grow bg-background px-4 py-2">
         <div className="flex flex-col">
           <ul className="flex flex-col gap-2">
-           
-           
             {items.length === 0 ? (
               <li className="text-sm text-foreground/80 text-center w-full py-6">
                 No items found
               </li>
-            ): <></>}
+            ) : (
+              <></>
+            )}
             {items.map((item, index) => (
               <CartItem
                 item={item}
@@ -218,7 +233,7 @@ function CartSummary({
               />
             ))}
 
-          {orderedItems.length ? (
+            {orderedItems.length ? (
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
@@ -229,9 +244,11 @@ function CartSummary({
                   </span>
                 </div>
               </div>
-            ) : <></>}
+            ) : (
+              <></>
+            )}
 
-          {orderedItems.slice(1).map((item: any) => (
+            {orderedItems.slice(1).map((item: any) => (
               <li
                 key={item.id}
                 className="flex justify-center items-center align-middle gap-2 text-sm font-medium text-inactive w-full"
@@ -261,8 +278,7 @@ function CartSummary({
               </li>
             ))}
 
-
-{         orderedItems.length ? (
+            {orderedItems.length ? (
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
@@ -273,8 +289,9 @@ function CartSummary({
                   </span>
                 </div>
               </div>
-            ) : <></>}
-
+            ) : (
+              <></>
+            )}
 
             {orderedItems.slice(0, 1).map((item: any) => (
               <li

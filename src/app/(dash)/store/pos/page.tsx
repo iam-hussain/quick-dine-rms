@@ -68,7 +68,7 @@ export default function POS() {
     type: ORDER_TYPE.PICK_UP,
     items: [],
     fees: [],
-    taxes: taxes
+    taxes: taxes,
   };
 
   const form = useForm<OrderUpsertSchemaType>({
@@ -83,14 +83,14 @@ export default function POS() {
     formState: { errors },
   } = form;
 
-
   const fetchOrder = useMutation({
-    mutationFn: (variables) => instance.get(`/store/order/${variables.shortId}`),
+    mutationFn: (variables) =>
+      instance.get(`/store/order/${variables.shortId}`),
     onSuccess: async (data: any) => {
       history.pushState({}, "", `/store/pos?id=${data.shortId}`);
       setOrder(data as any);
       setValue("shortId", data.shortId);
-    
+
       setValue("shortId", data.shortId);
       setValue("type", data.type);
       setValue("status", data.status);
@@ -105,33 +105,33 @@ export default function POS() {
     onError: console.error,
   });
 
-
-
   useEffect(() => {
     if (id && !order?.shortId) {
-      fetchOrder.mutate({ shortId: id })
+      fetchOrder.mutate({ shortId: id });
     }
   }, [fetchOrder, id, order]);
 
-
   const mutation = useMutation({
     mutationFn: (variables) => instance.post("/store/order", variables),
-    onSuccess: async (data: any) =>  {  fetchOrder.mutate({ shortId: data.shortId }); setValue("items", []);} ,
+    onSuccess: async (data: any) => {
+      fetchOrder.mutate({ shortId: data.shortId });
+      setValue("items", []);
+    },
     onError: console.error,
   });
 
-  async function onSubmit({table,  ...variables}: OrderUpsertSchemaType) {
+  async function onSubmit({ table, ...variables }: OrderUpsertSchemaType) {
     console.log({ variables });
-    
+
     return await mutation.mutateAsync({
       ...variables,
-      ...(table?.key ? { table }: {})
+      ...(table?.key ? { table } : {}),
     } as any);
   }
 
   return (
     <div className="flex md:flex-row flex-col w-full h-full">
-      <div className="flex flex-col md:w-8/12 w-full h-full py-4">
+      <div className="flex flex-col md:w-8/12 xl:w-9/12 w-full h-full py-4">
         <div className="flex flex-col gap-4 px-4">
           <div className="flex justify-between align-middle items-center gap-4">
             <SearchBar className="" />
@@ -151,7 +151,7 @@ export default function POS() {
       </div>
       <Form {...form}>
         <form
-          className="flex md:flex-row flex-col md:w-4/12 w-full h-full"
+          className="flex md:flex-row flex-col md:w-4/12 lg:w-3/12 w-full h-full"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <CartSummary
