@@ -114,8 +114,8 @@ function CartSummary({
 
   return (
     <div className={clsx("flex gap-2", className)}>
-      <div className="flex flex-col px-4">
-        <div className="flex justify-between gap-4 py-2">
+      <div className="flex flex-col px-4 py-2">
+        <div className="flex justify-between gap-4 pb-2">
           <FormField
             control={control}
             name="type"
@@ -248,7 +248,7 @@ function CartSummary({
 
         <Separator />
       </div>
-      <ScrollArea className="w-full flex justify-end grow bg-background px-4 py-2 cart">
+      <ScrollArea className="w-full flex justify-end grow bg-background px-4 pb-2 cart">
         <div className="flex flex-col h-full">
           <div className="flex flex-col gap-2 justify-between h-full">
             <ul className="flex flex-col gap-2">
@@ -274,7 +274,7 @@ function CartSummary({
             {!enableKDS && Boolean(orderedItems.length) && (
               <ul className="flex flex-col gap-2">
                 {Boolean(orderedItems.length) && (
-                  <div className="relative my-4">
+                  <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                       <span className="w-full border-t" />
                     </div>
@@ -322,9 +322,9 @@ function CartSummary({
             )}
 
             {enableKDS && (
-              <>
+              <ul className="flex flex-col gap-2">
                 {Boolean(orderedItems.length) && (
-                  <div className="relative my-4">
+                  <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                       <span className="w-full border-t" />
                     </div>
@@ -369,7 +369,7 @@ function CartSummary({
                   </li>
                 ))}
                 {Boolean(orderedItems.length) && (
-                  <div className="relative my-4">
+                  <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                       <span className="w-full border-t" />
                     </div>
@@ -413,7 +413,7 @@ function CartSummary({
                     </span>
                   </li>
                 ))}
-              </>
+              </ul>
             )}
           </div>
         </div>
