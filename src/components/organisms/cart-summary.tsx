@@ -57,8 +57,17 @@ function CartSummary({
     taxesValue,
     grandTotal,
     orderedItems,
+    showPushToKot,
+    type,
   } = useCart({ control, order });
   const [openTable, setOpenTable] = React.useState(false);
+  const {
+    enableTables,
+    enableCustomerAdding,
+    enableExpressOrder,
+    showUpdatedDate,
+    enableKDS,
+  } = useStoreStore((state) => state.featureFlags);
 
   const { tables } = useStoreStore(
     (state: { settings: StoreAdditionalType }) => state.settings
@@ -93,6 +102,16 @@ function CartSummary({
     });
   };
 
+  const showExpressOption = React.useMemo(() => {
+    if (enableExpressOrder) {
+      return true;
+    }
+    if (!enableExpressOrder && order?.shortId) {
+      return true;
+    }
+    return false;
+  }, [enableExpressOrder, order?.shortId]);
+
   return (
     <div className={clsx("flex gap-2", className)}>
       <div className="flex flex-col px-4">
@@ -112,7 +131,9 @@ function CartSummary({
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Order Type</SelectLabel>
-                      <SelectItem value="PICK_UP">Express</SelectItem>
+                      {showExpressOption && (
+                        <SelectItem value="PICK_UP">Express</SelectItem>
+                      )}
                       <SelectItem value="DINING">Dine In</SelectItem>
                       <SelectItem value="TAKE_AWAY">Take Away</SelectItem>
                       <SelectItem value="DELIVERY">Delivery</SelectItem>
@@ -125,73 +146,80 @@ function CartSummary({
           />
 
           <div className="flex justify-between align-middle items-center gap-2">
-            <ButtonToolTip
-              label="Link Customer"
-              icon="IoPersonAddSharp"
-              variant="outline"
-            />
-
-            <Dialog open={openTable} onOpenChange={setOpenTable}>
-              <DialogTrigger asChild>
-                <Button
-                  variant={table?.key ? "accent" : "outline"}
-                  className={clsx(
-                    "flex justify-center gap-2 font-normal text-lg"
-                  )}
-                >
-                  {table?.name ? (
-                    <p className="font-bold text-base">{table?.name}</p>
-                  ) : (
-                    <Icon name={"MdTableRestaurant"} className="h-5 w-5" />
-                  )}
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Select Table</DialogTitle>
-                </DialogHeader>
-                <div className="flex gap-4 py-4 justify-center">
-                  <ToggleGroup
-                    type="single"
-                    variant="outline"
-                    className="flex items-center gap-4 justify-center flex-wrap"
-                    value={table?.key || ""}
+            {enableTables && showPushToKot && (
+              <Dialog open={openTable} onOpenChange={setOpenTable}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant={table?.key ? "accent" : "outline"}
+                    className={clsx(
+                      "flex justify-center gap-2 font-normal text-lg"
+                    )}
                   >
-                    <ToggleGroupItem
-                      value={""}
-                      aria-label={"None"}
-                      className="text-2xl px-4 py-8"
-                      onClick={() => {
-                        onTableChange({});
-                        setOpenTable(false);
-                      }}
+                    {table?.name ? (
+                      <p className="font-bold text-base">{table?.name}</p>
+                    ) : (
+                      <Icon name={"MdTableRestaurant"} className="h-5 w-5" />
+                    )}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Select Table</DialogTitle>
+                  </DialogHeader>
+                  <div className="flex gap-4 py-4 justify-center">
+                    <ToggleGroup
+                      type="single"
+                      variant="outline"
+                      className="flex items-center gap-4 justify-center flex-wrap"
+                      value={table?.key || ""}
                     >
-                      <div>--</div>
-                    </ToggleGroupItem>
-                    {tables.map((e, i) => (
                       <ToggleGroupItem
-                        value={e.key}
-                        aria-label={e.name}
-                        key={`table_${i}`}
+                        value={""}
+                        aria-label={"None"}
                         className="text-2xl px-4 py-8"
                         onClick={() => {
-                          onTableChange(e);
+                          onTableChange({});
                           setOpenTable(false);
                         }}
                       >
-                        <div>{e.name}</div>
+                        <div>--</div>
                       </ToggleGroupItem>
-                    ))}
-                  </ToggleGroup>
-                </div>
-              </DialogContent>
-            </Dialog>
+                      {tables.map((e, i) => (
+                        <ToggleGroupItem
+                          value={e.key}
+                          aria-label={e.name}
+                          key={`table_${i}`}
+                          className="text-2xl px-4 py-8"
+                          onClick={() => {
+                            onTableChange(e);
+                            setOpenTable(false);
+                          }}
+                        >
+                          <div>{e.name}</div>
+                        </ToggleGroupItem>
+                      ))}
+                    </ToggleGroup>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            )}
+            {enableCustomerAdding && (
+              <ButtonToolTip
+                label="Link Customer"
+                icon="IoPersonAddSharp"
+                variant="outline"
+              />
+            )}
           </div>
         </div>
         <Separator />
         <div className="flex gap-2 text-sm flex-row justify-between w-full py-2">
           <div>
-            <p className="font-medium">Daniel Amir</p>
+            {enableCustomerAdding && (
+              <p className="font-medium">
+                {order?.customerId ? order.customerId : "Unknown Name"}
+              </p>
+            )}
             {order?.shortId && (
               <p className="text-foreground/80">
                 Order: #{order?.shortId}
@@ -201,10 +229,18 @@ function CartSummary({
           </div>
 
           <div className="text-sm text-right">
-            <p className="">{order?.status || "Unsaved"}</p>
-            {order?.updatedAt && (
+            <p className="">
+              {order?.status || "Unsaved"}{" "}
+              {order?.type ? ` / ${order.type}` : ""}
+            </p>
+            {showUpdatedDate && order?.updatedAt && (
               <p className="text-foreground/80">
                 {new Date(order.updatedAt).toLocaleString()}
+              </p>
+            )}
+            {!showUpdatedDate && order?.createdAt && (
+              <p className="text-foreground/80">
+                {new Date(order.createdAt).toLocaleString()}
               </p>
             )}
           </div>
@@ -212,117 +248,174 @@ function CartSummary({
 
         <Separator />
       </div>
-      <ScrollArea className="w-full flex justify-end grow bg-background px-4 py-2">
-        <div className="flex flex-col">
-          <ul className="flex flex-col gap-2">
-            {items.length === 0 ? (
-              <li className="text-sm text-foreground/80 text-center w-full py-6">
-                No items found
-              </li>
-            ) : (
-              <></>
-            )}
-            {items.map((item, index) => (
-              <CartItem
-                item={item}
-                index={index}
-                key={`cart_item_${index}`}
-                onAddClick={(index) => handleQuantityClick("ADD", index)}
-                onSubClick={(index) => handleQuantityClick("SUB", index)}
-                onRemoveClick={(index) => remove(index)}
-              />
-            ))}
+      <ScrollArea className="w-full flex justify-end grow bg-background px-4 py-2 cart">
+        <div className="flex flex-col h-full">
+          <div className="flex flex-col gap-2 justify-between h-full">
+            <ul className="flex flex-col gap-2">
+              {items.length === 0 ? (
+                <li className="text-sm text-foreground/80 text-center w-full py-6">
+                  No items found
+                </li>
+              ) : (
+                <></>
+              )}
+              {items.map((item, index) => (
+                <CartItem
+                  item={item}
+                  index={index}
+                  key={`cart_item_${index}`}
+                  onAddClick={(index) => handleQuantityClick("ADD", index)}
+                  onSubClick={(index) => handleQuantityClick("SUB", index)}
+                  onRemoveClick={(index) => remove(index)}
+                />
+              ))}
+            </ul>
 
-            {orderedItems.length ? (
-              <div className="relative my-4">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    Cooking
-                  </span>
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
+            {!enableKDS && Boolean(orderedItems.length) && (
+              <ul className="flex flex-col gap-2">
+                {Boolean(orderedItems.length) && (
+                  <div className="relative my-4">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">
+                        Ordered
+                      </span>
+                    </div>
+                  </div>
+                )}
 
-            {orderedItems.slice(1).map((item: any) => (
-              <li
-                key={item.id}
-                className="flex justify-center items-center align-middle gap-2 text-sm font-medium text-inactive w-full"
-              >
-                <div className="grow">
-                  <p className=" text-left text-foreground">{item.title}</p>
-                </div>
+                {orderedItems.map((item: any) => (
+                  <li
+                    key={item.id}
+                    className="flex justify-center items-center align-middle gap-2 text-sm font-medium text-inactive w-full"
+                  >
+                    <div className="grow">
+                      <p className=" text-left text-foreground">{item.title}</p>
+                    </div>
 
-                <div className="flex justify-center align-middle items-center gap-2 min-w-[90px]">
-                  <span className="text-xs">
-                    {Number(item.price).toLocaleString("en-IN", {
-                      style: "currency",
-                      currency: "INR",
-                    })}
-                  </span>
-                  <span>x</span>
-                  <span className="select-none text-foreground text-center">
-                    {item.quantity}
-                  </span>
-                </div>
-                <span className="min-w-20 flex justify-end text-foreground">
-                  {Number(item.price * item.quantity).toLocaleString("en-IN", {
-                    style: "currency",
-                    currency: "INR",
-                  })}
-                </span>
-              </li>
-            ))}
-
-            {orderedItems.length ? (
-              <div className="relative my-4">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    Completed
-                  </span>
-                </div>
-              </div>
-            ) : (
-              <></>
+                    <div className="flex justify-center align-middle items-center gap-2 min-w-[90px]">
+                      <span className="text-xs">
+                        {Number(item.price).toLocaleString("en-IN", {
+                          style: "currency",
+                          currency: "INR",
+                        })}
+                      </span>
+                      <span>x</span>
+                      <span className="select-none text-foreground text-center">
+                        {item.quantity}
+                      </span>
+                    </div>
+                    <span className="min-w-20 flex justify-end text-foreground">
+                      {Number(item.price * item.quantity).toLocaleString(
+                        "en-IN",
+                        {
+                          style: "currency",
+                          currency: "INR",
+                        }
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             )}
 
-            {orderedItems.slice(0, 1).map((item: any) => (
-              <li
-                key={item.id}
-                className="flex justify-center items-center align-middle gap-2 text-sm font-medium text-inactive w-full"
-              >
-                <div className="grow">
-                  <p className=" text-left text-foreground">{item.title}</p>
-                </div>
+            {enableKDS && (
+              <>
+                {Boolean(orderedItems.length) && (
+                  <div className="relative my-4">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">
+                        Cooking
+                      </span>
+                    </div>
+                  </div>
+                )}
 
-                <div className="flex justify-center align-middle items-center gap-2 min-w-[90px]">
-                  <span className="text-xs">
-                    {Number(item.price).toLocaleString("en-IN", {
-                      style: "currency",
-                      currency: "INR",
-                    })}
-                  </span>
-                  <span>x</span>
-                  <span className="select-none text-foreground text-center">
-                    {item.quantity}
-                  </span>
-                </div>
-                <span className="min-w-20 flex justify-end text-foreground">
-                  {Number(item.price * item.quantity).toLocaleString("en-IN", {
-                    style: "currency",
-                    currency: "INR",
-                  })}
-                </span>
-              </li>
-            ))}
-          </ul>
+                {orderedItems.map((item: any) => (
+                  <li
+                    key={item.id}
+                    className="flex justify-center items-center align-middle gap-2 text-sm font-medium text-inactive w-full"
+                  >
+                    <div className="grow">
+                      <p className=" text-left text-foreground">{item.title}</p>
+                    </div>
+
+                    <div className="flex justify-center align-middle items-center gap-2 min-w-[90px]">
+                      <span className="text-xs">
+                        {Number(item.price).toLocaleString("en-IN", {
+                          style: "currency",
+                          currency: "INR",
+                        })}
+                      </span>
+                      <span>x</span>
+                      <span className="select-none text-foreground text-center">
+                        {item.quantity}
+                      </span>
+                    </div>
+                    <span className="min-w-20 flex justify-end text-foreground">
+                      {Number(item.price * item.quantity).toLocaleString(
+                        "en-IN",
+                        {
+                          style: "currency",
+                          currency: "INR",
+                        }
+                      )}
+                    </span>
+                  </li>
+                ))}
+                {Boolean(orderedItems.length) && (
+                  <div className="relative my-4">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">
+                        Completed
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {orderedItems.map((item: any) => (
+                  <li
+                    key={item.id}
+                    className="flex justify-center items-center align-middle gap-2 text-sm font-medium text-inactive w-full"
+                  >
+                    <div className="grow">
+                      <p className=" text-left text-foreground">{item.title}</p>
+                    </div>
+
+                    <div className="flex justify-center align-middle items-center gap-2 min-w-[90px]">
+                      <span className="text-xs">
+                        {Number(item.price).toLocaleString("en-IN", {
+                          style: "currency",
+                          currency: "INR",
+                        })}
+                      </span>
+                      <span>x</span>
+                      <span className="select-none text-foreground text-center">
+                        {item.quantity}
+                      </span>
+                    </div>
+                    <span className="min-w-20 flex justify-end text-foreground">
+                      {Number(item.price * item.quantity).toLocaleString(
+                        "en-IN",
+                        {
+                          style: "currency",
+                          currency: "INR",
+                        }
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </>
+            )}
+          </div>
         </div>
       </ScrollArea>
       <Separator />
@@ -390,26 +483,33 @@ function CartSummary({
             </span>
           </div>
         </div>
-        <div className="grid grid-cols-5 gap-2 w-full">
+        <div className="flex gap-2 w-full">
           <ButtonToolTip
             label="Discord/Cancel"
             icon="MdDeleteOutline"
             variant={"outline"}
             className="text-destructive"
+            disabled={!order?.shortId}
           />
           <ButtonToolTip
             label="Draft Order"
-            icon="RiDraftFill"
+            icon="FaSave"
             variant={"outline"}
-          />
-          <ButtonToolTip
-            label="Place Order"
-            icon="GiCampCookingPot"
-            variant={"outline"}
+            type="submit"
           />
 
+          {showPushToKot && (
+            <Button
+              className="w-full col-span-2"
+              type="submit"
+              variant={"secondary"}
+            >
+              Kitchen Dispatch
+            </Button>
+          )}
+
           <Button className="w-full col-span-2" type="submit">
-            Complete Order
+            Bill Out
           </Button>
         </div>
       </div>

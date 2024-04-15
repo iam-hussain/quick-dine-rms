@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { AspectRatio } from "@/components/atoms/aspect-ratio";
 import { ProductAPI } from "@/types";
+import { useStoreStore } from "@/stores/storeSlice";
 
 const animateVariation = {
   initial: { scale: 1 },
@@ -17,6 +18,7 @@ export interface ProductCardProps {
 }
 
 function ProductCard({ product, ...props }: ProductCardProps) {
+  const featureFlags = useStoreStore((state) => state.featureFlags);
   return (
     <motion.div
       initial="initial"
@@ -32,7 +34,7 @@ function ProductCard({ product, ...props }: ProductCardProps) {
       )}
       {...props}
     >
-      {product?.image.primary?.value && (
+      {featureFlags.showProductsImage && product?.image.primary?.value && (
         <div className="w-5/12 rounded-lg">
           <AspectRatio ratio={4 / 3} className="h-full">
             <Image
@@ -44,7 +46,7 @@ function ProductCard({ product, ...props }: ProductCardProps) {
           </AspectRatio>
         </div>
       )}
-      {!product?.image.primary?.value && (
+      {featureFlags.showProductsImage && !product?.image.primary?.value && (
         <div className="w-5/12 rounded-lg">
           <AspectRatio ratio={4 / 3} className="h-full">
             <div className="flex justify-center align-middle items-center rounded-md object-cover h-full w-full bg-accent text-2xl font-bold">
@@ -56,14 +58,21 @@ function ProductCard({ product, ...props }: ProductCardProps) {
 
       <div
         className={clsx("flex-col", {
-          "text-left w-7/12": product?.image.primary?.value,
-          "text-center w-full": !product?.image.primary?.value,
+          "text-left w-7/12": featureFlags.showProductsImage,
+          "text-center w-full": !featureFlags.showProductsImage,
         })}
       >
-        <h5 className="text-sm md:text-base break-words font-semibold text-foreground text-one-line">
+        <h5
+          className={clsx(
+            "text-sm md:text-base font-semibold text-foreground",
+            {
+              "break-words text-one-line": featureFlags.showProductsImage,
+            }
+          )}
+        >
           {product?.name || ""}
         </h5>
-        {product?.deck && (
+        {featureFlags.showProductsImage && product?.deck && (
           <p className="text-sm truncate overflow-hidden">{product?.deck}</p>
         )}
         <p className="text-sm md:text-md font-medium text-primary">

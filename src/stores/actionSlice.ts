@@ -6,6 +6,8 @@ interface ActionState {
   setSideBarMinimize: () => void;
   isFullscreenActive: boolean;
   setFullscreenOpen: (callback: () => Promise<void>) => void;
+  isTopBarHidden: boolean;
+  setHideTopBar: () => void;
 }
 
 export const useActionStore = create<ActionState>()(
@@ -22,6 +24,9 @@ export const useActionStore = create<ActionState>()(
             isSideBarMinimized: !state.isSideBarMinimized,
           }));
         },
+        isTopBarHidden: false,
+        setHideTopBar: () =>
+          set((state) => ({ isTopBarHidden: !state.isTopBarHidden })),
       }),
       {
         name: "action-storage",

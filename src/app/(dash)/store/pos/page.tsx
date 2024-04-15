@@ -18,6 +18,8 @@ import { useStoreStore } from "@/stores/storeSlice";
 import { StoreAdditionalType } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
+import clsx from "clsx";
+import { useActionStore } from "@/stores/actionSlice";
 
 export default function POS() {
   const searchParams = useSearchParams();
@@ -29,6 +31,11 @@ export default function POS() {
   const { taxes } = useStoreStore(
     (state: { settings: StoreAdditionalType }) => state.settings
   );
+
+  const { enableTables, enableCustomerAdding } = useStoreStore(
+    (state) => state.featureFlags
+  );
+  const isTopBarHidden = useActionStore((state) => state.isTopBarHidden);
 
   const { data: categoriesData } = useQuery({
     queryKey: ["categories"],
@@ -65,7 +72,7 @@ export default function POS() {
   }, [productsData, selectedCat]);
 
   const defaultValues: Partial<OrderUpsertSchemaType> = {
-    type: ORDER_TYPE.PICK_UP,
+    type: ORDER_TYPE.TAKE_AWAY,
     items: [],
     fees: [],
     taxes: taxes,
@@ -125,13 +132,14 @@ export default function POS() {
 
     return await mutation.mutateAsync({
       ...variables,
-      ...(table?.key ? { table } : {}),
+      ...(enableTables && table?.key ? { table } : {}),
+      ...(enableCustomerAdding ? {} : {}),
     } as any);
   }
 
   return (
     <div className="flex md:flex-row flex-col w-full h-full">
-      <div className="flex flex-col md:w-8/12 xl:w-9/12 w-full h-full py-4">
+      <div className="flex flex-col md:w-8/12 3xl:w-9/12 w-full h-full py-4">
         <div className="flex flex-col gap-4 px-4">
           <div className="flex justify-between align-middle items-center gap-4">
             <SearchBar className="" />
@@ -151,7 +159,13 @@ export default function POS() {
       </div>
       <Form {...form}>
         <form
-          className="flex md:flex-row flex-col md:w-4/12 lg:w-3/12 w-full h-full"
+          className={clsx(
+            "flex md:flex-row flex-col md:w-4/12 3xl:w-3/12 w-full duration-300 transition-all",
+            {
+              "h-d-screen-top-close": isTopBarHidden,
+              "h-d-screen-top-open": !isTopBarHidden,
+            }
+          )}
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <CartSummary

@@ -20,7 +20,7 @@ import instance from "@/lib/instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function FeatureFlagForm() {
-  const featureFlags = useStoreStore((state) => state.featureFlag);
+  const featureFlags = useStoreStore((state) => state.featureFlags);
   const featureFlagsFormData = getFeatureFlagForm(featureFlags);
 
   const form = useForm({

@@ -136,6 +136,22 @@ body {
   height: 100svh;
 }
 
+.h-d-screen-top-open {
+  height: 100%;
+
+  @include breakpoint(md) {
+    height: calc(100svh - 50px);
+  }
+}
+
+.h-d-screen-top-close {
+  height: 100%;
+
+  @include breakpoint(md) {
+    height: 100svh;
+  }
+}
+
 .min-h-fill {
   min-height: 100svh;
 }
@@ -225,4 +241,8 @@ body {
     max-height: 50vh;
     min-height: 30vh;
   }
+}
+
+.cart > div > div {
+  height: 100%;
 }

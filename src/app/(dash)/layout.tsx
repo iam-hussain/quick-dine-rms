@@ -9,10 +9,12 @@ import instance from "@/lib/instance";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { cookieNames, deleteCookie } from "@/lib/cookies";
+import { useActionStore } from "@/stores/actionSlice";
 
 export default function POS({ children }: { children: React.ReactNode }) {
-  const [isTopBarHidden, setHideTopBar] = useState(false);
   const setStoreData = useStoreStore((state) => state.setStoreData);
+  const isTopBarHidden = useActionStore((state) => state.isTopBarHidden);
+  const setHideTopBar = useActionStore((state) => state.setHideTopBar);
 
   const { data, isLoading, isError, isSuccess } = useQuery({
     queryKey: ["store"],
@@ -55,7 +57,7 @@ export default function POS({ children }: { children: React.ReactNode }) {
         />
         <div
           className={clsx(
-            "h-full min-h-svh md:h-screen w-full transition-all duration-300",
+            "h-full min-h-svh w-full transition-all duration-300",
             {
               "pt-[50px]": !isTopBarHidden,
             }

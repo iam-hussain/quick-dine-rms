@@ -3,12 +3,7 @@ import { useStoreStore } from "@/stores/storeSlice";
 import { Control, useWatch, useFieldArray } from "react-hook-form";
 import { StoreAdditionalType } from "@/types";
 import { getChargesValue } from "@/lib/utils";
-import { CartSchemaValues } from "@/validations";
-import {
-  ORDER_STATUS,
-  ORDER_TYPE,
-  OrderUpsertSchemaType,
-} from "@iam-hussain/qd-copilot";
+import { ORDER_TYPE, OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 
 type UseCartType = {
   order: any;
@@ -37,7 +32,7 @@ function useCart({ control, order }: UseCartType) {
   const type = useWatch({
     control,
     name: "type",
-    defaultValue: ORDER_TYPE.Values.PICK_UP as any,
+    defaultValue: ORDER_TYPE.Values.TAKE_AWAY as any,
   });
 
   const fees = useWatch({
@@ -159,6 +154,8 @@ function useCart({ control, order }: UseCartType) {
     return total + taxesValue.reduce((a, b) => a + b.amount, 0);
   }, [total, taxesValue]);
 
+  const showPushToKot = [ORDER_TYPE.Values.DINING].includes(type as any);
+
   return {
     shouldAddPackingCharge,
     shouldAddDeliveryCharge,
@@ -173,6 +170,7 @@ function useCart({ control, order }: UseCartType) {
     taxesValue,
     grandTotal,
     totalItems,
+    showPushToKot,
   };
 }
 export default useCart;
