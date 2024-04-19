@@ -40,14 +40,11 @@ import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import ItemsList from "../molecules/items-list";
 import { KitchenDispatch } from "./kitchen-dispatch";
 import { BillOut } from "./bill-out";
-import OrderDetails from "../molecules/order-details";
-import OrderTypeSelect from "../molecules/order-type-select";
-import TableSelection from "./table-selection";
 
-function CartSummary({
+function Order({
   className,
   control,
-  order,
+  fetched,
 }: {
   order: any;
   className?: string;
@@ -68,7 +65,7 @@ function CartSummary({
     placedItems,
     acceptedItems,
     preparedItems,
-  } = useCart({ control, order });
+  } = useCart({ control, order: fetched });
   const [openTable, setOpenTable] = React.useState(false);
   const {
     enableTables,
@@ -125,10 +122,93 @@ function CartSummary({
     <div className={clsx("flex gap-2", className)}>
       <div className="flex flex-col px-4 py-2">
         <div className="flex justify-between gap-4 pb-2">
-         <OrderTypeSelect control={control}  />
+          <FormField
+            control={control}
+            name="type"
+            render={({ field }) => (
+              <FormItem className="min-w-32">
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="text-sm">
+                    <SelectValue placeholder="Select a order type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Order Type</SelectLabel>
+                      {showExpressOption && (
+                        <SelectItem value="PICK_UP">Express</SelectItem>
+                      )}
+                      <SelectItem value="DINING">Dine In</SelectItem>
+                      <SelectItem value="TAKE_AWAY">Take Away</SelectItem>
+                      <SelectItem value="DELIVERY">Delivery</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <div className="flex justify-between align-middle items-center gap-2">
-            <TableSelection control={control} />
+            {enableTables && showPushToKot && (
+              <Dialog open={openTable} onOpenChange={setOpenTable}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant={table?.key ? "accent" : "outline"}
+                    className={clsx(
+                      "flex justify-center gap-2 font-normal text-lg"
+                    )}
+                  >
+                    {table?.name ? (
+                      <p className="font-bold text-base">{table?.name}</p>
+                    ) : (
+                      <Icon name={"MdTableRestaurant"} className="h-5 w-5" />
+                    )}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Select Table</DialogTitle>
+                  </DialogHeader>
+                  <div className="flex gap-4 py-4 justify-center">
+                    <ToggleGroup
+                      type="single"
+                      variant="outline"
+                      className="flex items-center gap-4 justify-center flex-wrap"
+                      value={table?.key || ""}
+                    >
+                      <ToggleGroupItem
+                        value={""}
+                        aria-label={"None"}
+                        className="text-2xl px-4 py-8"
+                        onClick={() => {
+                          onTableChange({});
+                          setOpenTable(false);
+                        }}
+                      >
+                        <div>--</div>
+                      </ToggleGroupItem>
+                      {tables.map((e, i) => (
+                        <ToggleGroupItem
+                          value={e.key}
+                          aria-label={e.name}
+                          key={`table_${i}`}
+                          className="text-2xl px-4 py-8"
+                          onClick={() => {
+                            onTableChange(e);
+                            setOpenTable(false);
+                          }}
+                        >
+                          <div>{e.name}</div>
+                        </ToggleGroupItem>
+                      ))}
+                    </ToggleGroup>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            )}
             {enableCustomerAdding && (
               <ButtonToolTip
                 label="Link Customer"
@@ -139,7 +219,39 @@ function CartSummary({
           </div>
         </div>
         <Separator />
-         <OrderDetails order={order} />
+        <div className="flex gap-2 text-sm flex-row justify-between w-full py-2">
+          <div>
+            {enableCustomerAdding && (
+              <p className="font-medium">
+                {order?.customerId ? order.customerId : "Unknown Name"}
+              </p>
+            )}
+            {order?.shortId && (
+              <p className="text-foreground/80">
+                Order: #{order?.shortId}
+                {order?.table?.key ? ` / ${order?.table?.key}` : ""}
+              </p>
+            )}
+          </div>
+
+          <div className="text-sm text-right">
+            <p className="">
+              {order?.status || "Unsaved"}{" "}
+              {order?.type ? ` / ${order.type}` : ""}
+            </p>
+            {showUpdatedDate && order?.updatedAt && (
+              <p className="text-foreground/80">
+                {new Date(order.updatedAt).toLocaleString()}
+              </p>
+            )}
+            {!showUpdatedDate && order?.createdAt && (
+              <p className="text-foreground/80">
+                {new Date(order.createdAt).toLocaleString()}
+              </p>
+            )}
+          </div>
+        </div>
+
         <Separator />
       </div>
       <ScrollArea className="w-full flex justify-end grow bg-background px-4 pb-1 cart">
@@ -270,4 +382,4 @@ function CartSummary({
   );
 }
 
-export default CartSummary;
+export default Order;
