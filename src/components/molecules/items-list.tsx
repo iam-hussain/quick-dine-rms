@@ -1,13 +1,13 @@
 import React from "react";
 
-function ItemsList({ items, label }: { items: any[]; label: string }) {
+function ItemsList({ items, label }: { items: any[]; label?: string }) {
   if (!items.length) {
     return <></>;
   }
 
   return (
     <ul className="flex flex-col gap-2">
-      <div className="relative">
+      {label && <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
         </div>
@@ -16,7 +16,7 @@ function ItemsList({ items, label }: { items: any[]; label: string }) {
             {label}
           </span>
         </div>
-      </div>
+      </div>}
 
       {items.map((item: any) => (
         <li
@@ -27,7 +27,7 @@ function ItemsList({ items, label }: { items: any[]; label: string }) {
             <p className=" text-left text-foreground">{item.title}</p>
           </div>
 
-          <div className="flex justify-center align-middle items-center gap-2 min-w-[90px]">
+          <div className="flex justify-end align-middle items-center gap-2 min-w-28">
             <span className="text-xs">
               {Number(item.price).toLocaleString("en-IN", {
                 style: "currency",

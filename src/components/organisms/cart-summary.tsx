@@ -38,6 +38,8 @@ import { StoreAdditionalType } from "@/types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/atoms/toggle-group";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import ItemsList from "../molecules/items-list";
+import { KitchenDispatch } from "./kitchen-dispatch";
+import { BillOut } from "./bill-out";
 
 function CartSummary({
   className,
@@ -369,18 +371,11 @@ function CartSummary({
           />
 
           {showPushToKot && (
-            <Button
-              className="w-full col-span-2"
-              type="submit"
-              variant={"secondary"}
-            >
-              Kitchen Dispatch
-            </Button>
+            <KitchenDispatch btnClassName="w-full col-span-2"  items={items} fetched={order}/>
           )}
 
-          <Button className="w-full col-span-2" type="submit">
-            Bill Out
-          </Button>
+          <BillOut  btnClassName="w-full col-span-2"  items={items} fetched={order}/>
+         
         </div>
       </div>
     </div>
