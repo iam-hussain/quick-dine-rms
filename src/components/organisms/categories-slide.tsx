@@ -8,12 +8,12 @@ import clsx from "clsx";
 export function CategoriesSlide({
   className,
   categories,
-  onItemClick,
+  onClick,
   selected,
 }: {
   className?: string;
   categories: { name: string; id: string }[];
-  onItemClick: (e: any) => void;
+  onClick: (e: any) => void;
   selected: string;
 }) {
   return (
@@ -29,13 +29,13 @@ export function CategoriesSlide({
         <CategoryCard
           name="All"
           active={!selected}
-          onClick={() => onItemClick({})}
+          onClick={() => onClick({})}
         />
         {categories.map((category, index) => (
           <CategoryCard
             key={`cat_${index}`}
             {...category}
-            onClick={() => onItemClick(category)}
+            onClick={() => onClick(category)}
             active={selected === category.id}
           />
         ))}

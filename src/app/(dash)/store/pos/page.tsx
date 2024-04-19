@@ -9,13 +9,13 @@ import SearchBar from "@/components/organisms/search-bar";
 import instance from "@/lib/instance";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/atoms/button";
-import { useForm, useWatch } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import schemas, { CartSchemaValues, ORDER_TYPE } from "@/validations";
 import { Form } from "@/components/atoms/form";
 import { useEffect, useState } from "react";
 import { isValidArray } from "@/lib/utils";
 import { useStoreStore } from "@/stores/storeSlice";
-import { StoreAdditionalType } from "@/types";
+import { ProductAPI, StoreAdditionalType } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import clsx from "clsx";
@@ -118,6 +118,34 @@ export default function POS() {
     }
   }, [fetchOrder, id, order]);
 
+  const { append, update } = useFieldArray({
+    control,
+    name: "items",
+  });
+  const items = useWatch({
+    control,
+    name: "items",
+    defaultValue: [],
+  });
+
+  const onProductClick = (e: any, product: ProductAPI) => {
+    e.preventDefault();
+    const index = items.findIndex((e) => e.productId === product.id);
+    if (index >= 0) {
+      update(index, { ...items[index], quantity: items[index].quantity + 1 });
+    } else {
+      append({
+        price: product.price,
+        title: product.name,
+        note: "",
+        quantity: 1,
+        position: items.length + 1,
+        productId: product.id,
+        type: product.type,
+      });
+    }
+  };
+
   const mutation = useMutation({
     mutationFn: (variables) => instance.post("/store/order", variables),
     onSuccess: async (data: any) => {
@@ -137,6 +165,8 @@ export default function POS() {
     } as any);
   }
 
+
+
   return (
     <div className="flex md:flex-row flex-col w-full h-full">
       <div className="flex flex-col md:w-8/12 3xl:w-9/12 w-full h-full py-4">
@@ -147,14 +177,14 @@ export default function POS() {
           </div>
           <CategoriesSlide
             categories={categories || []}
-            onItemClick={(e) => setSelectedCat(e.id || "")}
+            onClick={(e) => setSelectedCat(e.id || "")}
             selected={selectedCat}
           />
         </div>
         <ProductList
           className="flex grow flex-col"
           products={products || []}
-          control={control}
+          onClick={onProductClick}
         />
       </div>
       <Form {...form}>
@@ -169,7 +199,7 @@ export default function POS() {
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <CartSummary
-            className="flex flex-col gap-1 w-full h-full py-4 md:py-2 px-1 bg-background"
+            className="flex flex-col gap-1 w-full h-full py-4 px-1 bg-background"
             control={control}
             order={order}
           />

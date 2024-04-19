@@ -1,5 +1,4 @@
 import { useStoreStore } from "@/stores/storeSlice";
-import { Button } from "@/components/atoms/button";
 import { ScrollArea } from "@/components/atoms/scroll-area";
 import clsx from "clsx";
 import ButtonToolTip from "@/components/molecules/button-tooltip";
@@ -12,30 +11,8 @@ import {
 } from "react-hook-form";
 import CartItem from "@/components/molecules/cart-item";
 import { Separator } from "@/components/atoms/separator";
-import { FormField, FormItem, FormMessage } from "@/components/atoms/form";
-import {
-  Select,
-  SelectLabel,
-  SelectGroup,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/atoms/select";
 import useCart from "@/hooks/useCart";
-import { CartSchemaValues } from "@/validations";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/atoms/dialog";
-import Icon from "@/components/atoms/icon";
 import { StoreAdditionalType } from "@/types";
-import { ToggleGroup, ToggleGroupItem } from "@/components/atoms/toggle-group";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import ItemsList from "../molecules/items-list";
 import { KitchenDispatch } from "./kitchen-dispatch";
@@ -43,6 +20,7 @@ import { BillOut } from "./bill-out";
 import OrderDetails from "../molecules/order-details";
 import OrderTypeSelect from "../molecules/order-type-select";
 import TableSelection from "./table-selection";
+import CartSummaryItem from "../molecules/cart-summary-item";
 
 function CartSummary({
   className,
@@ -123,8 +101,11 @@ function CartSummary({
 
   return (
     <div className={clsx("flex gap-2", className)}>
-      <div className="flex flex-col px-4 py-2">
-        <div className="flex justify-between gap-4 pb-2">
+      <div className="flex flex-col px-4 gap-2">
+
+         <OrderDetails order={order} />
+        <Separator />
+        <div className="flex justify-between gap-4">
          <OrderTypeSelect control={control}  />
 
           <div className="flex justify-between align-middle items-center gap-2">
@@ -139,12 +120,10 @@ function CartSummary({
           </div>
         </div>
         <Separator />
-         <OrderDetails order={order} />
-        <Separator />
       </div>
       <ScrollArea className="w-full flex justify-end grow bg-background px-4 pb-1 cart">
         <div className="flex flex-col h-full">
-          <div className="flex flex-col gap-2 justify-between h-full">
+          <div className="flex flex-col gap-4 pt-2 justify-between h-full">
             <ul className="flex flex-col gap-2">
               {items.length === 0 ? (
                 <li className="text-sm text-foreground/80 text-center w-full py-6">
@@ -179,69 +158,27 @@ function CartSummary({
         </div>
       </ScrollArea>
       <Separator />
-      <div className="flex justify-center align-middle items-center gap-4 flex-col text-sm bg-background select-none h-auto px-4 py-2">
+      <div className="flex justify-center align-middle items-center gap-4 flex-col text-sm bg-background select-none h-auto px-4">
         <div className="flex flex-col justify-center align-middle items-center w-full text-sm text-foreground/80">
-          <div className="flex gap-2 justify-between align-middle items-center w-full">
-            <span>Subtotal</span>
-            <span>
-              {Number(subTotal).toLocaleString("en-IN", {
-                style: "currency",
-                currency: "INR",
-              })}
-            </span>
-          </div>
-
+          <CartSummaryItem name="Subtotal" price={subTotal} />
           {shouldAddPackingCharge && (
-            <div className="flex gap-2 justify-between align-middle items-center w-full">
-              <span>Packaging</span>
-              <span>
-                {Number(packagingCharge).toLocaleString("en-IN", {
-                  style: "currency",
-                  currency: "INR",
-                })}
-              </span>
-            </div>
+            <CartSummaryItem name="Packaging" price={packagingCharge} />
+       
           )}
 
           {shouldAddDeliveryCharge && (
-            <div className="flex gap-2 justify-between align-middle items-center w-full">
-              <span>Delivery</span>
-              <span>
-                {Number(deliveryCharge).toLocaleString("en-IN", {
-                  style: "currency",
-                  currency: "INR",
-                })}
-              </span>
-            </div>
+                 <CartSummaryItem name="Delivery" price={deliveryCharge} />
+       
           )}
 
           {taxesValue &&
             taxesValue.map(
               (e: { key: string; name: string; amount: any }, i: any) => (
-                <div
-                  className="flex gap-2 justify-between align-middle items-center w-full"
-                  key={e.key}
-                >
-                  <span>{e.name}</span>
-                  <span>
-                    {Number(e.amount).toLocaleString("en-IN", {
-                      style: "currency",
-                      currency: "INR",
-                    })}
-                  </span>
-                </div>
+                <CartSummaryItem key={e.key} name={e.name} price={e.amount} />
               )
             )}
-
-          <div className="flex gap-2 justify-between align-middle items-center w-full text-base text-foreground">
-            <span>Grand Total</span>
-            <span className="font-medium">
-              {Number(grandTotal).toLocaleString("en-IN", {
-                style: "currency",
-                currency: "INR",
-              })}
-            </span>
-          </div>
+<CartSummaryItem name="Grand Total" price={grandTotal} />
+         
         </div>
         <div className="flex gap-2 w-full">
           <ButtonToolTip

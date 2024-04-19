@@ -14,10 +14,10 @@ const animateVariation = {
 
 export interface ProductCardProps {
   product: ProductAPI;
-  onClick: () => void;
+  onClick: (e: any, p: ProductAPI) => void
 }
 
-function ProductCard({ product, ...props }: ProductCardProps) {
+function ProductCard({ product, onClick, ...props }: ProductCardProps) {
   const featureFlags = useStoreStore((state) => state.featureFlags);
   return (
     <motion.div
@@ -32,6 +32,7 @@ function ProductCard({ product, ...props }: ProductCardProps) {
           "justify-start": product?.image.primary?.value,
         }
       )}
+      onClick={(e => onClick(e, product))}
       {...props}
     >
       {featureFlags.showProductsImage && product?.image.primary?.value && (
