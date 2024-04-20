@@ -3,7 +3,7 @@ import { Button } from "@/components/atoms/button";
 import { ScrollArea } from "@/components/atoms/scroll-area";
 import clsx from "clsx";
 import ButtonToolTip from "@/components/molecules/button-tooltip";
-import React from "react";
+import React, { useState } from "react";
 import {
   Control,
   useWatch,
@@ -40,6 +40,9 @@ import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import ItemsList from "../molecules/items-list";
 import { KitchenDispatch } from "./kitchen-dispatch";
 import { BillOut } from "./bill-out";
+import CartSummary from "./cart-summary";
+import OrderDetails from "../molecules/order-details";
+import OrderStatus from "./order-status";
 
 function Order({
   className,
@@ -50,6 +53,7 @@ function Order({
   className?: string;
   control: Control<OrderUpsertSchemaType>;
 }) {
+  const cart = useCart({ control, order });
   const {
     shouldAddPackingCharge,
     shouldAddDeliveryCharge,
@@ -65,62 +69,18 @@ function Order({
     placedItems,
     acceptedItems,
     preparedItems,
-  } = useCart({ control, order });
-  const [openTable, setOpenTable] = React.useState(false);
+  } = cart
   const {
-    enableTables,
-    enableCustomerAdding,
     enableExpressOrder,
-    showUpdatedDate,
-    enableKDS,
   } = useStoreStore((state) => state.featureFlags);
 
-  const { tables } = useStoreStore(
-    (state: { settings: StoreAdditionalType }) => state.settings
-  );
-
-  const table = useWatch({
-    control,
-    name: "table",
-    defaultValue: undefined,
-  });
-
-  const {
-    field: { onChange: onTableChange },
-  } = useController({
-    control,
-    name: "table",
-  });
-
-  const { remove, update } = useFieldArray({
-    control,
-    name: "items",
-  });
-
-  const handleQuantityClick = (type: "ADD" | "SUB" = "ADD", index: number) => {
-    if (type === "SUB" && items[index].quantity === 0) {
-      return;
-    }
-    update(index, {
-      ...items[index],
-      quantity:
-        type == "ADD" ? items[index].quantity + 1 : items[index].quantity - 1,
-    });
-  };
-
-  const showExpressOption = React.useMemo(() => {
-    if (enableExpressOrder) {
-      return true;
-    }
-    if (!enableExpressOrder && order?.shortId) {
-      return true;
-    }
-    return false;
-  }, [enableExpressOrder, order?.shortId]);
+  const [tab, setTab] = useState('CART')
 
   return (
-    <div className={clsx("flex gap-2", className)}>
-
+    <div className={clsx("flex flex-col gap-4 w-full h-full py-4 bg-background px-2", className)}>
+      <OrderDetails order={order} />
+        {items.length !== 0 ? <CartSummary order={order} control={control} cart={cart} /> :<OrderStatus cart={cart} /> }
+   
     </div>
 
   );

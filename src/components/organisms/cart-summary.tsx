@@ -5,14 +5,11 @@ import ButtonToolTip from "@/components/molecules/button-tooltip";
 import React from "react";
 import {
   Control,
-  useWatch,
-  useController,
   useFieldArray,
 } from "react-hook-form";
 import CartItem from "@/components/molecules/cart-item";
 import { Separator } from "@/components/atoms/separator";
 import useCart from "@/hooks/useCart";
-import { StoreAdditionalType } from "@/types";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import ItemsList from "../molecules/items-list";
 import { KitchenDispatch } from "./kitchen-dispatch";
@@ -26,10 +23,12 @@ function CartSummary({
   className,
   control,
   order,
+  cart,
 }: {
   order: any;
   className?: string;
   control: Control<OrderUpsertSchemaType>;
+  cart: ReturnType<typeof useCart>
 }) {
   const {
     shouldAddPackingCharge,
@@ -46,32 +45,12 @@ function CartSummary({
     placedItems,
     acceptedItems,
     preparedItems,
-  } = useCart({ control, order });
-  const [openTable, setOpenTable] = React.useState(false);
+  } = cart
+
   const {
-    enableTables,
     enableCustomerAdding,
-    enableExpressOrder,
-    showUpdatedDate,
     enableKDS,
   } = useStoreStore((state) => state.featureFlags);
-
-  const { tables } = useStoreStore(
-    (state: { settings: StoreAdditionalType }) => state.settings
-  );
-
-  const table = useWatch({
-    control,
-    name: "table",
-    defaultValue: undefined,
-  });
-
-  const {
-    field: { onChange: onTableChange },
-  } = useController({
-    control,
-    name: "table",
-  });
 
   const { remove, update } = useFieldArray({
     control,
@@ -89,23 +68,9 @@ function CartSummary({
     });
   };
 
-  const showExpressOption = React.useMemo(() => {
-    if (enableExpressOrder) {
-      return true;
-    }
-    if (!enableExpressOrder && order?.shortId) {
-      return true;
-    }
-    return false;
-  }, [enableExpressOrder, order?.shortId]);
-
   return (
-    <div className={clsx("flex gap-2", className)}>
-      <div className="flex flex-col px-4 gap-2">
-
-         <OrderDetails order={order} />
-        <Separator />
-        <div className="flex justify-between gap-4">
+    <div className={clsx("flex flex-col h-full gap-2", className)}>
+        <div className="flex justify-between gap-4 px-4">
          <OrderTypeSelect control={control}  />
 
           <div className="flex justify-between align-middle items-center gap-2">
@@ -118,10 +83,9 @@ function CartSummary({
               />
             )}
           </div>
-        </div>
-        <Separator />
       </div>
-      <ScrollArea className="w-full flex justify-end grow bg-background px-4 pb-1 cart">
+        <Separator className="my-2" />
+      <ScrollArea className="w-full flex justify-end grow bg-background px-4 h-0 cart">
         <div className="flex flex-col h-full">
           <div className="flex flex-col gap-4 pt-2 justify-between h-full">
             <ul className="flex flex-col gap-2">
@@ -144,21 +108,11 @@ function CartSummary({
               ))}
             </ul>
 
-            {!enableKDS && <ItemsList label="Ordered" items={allItems} />}
-
-            {enableKDS && (
-              <>
-                <ItemsList label="Scheduled" items={scheduledItems} />
-                <ItemsList label="Placed" items={placedItems} />
-                <ItemsList label="Accepted" items={acceptedItems} />
-                <ItemsList label="Completed" items={preparedItems} />
-              </>
-            )}
           </div>
         </div>
       </ScrollArea>
       <Separator />
-      <div className="flex justify-center align-middle items-center gap-4 flex-col text-sm bg-background select-none h-auto px-4">
+      <div className="flex justify-center align-middle items-center gap-4 flex-col text-sm bg-background select-none h-auto px-6">
         <div className="flex flex-col justify-center align-middle items-center w-full text-sm text-foreground/80">
           <CartSummaryItem name="Subtotal" price={subTotal} />
           {shouldAddPackingCharge && (
@@ -177,7 +131,7 @@ function CartSummary({
                 <CartSummaryItem key={e.key} name={e.name} price={e.amount} />
               )
             )}
-<CartSummaryItem name="Grand Total" price={grandTotal} />
+            <CartSummaryItem name="Grand Total" price={grandTotal} />
          
         </div>
         <div className="flex gap-2 w-full">

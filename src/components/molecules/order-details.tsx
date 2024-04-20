@@ -15,10 +15,10 @@ function OrderDetails({
 
 
   return (
-        <div className="flex gap-2 text-xs flex-row justify-between w-full align-middle items-center">
+        <div className="flex gap-2 text-xs flex-row justify-between w-full align-middle items-center px-4">
          
          <div className="flex justify-between align-middle items-center gap-4">
-         <Button variant={'outline'}>
+         <Button variant={'outline'} type={'button'}>
           <Icon name='IoIosArrowBack' />
          </Button>
          <div>

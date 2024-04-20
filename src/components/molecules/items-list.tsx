@@ -6,7 +6,7 @@ function ItemsList({ items, label }: { items: any[]; label?: string }) {
   }
 
   return (
-    <ul className="flex flex-col gap-2">
+    <ul className="flex flex-col gap-2 pt-4">
       {label && <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />

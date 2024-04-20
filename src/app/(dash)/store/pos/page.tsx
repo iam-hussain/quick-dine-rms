@@ -10,7 +10,7 @@ import instance from "@/lib/instance";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/atoms/button";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
-import schemas, { CartSchemaValues, ORDER_TYPE } from "@/validations";
+import schemas, {  ORDER_TYPE } from "@/validations";
 import { Form } from "@/components/atoms/form";
 import { useEffect, useState } from "react";
 import { isValidArray } from "@/lib/utils";
@@ -20,6 +20,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import clsx from "clsx";
 import { useActionStore } from "@/stores/actionSlice";
+import Order from "@/components/organisms/order";
 
 export default function POS() {
   const searchParams = useSearchParams();
@@ -165,8 +166,6 @@ export default function POS() {
     } as any);
   }
 
-
-
   return (
     <div className="flex md:flex-row flex-col w-full h-full">
       <div className="flex flex-col md:w-8/12 3xl:w-9/12 w-full h-full py-4">
@@ -198,8 +197,7 @@ export default function POS() {
           )}
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <CartSummary
-            className="flex flex-col gap-1 w-full h-full py-4 px-1 bg-background"
+          <Order
             control={control}
             order={order}
           />
