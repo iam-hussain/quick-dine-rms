@@ -44,7 +44,7 @@ import { BillOut } from "./bill-out";
 function Order({
   className,
   control,
-  fetched,
+  order,
 }: {
   order: any;
   className?: string;
@@ -65,7 +65,7 @@ function Order({
     placedItems,
     acceptedItems,
     preparedItems,
-  } = useCart({ control, order: fetched });
+  } = useCart({ control, order });
   const [openTable, setOpenTable] = React.useState(false);
   const {
     enableTables,
@@ -112,11 +112,11 @@ function Order({
     if (enableExpressOrder) {
       return true;
     }
-    if (!enableExpressOrder && fetched?.shortId) {
+    if (!enableExpressOrder && order?.shortId) {
       return true;
     }
     return false;
-  }, [enableExpressOrder, fetched?.shortId]);
+  }, [enableExpressOrder, order?.shortId]);
 
   return (
     <div className={clsx("flex gap-2", className)}>
