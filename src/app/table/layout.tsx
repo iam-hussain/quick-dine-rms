@@ -6,7 +6,6 @@ import TopMenu from "@/components/organisms/top-menu";
 import { useFullScreenHandle, FullScreen } from "react-full-screen";
 import { CategoriesSlide } from "@/components/organisms/categories-slide";
 import ProductList from "@/components/organisms/product-list";
-import CartSummary from "@/components/organisms/cart-summary";
 import SearchBar from "@/components/organisms/search-bar";
 import BrandSideBySide from "@/components/atoms/brand/side-by-side";
 import ButtonToolTip from "@/components/molecules/button-tooltip";

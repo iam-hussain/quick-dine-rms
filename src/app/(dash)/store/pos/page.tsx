@@ -4,7 +4,6 @@ import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CategoriesSlide } from "@/components/organisms/categories-slide";
 import ProductList from "@/components/organisms/product-list";
-import CartSummary from "@/components/organisms/cart-summary";
 import SearchBar from "@/components/organisms/search-bar";
 import instance from "@/lib/instance";
 import { useQuery } from "@tanstack/react-query";

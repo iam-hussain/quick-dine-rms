@@ -1,5 +1,4 @@
 import { useStoreStore } from "@/stores/storeSlice";
-import { Button } from "@/components/atoms/button";
 import { ScrollArea } from "@/components/atoms/scroll-area";
 import clsx from "clsx";
 import ButtonToolTip from "@/components/molecules/button-tooltip";
@@ -40,9 +39,26 @@ import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import ItemsList from "../molecules/items-list";
 import { KitchenDispatch } from "./kitchen-dispatch";
 import { BillOut } from "./bill-out";
-import CartSummary from "./cart-summary";
+import Cart from "./cart";
 import OrderDetails from "../molecules/order-details";
 import OrderStatus from "./order-status";
+import { Button } from "@/components/atoms/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/atoms/card"
+import { Input } from "@/components/atoms/input"
+import { Label } from "@/components/atoms/label"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/atoms/tabs"
 
 function Order({
   className,
@@ -74,14 +90,31 @@ function Order({
     enableExpressOrder,
   } = useStoreStore((state) => state.featureFlags);
 
-  const [tab, setTab] = useState('CART')
+
+  const [tab, setTab] = useState('STATUS')
 
   return (
-    <div className={clsx("flex flex-col gap-4 w-full h-full py-4 bg-background px-2", className)}>
-      <OrderDetails order={order} />
-        {items.length !== 0 ? <CartSummary order={order} control={control} cart={cart} /> :<OrderStatus cart={cart} /> }
+     
    
-    </div>
+      <Tabs defaultValue="account"  className={clsx("flex gap-2 flex-col w-full h-full pt-2 pb-4 bg-background px-2", className)}>
+      <TabsList className="grid w-full grid-cols-3 gap-2 bg-background rounded-none">
+        <TabsTrigger className="data-[state=active]:shadow-none shadow-none data-[state=active]:border-primary border-2 border-background text-foreground/60" value="cart">Cart</TabsTrigger>
+        <TabsTrigger className="data-[state=active]:shadow-none shadow-none data-[state=active]:border-primary border-2 border-background text-foreground/60" value="progress">Progress</TabsTrigger>
+        <TabsTrigger className="data-[state=active]:shadow-none shadow-none data-[state=active]:border-primary border-2 border-background text-foreground/60" value="summary">Summary</TabsTrigger>
+      </TabsList>
+      <Separator className="bg-foreground/50" />
+      <OrderDetails order={order}  />
+      <Separator  />
+      <TabsContent value="cart" className="grow">
+        <Cart order={order} control={control} cart={cart} />
+      </TabsContent>
+      <TabsContent value="progress" className="grow">
+        <OrderStatus cart={cart} />
+      </TabsContent>
+      <TabsContent value="summary" className="grow">
+        <BillOut cart={cart}  control={control} />
+      </TabsContent>
+    </Tabs>
 
   );
 }

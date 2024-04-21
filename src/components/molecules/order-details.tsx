@@ -15,14 +15,8 @@ function OrderDetails({
 
 
   return (
-        <div className="flex gap-2 text-xs flex-row justify-between w-full align-middle items-center px-4">
-         
-         <div className="flex justify-between align-middle items-center gap-4">
-         <Button variant={'outline'} type={'button'}>
-          <Icon name='IoIosArrowBack' />
-         </Button>
-         <div>
-            
+        <div className="flex gap-2 text-xs flex-row justify-between w-full align-middle items-center px-4">   
+         <div className="flex justify-between align-middle items-center gap-1">
             {(enableCustomerAdding && order?.customerId) && (
               <p className="font-medium">
                 {order?.customerId ? order.customerId : "Unknown Name"}
@@ -34,11 +28,8 @@ function OrderDetails({
                 {order?.table?.key ? ` / ${order?.table?.key}` : ""}</span>
               </p>
             )}
-          </div>
          </div>
-         
-
-          <div className="text-xs text-right">
+          <div className="text-xs text-right flex flex-col gap-1">
             <p className="">
               {order?.status || "Unsaved"}{" "}
               {order?.type ? ` / ${order.type}` : ""}
