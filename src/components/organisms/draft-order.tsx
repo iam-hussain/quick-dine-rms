@@ -21,7 +21,6 @@ function DraftOrder() {
   const { upsert } = useContext(OrderContext);
 
   async function onSubmit({ items, ...data }: OrderUpsertSchemaType) {
-    console.log({ upsert, data, items });
     await upsert({
       ...data,
       items: items.map((e) => ({ ...e, status: "DRAFT" })),

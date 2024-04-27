@@ -156,7 +156,6 @@ export const OrderContextProvider: React.FC<{ children: ReactNode }> = ({
   ]);
 
   const upsert = ({ table, ...variables }: OrderUpsertSchemaType) => {
-    console.log("upsert upsert");
     return upsertOrderMutation.mutate({
       ...variables,
       ...(enableTables && table?.key ? { table } : {}),

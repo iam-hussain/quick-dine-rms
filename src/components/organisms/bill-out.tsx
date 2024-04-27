@@ -19,6 +19,11 @@ export function BillOut({ className }: { className?: string }) {
       <ScrollArea className="w-full flex justify-end grow bg-background px-4 cart">
         <div className="flex flex-col h-full">
           <div className="flex flex-col gap-4 pt-2 justify-between h-full">
+            {summary.length === 0 && (
+              <p className="text-sm text-foreground/80 text-center w-full py-6">
+                No items found
+              </p>
+            )}
             <ItemsList items={summary} />
           </div>
         </div>
