@@ -56,7 +56,7 @@ function Cart({ className }: { className?: string }) {
           )}
         </div>
       </div>
-      <Separator className="my-2" />
+      <Separator className="my-4" />
       <ScrollArea className="w-full flex justify-end grow bg-background px-4 h-0 cart">
         <ul className="flex flex-col gap-2">
           {items.length === 0 ? (
