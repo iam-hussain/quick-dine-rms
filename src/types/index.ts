@@ -86,3 +86,79 @@ export type StoreAdditionalType = {
     };
   };
 };
+
+export type OrderItem = {
+  id: string;
+  title: string;
+  note: string;
+  type: "VEG" | "NON_VEG" | "VEGAN";
+  price: number;
+  quantity: number;
+  total: number;
+  position: number;
+  placeAt: string;
+  placedAt: string;
+  acceptedAt: string | null;
+  prepared: string | null;
+  status: "PLACED";
+  productId: string;
+  orderId: string;
+  createdId: string;
+  createdAt: string;
+  updatedId: string | null;
+  updatedAt: string | null;
+  billId: string | null;
+};
+
+export type OrderType = {
+  id: string;
+  shortId: string;
+  type: "DINING" | "TAKE_AWAY" | "PICK_UP" | "DELIVERY" | "PLATFORM";
+  status:
+    | "DRAFT"
+    | "PLACED"
+    | "ACCEPTED"
+    | "PROGRESS"
+    | "READY"
+    | "OUT_FOR_DELIVERY"
+    | "COMPLETED";
+  note: string | null;
+  table: {
+    key: string;
+    name: string;
+    position: number;
+    printName: string;
+  };
+  taxes: {
+    key: string;
+    name: string;
+    rate: number;
+    type: "VALUE" | "PERCENTAGE" | "VALUE_COUNT";
+    position: number;
+    printName: string;
+  }[];
+  fees: {
+    key: string;
+    name: string;
+    rate: number;
+    type: "VALUE" | "PERCENTAGE" | "VALUE_COUNT";
+    position: number;
+    printName: string;
+  }[];
+  extra: Record<string, never>;
+  completedAt: string | null;
+  deliveredAt: string | null;
+  customerId: string | null;
+  createdId: string;
+  createdAt: string;
+  updatedId: string | null;
+  updatedAt: string | null;
+  storeId: string;
+  items: OrderItem[];
+  summary: OrderItem[];
+  drafted: OrderItem[];
+  scheduled: OrderItem[];
+  placed: OrderItem[];
+  accepted: OrderItem[];
+  prepared: OrderItem[];
+};

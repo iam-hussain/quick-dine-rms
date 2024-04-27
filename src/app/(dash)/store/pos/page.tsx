@@ -9,7 +9,7 @@ import instance from "@/lib/instance";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/atoms/button";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
-import schemas, {  ORDER_TYPE } from "@/validations";
+import schemas, { ORDER_TYPE } from "@/validations";
 import { Form } from "@/components/atoms/form";
 import { useEffect, useState } from "react";
 import { isValidArray } from "@/lib/utils";
@@ -20,20 +20,14 @@ import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import clsx from "clsx";
 import { useActionStore } from "@/stores/actionSlice";
 import Order from "@/components/organisms/order";
+import { OrderContextProvider } from "@/components/providers/order-provider";
 
 export default function POS() {
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-  const [order, setOrder] = useState<any>(null);
   const [selectedCat, setSelectedCat] = useState("");
   const [categories, setCategories] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const { taxes } = useStoreStore(
     (state: { settings: StoreAdditionalType }) => state.settings
-  );
-
-  const { enableTables, enableCustomerAdding } = useStoreStore(
-    (state) => state.featureFlags
   );
   const isTopBarHidden = useActionStore((state) => state.isTopBarHidden);
 
@@ -84,44 +78,13 @@ export default function POS() {
     mode: "onSubmit",
   });
 
-  const {
-    control,
-    setValue,
-    formState: { errors },
-  } = form;
-
-  const fetchOrder = useMutation({
-    mutationFn: (variables) =>
-      instance.get(`/store/order/${variables.shortId}`),
-    onSuccess: async (data: any) => {
-      history.pushState({}, "", `/store/pos?id=${data.shortId}`);
-      setOrder(data as any);
-      setValue("shortId", data.shortId);
-
-      setValue("shortId", data.shortId);
-      setValue("type", data.type);
-      setValue("status", data.status);
-      // setValue("note", e.note);
-      // setValue("customerId", e.customerId);
-      // setValue("completedAt", e.completedAt);
-      // setValue("deliveredAt", e.deliveredAt);
-      setValue("fees", data.fees);
-      setValue("table", data.table);
-      setValue("taxes", data.taxes);
-    },
-    onError: console.error,
-  });
-
-  useEffect(() => {
-    if (id && !order?.shortId) {
-      fetchOrder.mutate({ shortId: id });
-    }
-  }, [fetchOrder, id, order]);
+  const { control } = form;
 
   const { append, update } = useFieldArray({
     control,
     name: "items",
   });
+
   const items = useWatch({
     control,
     name: "items",
@@ -146,23 +109,8 @@ export default function POS() {
     }
   };
 
-  const mutation = useMutation({
-    mutationFn: (variables) => instance.post("/store/order", variables),
-    onSuccess: async (data: any) => {
-      fetchOrder.mutate({ shortId: data.shortId });
-      setValue("items", []);
-    },
-    onError: console.error,
-  });
-
   async function onSubmit({ table, ...variables }: OrderUpsertSchemaType) {
     console.log({ variables });
-
-    return await mutation.mutateAsync({
-      ...variables,
-      ...(enableTables && table?.key ? { table } : {}),
-      ...(enableCustomerAdding ? {} : {}),
-    } as any);
   }
 
   return (
@@ -196,10 +144,9 @@ export default function POS() {
           )}
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <Order
-            control={control}
-            order={order}
-          />
+          <OrderContextProvider>
+            <Order />
+          </OrderContextProvider>
         </form>
       </Form>
     </div>

@@ -1,26 +1,23 @@
 import React from "react";
-import {
-  Control,
-} from "react-hook-form";
-import { ItemCreateSchemaType, OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import CartSummaryItem from "../molecules/cart-summary-item";
 import useCartSummary from "@/hooks/useCartSummary";
+import useCartSettings from "@/hooks/useCartSettings";
+import { OrderItem } from "@/types";
 
 function CartSummary({
   className,
-  control,
   items,
 }: {
   className?: string;
-  control: Control<OrderUpsertSchemaType>;
-  items: ItemCreateSchemaType[]
+  items: OrderItem[];
 }) {
-  
-  const { subTotal, shouldAddPackingCharge, packagingCharge, shouldAddDeliveryCharge, deliveryCharge, taxesValue, grandTotal } = useCartSummary({
-     control, 
-     items
-  })
-  
+  const { shouldAddPackingCharge, shouldAddDeliveryCharge, showPushToKot } =
+    useCartSettings();
+  const { subTotal, packagingCharge, deliveryCharge, taxesValue, grandTotal } =
+    useCartSummary({
+      items,
+    });
+
   return (
     <div className="flex flex-col justify-center align-middle items-center w-full text-sm text-foreground/80">
       <CartSummaryItem name="Subtotal" price={subTotal} />
@@ -28,7 +25,7 @@ function CartSummary({
         <CartSummaryItem name="Packaging" price={packagingCharge} />
       )}
       {shouldAddDeliveryCharge && (
-            <CartSummaryItem name="Delivery" price={deliveryCharge} />
+        <CartSummaryItem name="Delivery" price={deliveryCharge} />
       )}
       {taxesValue &&
         taxesValue.map(
@@ -36,8 +33,7 @@ function CartSummary({
             <CartSummaryItem key={e.key} name={e.name} price={e.amount} />
           )
         )}
-        <CartSummaryItem name="Grand Total" price={grandTotal} />
-    
+      <CartSummaryItem name="Grand Total" price={grandTotal} />
     </div>
   );
 }

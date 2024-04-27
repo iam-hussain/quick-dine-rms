@@ -1,121 +1,66 @@
-import { useStoreStore } from "@/stores/storeSlice";
-import { ScrollArea } from "@/components/atoms/scroll-area";
 import clsx from "clsx";
-import ButtonToolTip from "@/components/molecules/button-tooltip";
-import React, { useState } from "react";
-import {
-  Control,
-  useWatch,
-  useController,
-  useFieldArray,
-} from "react-hook-form";
-import CartItem from "@/components/molecules/cart-item";
+import React, { useContext } from "react";
 import { Separator } from "@/components/atoms/separator";
-import { FormField, FormItem, FormMessage } from "@/components/atoms/form";
-import {
-  Select,
-  SelectLabel,
-  SelectGroup,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/atoms/select";
-import useCart from "@/hooks/useCart";
-import { CartSchemaValues } from "@/validations";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/atoms/dialog";
-import Icon from "@/components/atoms/icon";
-import { StoreAdditionalType } from "@/types";
-import { ToggleGroup, ToggleGroupItem } from "@/components/atoms/toggle-group";
-import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import ItemsList from "../molecules/items-list";
-import { KitchenDispatch } from "./kitchen-dispatch";
 import { BillOut } from "./bill-out";
 import Cart from "./cart";
 import OrderDetails from "../molecules/order-details";
 import OrderStatus from "./order-status";
-import { Button } from "@/components/atoms/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/atoms/card"
-import { Input } from "@/components/atoms/input"
-import { Label } from "@/components/atoms/label"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/atoms/tabs"
+} from "@/components/atoms/tabs";
+import { OrderContext } from "../providers/order-provider";
 
-function Order({
-  className,
-  control,
-  order,
-}: {
-  order: any;
-  className?: string;
-  control: Control<OrderUpsertSchemaType>;
-}) {
-  const cart = useCart({ control, order });
-  const {
-    shouldAddPackingCharge,
-    shouldAddDeliveryCharge,
-    subTotal,
-    deliveryCharge,
-    packagingCharge,
-    items,
-    taxesValue,
-    grandTotal,
-    showPushToKot,
-    allItems,
-    scheduledItems,
-    placedItems,
-    acceptedItems,
-    preparedItems,
-  } = cart
-  const {
-    enableExpressOrder,
-  } = useStoreStore((state) => state.featureFlags);
-
-
-  const [tab, setTab] = useState('STATUS')
+function Order({ className }: { className?: string }) {
+  const { order } = useContext(OrderContext);
 
   return (
-     
-   
-      <Tabs defaultValue="account"  className={clsx("flex gap-2 flex-col w-full h-full pt-2 pb-4 bg-background px-2", className)}>
-      <TabsList className="grid w-full grid-cols-3 gap-2 bg-background rounded-none">
-        <TabsTrigger className="data-[state=active]:shadow-none shadow-none data-[state=active]:border-primary border-2 border-background text-foreground/60" value="cart">Cart</TabsTrigger>
-        <TabsTrigger className="data-[state=active]:shadow-none shadow-none data-[state=active]:border-primary border-2 border-background text-foreground/60" value="progress">Progress</TabsTrigger>
-        <TabsTrigger className="data-[state=active]:shadow-none shadow-none data-[state=active]:border-primary border-2 border-background text-foreground/60" value="summary">Summary</TabsTrigger>
+    <Tabs
+      defaultValue="cart"
+      className={clsx(
+        "flex gap-4 flex-col w-full h-full pb-4 pt-1 bg-background px-2",
+        className
+      )}
+    >
+      <TabsList className="grid w-full grid-cols-3 gap-x-2 bg-background rounded-none p-0 mt-1 -mb-1">
+        <TabsTrigger
+          className="data-[state=active]:shadow-none shadow-none data-[state=active]:bg-paper border-0 select-none text-foreground/60 py-2 rounded-none rounded-tl-lg rounded-tr-lg"
+          value="cart"
+        >
+          Cart
+        </TabsTrigger>
+        <TabsTrigger
+          className="data-[state=active]:shadow-none shadow-none data-[state=active]:bg-paper border-0 select-none text-foreground/60 py-2 rounded-none rounded-tl-lg rounded-tr-lg"
+          value="progress"
+        >
+          Progress
+        </TabsTrigger>
+        <TabsTrigger
+          className="data-[state=active]:shadow-none shadow-none data-[state=active]:bg-paper border-0 select-none text-foreground/60 py-2 rounded-none rounded-tl-lg rounded-tr-lg"
+          value="summary"
+        >
+          Summary
+        </TabsTrigger>
+        <Separator className="bg-paper h-1 my-0 col-span-3" />
       </TabsList>
-      <Separator className="bg-foreground/50" />
-      <OrderDetails order={order}  />
-      <Separator  />
+      {order?.shortId && (
+        <>
+          <OrderDetails order={order} />
+          {/* <Separator className="my-0" /> */}
+        </>
+      )}
       <TabsContent value="cart" className="grow">
-        <Cart order={order} control={control} cart={cart} />
+        <Cart />
       </TabsContent>
       <TabsContent value="progress" className="grow">
-        <OrderStatus cart={cart} />
+        <OrderStatus />
       </TabsContent>
       <TabsContent value="summary" className="grow">
-        <BillOut cart={cart}  control={control} />
+        <BillOut />
       </TabsContent>
     </Tabs>
-
   );
 }
 

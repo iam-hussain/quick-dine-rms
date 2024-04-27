@@ -1,45 +1,30 @@
 import { useEffect, useMemo } from "react";
 import { useStoreStore } from "@/stores/storeSlice";
-import { Control, useWatch, useFieldArray } from "react-hook-form";
-import { StoreAdditionalType } from "@/types";
+import {
+  Control,
+  useWatch,
+  useFieldArray,
+  useFormContext,
+} from "react-hook-form";
+import { OrderItem, StoreAdditionalType } from "@/types";
 import { getChargesValue } from "@/lib/utils";
-import { ItemCreateSchemaType, ORDER_TYPE, OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
+import {
+  ItemCreateSchemaType,
+  ORDER_TYPE,
+  OrderUpsertSchemaType,
+} from "@iam-hussain/qd-copilot";
+import useCartSettings from "./useCartSettings";
 
-type UseCartType = {
-  items: ItemCreateSchemaType[];
-  control: Control<OrderUpsertSchemaType>;
-};
-
-function useCartSummary({ control, items }: UseCartType) {
-  const {
-    taxes,
-    fees: { DELIVERY, PACKING },
-  } = useStoreStore(
+function useCartSummary({ items }: { items: OrderItem[] }) {
+  const { watch } = useFormContext<OrderUpsertSchemaType>();
+  const { taxes } = useStoreStore(
     (state: { settings: StoreAdditionalType }) => state.settings
   );
+  const { shouldAddPackingCharge, shouldAddDeliveryCharge, showPushToKot } =
+    useCartSettings();
 
-  const { remove, append } = useFieldArray({
-    control,
-    name: "fees",
-  });
-
-  const currentItems = useWatch({
-    control,
-    name: "items",
-    defaultValue: [],
-  });
-
-  const type = useWatch({
-    control,
-    name: "type",
-    defaultValue: ORDER_TYPE.Values.TAKE_AWAY as any,
-  });
-
-  const fees = useWatch({
-    control,
-    name: "fees",
-    defaultValue: [],
-  });
+  const type = watch("type", ORDER_TYPE.Values.TAKE_AWAY as any);
+  const fees = watch("fees", []);
 
   const deliveryIndex = useMemo(
     () => fees && fees.findIndex((e) => e.key === "DELIVERY"),
@@ -49,50 +34,6 @@ function useCartSummary({ control, items }: UseCartType) {
     () => fees && fees.findIndex((e) => e.key === "PACKING"),
     [fees]
   );
-
-  useEffect(() => {
-    if (
-      type &&
-      [
-        ORDER_TYPE.Values.DELIVERY,
-        ORDER_TYPE.Values.PLATFORM,
-        ORDER_TYPE.Values.TAKE_AWAY,
-      ].includes(type as any)
-    ) {
-      if (packagingIndex && packagingIndex < 0) {
-        append(PACKING);
-      }
-    } else if (packagingIndex && packagingIndex >= 0) {
-      remove(packagingIndex);
-    }
-
-    if (type && type === ORDER_TYPE.Values.DELIVERY) {
-      if (deliveryIndex && deliveryIndex < 0) {
-        append(DELIVERY);
-      }
-    } else if (deliveryIndex && deliveryIndex >= 0) {
-      remove(deliveryIndex);
-    }
-  }, [
-    DELIVERY,
-    PACKING,
-    append,
-    deliveryIndex,
-    fees,
-    packagingIndex,
-    remove,
-    type,
-  ]);
-
-  const shouldAddPackingCharge =
-    type &&
-    [
-      ORDER_TYPE.Values.DELIVERY,
-      ORDER_TYPE.Values.PLATFORM,
-      ORDER_TYPE.Values.TAKE_AWAY,
-    ].includes(type as any);
-
-  const shouldAddDeliveryCharge = type === ORDER_TYPE.Values.DELIVERY;
 
   const subTotal = useMemo(() => {
     if (!items.length) {
@@ -150,8 +91,6 @@ function useCartSummary({ control, items }: UseCartType) {
   }, [total, taxesValue]);
 
   return {
-    shouldAddPackingCharge,
-    shouldAddDeliveryCharge,
     subTotal,
     deliveryCharge,
     packagingCharge,
