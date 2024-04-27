@@ -11,7 +11,7 @@ type DraftItemsProps = {
 
 function DraftItems({ label, items }: DraftItemsProps) {
   return (
-    <ul className="flex flex-col gap-2 pt-4">
+    <ul className="flex flex-col gap-0 pt-4">
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
