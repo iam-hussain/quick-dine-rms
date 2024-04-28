@@ -2,7 +2,7 @@ import instance from "@/lib/instance";
 import { useStoreStore } from "@/stores/storeSlice";
 import { OrderType, StoreAdditionalType } from "@/types";
 import { ORDER_TYPE, OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import React, {
   createContext,
@@ -34,6 +34,7 @@ export const OrderContextConsumer = OrderContext.Consumer;
 export const OrderContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const queryClient = useQueryClient();
   const { enableTables, enableCustomerAdding } = useStoreStore(
     (state) => state.featureFlags
   );
@@ -46,29 +47,49 @@ export const OrderContextProvider: React.FC<{ children: ReactNode }> = ({
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const [order, setOrder] = useState<any>(null);
-  const { setValue, watch, control } = useFormContext<OrderUpsertSchemaType>();
+  const { setValue, watch } = useFormContext<OrderUpsertSchemaType>();
 
-  const fetchOrderMutation = useMutation({
-    mutationFn: (variables) =>
-      instance.get(`/store/order/${variables.shortId}`),
-    onSuccess: async (data: any) => {
-      history.pushState({}, "", `/store/pos?id=${data.shortId}`);
-      setOrder(data as any);
-      setValue("shortId", data.shortId);
+  const itemsArray = useFieldArray({
+    name: "items",
+  });
 
-      setValue("shortId", data.shortId);
-      setValue("type", data.type);
-      setValue("status", data.status);
+  const type = watch("type", ORDER_TYPE.Values.TAKE_AWAY as any);
+  const fees = watch("fees", []);
+  const items = watch("items", []);
+
+  const { data: orderData } = useQuery({
+    queryKey: [`order_${id || ""}`],
+    queryFn: () => instance.get(`/store/order/${id}`) as unknown as any,
+    enabled: Boolean(id),
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    const fetchedString = JSON.stringify(orderData || {});
+    const existingString = JSON.stringify(order || {});
+
+    if (orderData && fetchedString !== existingString) {
+      history.pushState({}, "", `/store/pos?id=${orderData.shortId}`);
+      setOrder(orderData as any);
+      setValue("shortId", orderData.shortId);
+      setValue("type", orderData.type);
+      setValue("status", orderData.status);
       // setValue("note", e.note);
       // setValue("customerId", e.customerId);
       // setValue("completedAt", e.completedAt);
       // setValue("deliveredAt", e.deliveredAt);
-      setValue("fees", data.fees);
-      setValue("table", data.table);
-      setValue("taxes", data.taxes);
-    },
-    onError: console.error,
-  });
+      setValue("fees", orderData.fees);
+      setValue("table", orderData.table);
+      setValue("taxes", orderData.taxes);
+      const drafted = orderData?.drafted || [];
+      if (drafted.length && items.length === 0) {
+        drafted.forEach(itemsArray.append);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderData]);
 
   const upsertOrderMutation = useMutation({
     mutationFn: (variables) => instance.post("/store/order", variables),
@@ -79,13 +100,16 @@ export const OrderContextProvider: React.FC<{ children: ReactNode }> = ({
           `Order ID ${data.shortId} has been successfully updated! 🚀`
         );
       } else {
-        toast.success(`A new order with ID ${data.id} has been created! 🌟`);
+        toast.success(
+          `A new order with ID ${data.shortId} has been created! 🌟`
+        );
       }
-      fetchOrderMutation.mutate({ shortId: data.shortId });
+      await queryClient.invalidateQueries({
+        queryKey: [`order_${data.shortId}`],
+      });
     },
     onError: (error, variables: OrderUpsertSchemaType) => {
       console.error(error);
-
       if (variables.shortId) {
         toast.success(
           `Unable to update order with ID ${variables.shortId}. Please review the entered information and try again. If the issue persists, contact support for further assistance`
@@ -98,15 +122,6 @@ export const OrderContextProvider: React.FC<{ children: ReactNode }> = ({
     },
   });
 
-  useEffect(() => {
-    if (id && !order?.shortId) {
-      fetchOrderMutation.mutate({ shortId: id });
-    }
-  }, [fetchOrderMutation, id, order]);
-
-  const type = watch("type", ORDER_TYPE.Values.TAKE_AWAY as any);
-  const fees = watch("fees", []);
-
   const deliveryIndex = useMemo(
     () => fees && fees.findIndex((e) => e.key === "DELIVERY"),
     [fees]
@@ -117,7 +132,6 @@ export const OrderContextProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   const { remove, append } = useFieldArray({
-    control,
     name: "fees",
   });
 

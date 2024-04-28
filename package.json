@@ -21,7 +21,7 @@
   "homepage": "https://github.com/iam-hussain/quick-dine-rms#readme",
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
-    "@iam-hussain/qd-copilot": "^1.1.15",
+    "@iam-hussain/qd-copilot": "^1.1.18",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-avatar": "^1.0.4",

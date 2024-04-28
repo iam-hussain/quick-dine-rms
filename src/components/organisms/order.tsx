@@ -20,7 +20,7 @@ function Order({ className }: { className?: string }) {
     <Tabs
       defaultValue="cart"
       className={clsx(
-        "flex gap-4 flex-col w-full h-full pb-4 pt-1 bg-background px-2",
+        "flex gap-4 flex-col w-full h-full bg-background p-4",
         className
       )}
     >
@@ -45,12 +45,7 @@ function Order({ className }: { className?: string }) {
         </TabsTrigger>
         <Separator className="bg-paper h-1 my-0 col-span-3" />
       </TabsList>
-      {order?.shortId && (
-        <>
-          <OrderDetails order={order} />
-          {/* <Separator className="my-0" /> */}
-        </>
-      )}
+      {order?.shortId && <OrderDetails order={order} />}
       <TabsContent value="cart" className="grow">
         <Cart />
       </TabsContent>

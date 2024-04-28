@@ -16,15 +16,14 @@ import { OrderContext } from "../providers/order-provider";
 import useCartItems from "@/hooks/useCartItems";
 import DraftOrder from "./draft-order";
 import DraftItems from "../molecules/draft-items";
+import DeleteOrder from "./delete-order";
+import KitchenDispatch from "./kitchen-dispatch";
 
 function Cart({ className }: { className?: string }) {
-  const { order } = useContext(OrderContext);
-  const { control } = useFormContext<OrderUpsertSchemaType>();
   const { showPushToKot } = useCartSettings();
 
   const { enableCustomerAdding } = useStoreStore((state) => state.featureFlags);
   const { remove, update } = useFieldArray({
-    control,
     name: "items",
   });
   const { drafted, cart } = useCartItems();
@@ -46,7 +45,7 @@ function Cart({ className }: { className?: string }) {
       <div className="flex justify-between gap-4 px-4">
         <OrderTypeSelect />
         <div className="flex justify-between align-middle items-center gap-2">
-          <TableSelection control={control} />
+          <TableSelection />
           {enableCustomerAdding && (
             <ButtonToolTip
               label="Link Customer"
@@ -77,32 +76,15 @@ function Cart({ className }: { className?: string }) {
             />
           ))}
         </ul>
-        {drafted.length && <DraftItems items={drafted} />}
+        {/* {drafted.length && <DraftItems items={drafted} />} */}
       </ScrollArea>
       <Separator />
       <div className="flex justify-center align-middle items-center gap-4 flex-col text-sm bg-background select-none h-auto px-6">
         <CartSummary items={items as any} />
         <div className="flex gap-2 w-full">
-          <ButtonToolTip
-            label="Discord/Cancel"
-            icon="MdDeleteOutline"
-            variant={"outline"}
-            className="text-destructive"
-            disabled={!order?.shortId}
-          />
-
+          <DeleteOrder />
           <DraftOrder />
-
-          {showPushToKot && (
-            <Button
-              className="w-full col-span-2"
-              type="submit"
-              variant={"secondary"}
-            >
-              Kitchen Dispatch
-            </Button>
-          )}
-
+          {showPushToKot && <KitchenDispatch />}
           <Button className="w-full col-span-2" type="submit">
             Bill Out
           </Button>

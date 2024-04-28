@@ -31,6 +31,15 @@ export default function POS() {
   );
   const isTopBarHidden = useActionStore((state) => state.isTopBarHidden);
 
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
+  // const { data: orderData } = useQuery({
+  //   queryKey: [`order_${id || ""}`],
+  //   queryFn: () => instance.get(`/store/order/${id}`) as unknown as any[],
+  //   enabled: Boolean(id),
+  // });
+
   const { data: categoriesData } = useQuery({
     queryKey: ["categories"],
     queryFn: () => instance.get("/store/categories") as unknown as any[],
@@ -65,6 +74,10 @@ export default function POS() {
     }
   }, [productsData, selectedCat]);
 
+  // useEffect(() => {
+  //   console.log({ orderData });
+  // }, [orderData]);
+
   const defaultValues: Partial<OrderUpsertSchemaType> = {
     type: ORDER_TYPE.TAKE_AWAY,
     items: [],
@@ -78,18 +91,14 @@ export default function POS() {
     mode: "onSubmit",
   });
 
-  const { control } = form;
+  const { control, watch } = form;
 
   const { append, update } = useFieldArray({
     control,
     name: "items",
   });
 
-  const items = useWatch({
-    control,
-    name: "items",
-    defaultValue: [],
-  });
+  const items = watch("items", []);
 
   const onProductClick = (e: any, product: ProductAPI) => {
     e.preventDefault();

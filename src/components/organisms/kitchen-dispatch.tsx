@@ -1,63 +1,67 @@
-"use client";
-
-import { Button } from "@/components/atoms/button"
+import { Button } from "@/components/atoms/button";
+import clsx from "clsx";
+import React, { useContext } from "react";
+import { useFormContext } from "react-hook-form";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/atoms/dialog"
-import { Input } from "@/components/atoms/input"
-import { Label } from "@/components/atoms/label"
+  DialogFooter,
+} from "@/components/atoms/dialog";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import clsx from "clsx";
+import { OrderContext } from "../providers/order-provider";
 
-export function KitchenDispatch({ btnClassName, items, fetched }: {
-    btnClassName?: string,
-    items: any[],
-    fetched: any
-}) {
+function KitchenDispatch() {
+  const [open, setOpen] = React.useState(false);
+  const { handleSubmit } = useFormContext<OrderUpsertSchemaType>();
+  const { upsert } = useContext(OrderContext);
+
+  async function onSubmit({ items, ...data }: OrderUpsertSchemaType) {
+    await upsert({
+      ...data,
+      status: "IN_PROGRESS",
+      items: items.map((e) => ({
+        ...e,
+        status: "PLACED",
+        placedAt: new Date().toISOString(),
+      })),
+    });
+    setOpen(false);
+  }
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className={clsx(btnClassName)}>Kitchen Dispatch</Button>
+        <Button
+          aria-label="Kitchen Dispatch"
+          variant={"secondary"}
+          className={clsx(
+            "flex justify-center gap-2 font-normal w-full col-span-2"
+          )}
+        >
+          Kitchen Dispatch
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Kitchen Dispatch</DialogTitle>
           <DialogDescription>
-          Ensure timely preparation by initiating cooking processes for select items prior to payment completion, streamlining service for table and dine-in orders.
+            Are you sure you want to dispatch these items to the kitchen to
+            start the cooking process? This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input
-              id="name"
-              defaultValue="Pedro Duarte"
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input
-              id="username"
-              defaultValue="@peduarte"
-              className="col-span-3"
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Push to Kitchen</Button>
+        <DialogFooter className="gap-2">
+          <Button variant={"outline"} onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit(onSubmit)}>Dispatch</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
+
+export default KitchenDispatch;

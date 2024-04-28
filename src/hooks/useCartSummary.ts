@@ -1,27 +1,15 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useStoreStore } from "@/stores/storeSlice";
-import {
-  Control,
-  useWatch,
-  useFieldArray,
-  useFormContext,
-} from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { OrderItem, StoreAdditionalType } from "@/types";
 import { getChargesValue } from "@/lib/utils";
-import {
-  ItemCreateSchemaType,
-  ORDER_TYPE,
-  OrderUpsertSchemaType,
-} from "@iam-hussain/qd-copilot";
-import useCartSettings from "./useCartSettings";
+import { ORDER_TYPE, OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 
 function useCartSummary({ items }: { items: OrderItem[] }) {
   const { watch } = useFormContext<OrderUpsertSchemaType>();
   const { taxes } = useStoreStore(
     (state: { settings: StoreAdditionalType }) => state.settings
   );
-  const { shouldAddPackingCharge, shouldAddDeliveryCharge, showPushToKot } =
-    useCartSettings();
 
   const type = watch("type", ORDER_TYPE.Values.TAKE_AWAY as any);
   const fees = watch("fees", []);

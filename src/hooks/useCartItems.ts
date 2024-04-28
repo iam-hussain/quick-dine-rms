@@ -1,6 +1,6 @@
-import { useContext, useEffect, useMemo } from "react";
-import { useWatch, useFormContext } from "react-hook-form";
-import { ORDER_TYPE, OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
+import { useContext } from "react";
+import { useFormContext } from "react-hook-form";
+import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import { OrderContext } from "@/components/providers/order-provider";
 
 function useCartItems() {

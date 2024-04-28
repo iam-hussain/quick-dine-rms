@@ -19,7 +19,7 @@ function CartSummary({
     });
 
   return (
-    <div className="flex flex-col justify-center align-middle items-center w-full text-sm text-foreground/80">
+    <div className="flex flex-col justify-center align-middle items-center w-full text-sm text-foreground/80 pt-2">
       <CartSummaryItem name="Subtotal" price={subTotal} />
       {shouldAddPackingCharge && (
         <CartSummaryItem name="Packaging" price={packagingCharge} />

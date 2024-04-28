@@ -2,7 +2,12 @@ import { useStoreStore } from "@/stores/storeSlice";
 import { Button } from "@/components/atoms/button";
 import clsx from "clsx";
 import React from "react";
-import { Control, useWatch, useController } from "react-hook-form";
+import {
+  Control,
+  useWatch,
+  useController,
+  useFormContext,
+} from "react-hook-form";
 import {
   Dialog,
   DialogContent,
@@ -15,15 +20,10 @@ import { StoreAdditionalType } from "@/types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/atoms/toggle-group";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 
-function TableSelection({
-  className,
-  control,
-}: {
-  className?: string;
-  control: Control<OrderUpsertSchemaType>;
-}) {
+function TableSelection({ className }: { className?: string }) {
   const [openTable, setOpenTable] = React.useState(false);
   const { enableTables } = useStoreStore((state) => state.featureFlags);
+  const { control } = useFormContext<OrderUpsertSchemaType>();
 
   const { tables } = useStoreStore(
     (state: { settings: StoreAdditionalType }) => state.settings

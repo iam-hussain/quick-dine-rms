@@ -25,7 +25,6 @@ export default function POS({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (data) {
-      console.log({ data });
       setStoreData(data);
     }
   }, [data, setStoreData]);

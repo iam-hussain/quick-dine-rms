@@ -15,47 +15,48 @@ import Icon from "@/components/atoms/icon";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import { OrderContext } from "../providers/order-provider";
 
-function DraftOrder() {
+function DeleteOrder() {
   const [open, setOpen] = React.useState(false);
   const { handleSubmit } = useFormContext<OrderUpsertSchemaType>();
-  const { upsert } = useContext(OrderContext);
+  const { order } = useContext(OrderContext);
 
-  async function onSubmit({ items, ...data }: OrderUpsertSchemaType) {
-    await upsert({
-      ...data,
-      status: "DRAFT",
-      items: items.map((e) => ({ ...e, status: "DRAFT" })),
-    });
-    setOpen(false);
+  async function onSubmit(data: OrderUpsertSchemaType) {
+    console.log({ data });
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          aria-label="Draft Order"
+          aria-label="Delete Order"
           variant={"outline"}
-          className={clsx("flex justify-center gap-2 font-normal text-lg")}
+          disabled={!order?.shortId}
+          className={clsx(
+            "flex justify-center gap-2 font-normal text-lg text-destructive"
+          )}
         >
-          <Icon name={"FaSave"} className="h-5 w-5" />
+          <Icon name={"MdDeleteOutline"} className="h-5 w-5" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Draft Order</DialogTitle>
+          <DialogTitle>Delete Order</DialogTitle>
           <DialogDescription>
-            Are you sure you want to submit this order as a draft?
+            Are you sure you want to delete this order? This action cannot be
+            undone and all associated data will be permanently removed.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2">
           <Button variant={"outline"} onClick={() => setOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)}>Draft</Button>
+          <Button variant={"destructive"} onClick={handleSubmit(onSubmit)}>
+            Delete
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
 
-export default DraftOrder;
+export default DeleteOrder;
