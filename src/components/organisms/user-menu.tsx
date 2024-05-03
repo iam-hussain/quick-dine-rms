@@ -25,7 +25,7 @@ function UserMenu() {
           className="flex gap-2 justify-end align-middle items-center p-0"
           variant={"ghost"}
         >
-          <UserBadge name="Zakir Hussain" image="" />
+          <UserBadge firstName="Zakir" lastName="Hussain" image="" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40" align="end">
