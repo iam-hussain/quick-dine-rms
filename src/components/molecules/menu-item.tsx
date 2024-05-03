@@ -5,12 +5,6 @@ import clsx from "clsx";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useMedia } from "react-use";
-// import {
-//   Tooltip,
-//   TooltipContent,
-//   TooltipProvider,
-//   TooltipTrigger,
-// } from "@/components/atoms/tooltip";
 
 function MenuItem({
   icon,
@@ -21,36 +15,11 @@ function MenuItem({
 }: {
   icon: IconKey;
   label: string;
-  minimize: Boolean;
+  minimize?: Boolean;
   link?: string;
   onRedirect?: () => void;
 }) {
   const isSmallDevice = useMedia("(max-width: 767px)", false);
-  // if (minimize) {
-  //   return (
-  //     <TooltipProvider>
-  //       <Tooltip>
-  //         <TooltipTrigger asChild>
-  //           <Button
-  //             variant={"ghost"}
-  //             className={clsx(
-  //               "flex justify-center gap-2 font-norma px-1 py-1",
-  //               {
-  //                 "text-primary border-2 border-primary": active,
-  //                 "text-inactive-foreground border-2 border-bw": !active,
-  //               }
-  //             )}
-  //           >
-  //             <Icon name={icon} className="h-5 w-5" />
-  //           </Button>
-  //         </TooltipTrigger>
-  //         <TooltipContent className="bg-bw-foreground text-bw">
-  //           <p>{label}</p>
-  //         </TooltipContent>
-  //       </Tooltip>
-  //     </TooltipProvider>
-  //   );
-  // }
 
   const fader = {
     hide: {

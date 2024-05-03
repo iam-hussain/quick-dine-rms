@@ -1,4 +1,4 @@
-import { useStoreStore } from "@/stores/storeSlice";
+import { useStoreStore } from "@/store/storeSlice";
 import { ScrollArea } from "@/components/atoms/scroll-area";
 import React from "react";
 import ItemsList from "../molecules/items-list";

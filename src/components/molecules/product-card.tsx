@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { AspectRatio } from "@/components/atoms/aspect-ratio";
 import { ProductAPI } from "@/types";
-import { useStoreStore } from "@/stores/storeSlice";
+import { useStoreStore } from "@/store/storeSlice";
 
 const animateVariation = {
   initial: { scale: 1 },
@@ -14,7 +14,7 @@ const animateVariation = {
 
 export interface ProductCardProps {
   product: ProductAPI;
-  onClick: (e: any, p: ProductAPI) => void
+  onClick: (e: any, p: ProductAPI) => void;
 }
 
 function ProductCard({ product, onClick, ...props }: ProductCardProps) {
@@ -32,7 +32,7 @@ function ProductCard({ product, onClick, ...props }: ProductCardProps) {
           "justify-start": product?.image.primary?.value,
         }
       )}
-      onClick={(e => onClick(e, product))}
+      onClick={(e) => onClick(e, product)}
       {...props}
     >
       {featureFlags.showProductsImage && product?.image.primary?.value && (

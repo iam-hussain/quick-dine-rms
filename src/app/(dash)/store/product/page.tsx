@@ -22,6 +22,8 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import ProductForm from "@/components/forms/product-form";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
 
 dayjs.extend(relativeTime);
 
@@ -32,6 +34,8 @@ const typeMap = {
 };
 
 export default function Dashboard() {
+  const categories = useSelector((state: RootState) => state.base.categories);
+  const products = useSelector((state: RootState) => state.base.products);
   const [value, setValue] = useState<
     Partial<
       ProductSchemaValues & {
@@ -45,16 +49,6 @@ export default function Dashboard() {
   const queryClient = useQueryClient();
   const [contentType, setContentType] = useState<"FORM" | "PROMPT">("FORM");
   const [open, setOpen] = useState(false);
-
-  const { data: categories } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => instance.get("/store/categories"),
-  });
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["products"],
-    queryFn: () => instance.get("/store/products"),
-  });
 
   const mutation = useMutation({
     mutationFn: () => instance.delete(`/store/product/${value.id}`),
@@ -351,11 +345,7 @@ export default function Dashboard() {
           </DialogTrigger>
         </section>
         <section className="flex w-3xl max-w-full h-full gap-8 md:flex-row justify-start">
-          <BaseTable
-            columns={columns}
-            data={data as unknown as any[]}
-            isLoading={isLoading}
-          />
+          <BaseTable columns={columns} data={products} isLoading={false} />
         </section>
         <DialogContent className="sm:max-w-[425px]">
           {contentType === "FORM" ? (
@@ -373,7 +363,7 @@ export default function Dashboard() {
               <ProductForm
                 defaultValues={value}
                 onSuccess={() => setOpen(false)}
-                categories={(categories as unknown as [any]) || []}
+                categories={categories}
               />
             </>
           ) : (

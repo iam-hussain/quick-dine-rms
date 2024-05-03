@@ -1,4 +1,4 @@
-import { useStoreStore } from "@/stores/storeSlice";
+import { useStoreStore } from "@/store/storeSlice";
 import React, { useContext } from "react";
 import { Control, useFormContext } from "react-hook-form";
 import { FormField, FormItem, FormMessage } from "@/components/atoms/form";
@@ -14,9 +14,8 @@ import {
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import { OrderContext } from "../providers/order-provider";
 
-function OrderTypeSelect({}: { className?: string }) {
+function OrderTypeSelect() {
   const { control } = useFormContext<OrderUpsertSchemaType>();
-  const { order } = useContext(OrderContext);
   const { enableExpressOrder = true } = useStoreStore(
     (state) => state.featureFlags
   );
@@ -34,7 +33,7 @@ function OrderTypeSelect({}: { className?: string }) {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Order Type</SelectLabel>
-                {(enableExpressOrder || order?.type === "PICK_UP") && (
+                {(enableExpressOrder || field.value === "PICK_UP") && (
                   <SelectItem value="PICK_UP">Express</SelectItem>
                 )}
                 <SelectItem value="DINING">Dine In</SelectItem>

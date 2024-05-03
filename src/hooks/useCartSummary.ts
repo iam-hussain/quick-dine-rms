@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useStoreStore } from "@/stores/storeSlice";
+import { useStoreStore } from "@/store/storeSlice";
 import { useFormContext } from "react-hook-form";
 import { OrderItem, StoreAdditionalType } from "@/types";
 import { getChargesValue } from "@/lib/utils";

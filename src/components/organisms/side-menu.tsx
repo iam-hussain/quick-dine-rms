@@ -1,16 +1,20 @@
 "use client";
+
 import { Container } from "@/components/atoms/container";
 import Icon, { IconKey } from "@/components/atoms/icon";
 import MenuItem from "@/components/molecules/menu-item";
 import { ScrollArea } from "@/components/atoms/scroll-area";
-import { useActionStore } from "@/stores/actionSlice";
 import UserBadge from "../molecules/user-badge";
 import { useMedia } from "react-use";
 import { motion } from "framer-motion";
 import clsx from "clsx";
 import { Separator } from "../atoms/separator";
 import { useEffect } from "react";
-import { useStoreStore } from "@/stores/storeSlice";
+import { useStoreStore } from "@/store/storeSlice";
+import Loader from "../molecules/loader";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { openSideBar } from "@/store/pageSlice";
 
 type Menu = {
   icon: IconKey;
@@ -170,31 +174,32 @@ const decorator = {
 };
 
 function SideMenu({ className }: { className?: string }) {
-  const isSmallDevice = useMedia("(max-width: 767px)", false);
-  const store = useStoreStore((state) => state.store);
-  const minimize = useActionStore((state) => state.isSideBarMinimized);
-  const setMinimize = useActionStore((state) => state.setSideBarMinimize);
+  const smallScreen = useMedia("(max-width: 767px)", false);
+  const sideBarOpen = useSelector((state: RootState) => state.page.sideBarOpen);
+  const dispatch = useDispatch();
+  const store = useSelector((state: RootState) => state.base.store);
+  const user = useSelector((state: RootState) => state.base.user);
 
   useEffect(() => {
-    if (minimize) {
-      document.body.style.overflow = "unset";
-    } else {
+    if (sideBarOpen) {
       document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
     }
-  }, [minimize]);
+  }, [sideBarOpen]);
 
   return (
     <>
       <motion.div
         initial="hide"
         variants={decorator}
-        animate={minimize ? "hide" : "show"}
-        onClick={() => setMinimize()}
+        animate={sideBarOpen ? "show" : "hide"}
+        onClick={() => dispatch(openSideBar())}
         className="fixed bg-foreground/50 h-full w-screen min-h-fill "
       ></motion.div>
       <motion.div
         initial="initial"
-        animate={minimize ? "mobInitial" : "full"}
+        animate={sideBarOpen ? "full" : "mobInitial"}
         variants={variants}
         transition={{ type: "spring", stiffness: 100 }}
         className={clsx("side-menu py-4 bg-background px-2 z-50", className)}
@@ -211,7 +216,7 @@ function SideMenu({ className }: { className?: string }) {
                 whileTap="pressed"
                 variants={closerButton}
                 className="cursor-pointer flex gap-1 justify-center align-middle items-center"
-                onClick={() => setMinimize()}
+                onClick={() => dispatch(openSideBar())}
               >
                 <Icon
                   name="FaBowlFood"
@@ -219,10 +224,10 @@ function SideMenu({ className }: { className?: string }) {
                 />
                 <motion.h1
                   className={clsx("text-xl font-display", {
-                    hidden: !isSmallDevice && minimize,
+                    hidden: !smallScreen && !sideBarOpen,
                   })}
                   initial="hide"
-                  animate={minimize && !isSmallDevice ? "hide" : "show"}
+                  animate={!sideBarOpen && !smallScreen ? "hide" : "show"}
                   variants={fader}
                 >
                   QuickDine
@@ -231,42 +236,23 @@ function SideMenu({ className }: { className?: string }) {
             </div>
             <Separator className="my-2 select-none" />
           </div>
-          {/* <motion.div
-            initial="minimize"
-            whileHover="hover"
-            whileTap="pressed"
-            transition={{ type: "spring", stiffness: 100 }}
-            animate={"expand"}
-            variants={closerButton}
-            className="absolute right-0 left-0"
-          >
-            <Button
-              variant={"accent"}
-              className={clsx("flex font-normal p-2")}
-              onClick={() => setMinimize()}
-            >
-              <Icon name={"IoIosArrowBack"} className={"h-5 w-5"} />
-            </Button>
-          </motion.div> */}
         </div>
 
         <ScrollArea className="grow w-full flex justify-end py-4">
           <Container className="flex flex-col gap-2 text-right my-2 px-1">
             {AppMenus.map((each, key) => (
               <MenuItem
-                minimize={false}
                 {...each}
                 key={key}
-                onRedirect={() => setMinimize()}
+                onRedirect={() => dispatch(openSideBar())}
               />
             ))}
             <Separator className="my-2 select-none" />
             {SettingMenus.map((each, key) => (
               <MenuItem
-                minimize={false}
                 {...each}
                 key={key}
-                onRedirect={() => setMinimize()}
+                onRedirect={() => dispatch(openSideBar())}
               />
             ))}
           </Container>
@@ -274,13 +260,13 @@ function SideMenu({ className }: { className?: string }) {
 
         <motion.div
           className={clsx("flex flex-col gap-2", {
-            hidden: minimize,
+            hidden: !sideBarOpen,
           })}
           initial="hide"
           animate={"show"}
           variants={hideShow}
         >
-          {!store && <p>Loading</p>}
+          {!store && <Loader />}
           {store && (
             <div className={"text-center m-auto w-full px-4"}>
               <p className="text-md font-semibold pb-1 text-foreground/90">
@@ -301,12 +287,10 @@ function SideMenu({ className }: { className?: string }) {
           )}
 
           <UserBadge
-            name="Zakir Hussain"
+            firstName={user.firstName}
+            lastName={user.lastName}
             image=""
-            minimize={false}
-            className={clsx("py-2 px-4", {
-              // "px-4": !minimize,
-            })}
+            className={"py-2 px-4"}
           />
         </motion.div>
       </motion.div>

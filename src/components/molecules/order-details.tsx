@@ -1,4 +1,4 @@
-import { useStoreStore } from "@/stores/storeSlice";
+import { useStoreStore } from "@/store/storeSlice";
 import React from "react";
 import { Button } from "../atoms/button";
 import Icon from "../atoms/icon";

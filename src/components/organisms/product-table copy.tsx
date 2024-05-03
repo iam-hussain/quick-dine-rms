@@ -39,7 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/atoms/table";
-import { useStoreStore } from "@/stores/storeSlice";
+import { useStoreStore } from "@/store/storeSlice";
 import { DialogBox } from "../molecules/dailog-box";
 
 export const columns: ColumnDef<any>[] = [

@@ -4,6 +4,7 @@ import { Toaster } from "@/components/atoms/sonner";
 import { QueryClientProvider } from "@/components/providers/query-client-provider";
 
 import "../styles/globals.scss";
+import StoreProvider from "@/components/providers/store-provider";
 
 export const metadata: Metadata = {
   title: "Quick Dine Application",
@@ -19,17 +20,19 @@ export default function RootLayout({
     <html lang="en">
       <head />
       <body>
-        <QueryClientProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <Toaster />
-          </ThemeProvider>
-        </QueryClientProvider>
+        <StoreProvider>
+          <QueryClientProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+              <Toaster />
+            </ThemeProvider>
+          </QueryClientProvider>
+        </StoreProvider>
       </body>
     </html>
   );

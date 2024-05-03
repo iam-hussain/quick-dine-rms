@@ -13,7 +13,7 @@ import Icon from "@/components/atoms/icon";
 import BaseTable from "@/components/molecules/base-table";
 import { ColumnDef, SortingFnOption } from "@tanstack/react-table";
 import instance from "@/lib/instance";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import CategoryForm from "@/components/forms/category-form";
 import { useState } from "react";
 import { CategorySchemaValues } from "@/validations";
@@ -22,12 +22,13 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { zeroLastSortMethod } from "@/lib/utils";
-// import calendar from "dayjs/plugin/calendar";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
 
 dayjs.extend(relativeTime);
-// dayjs.extend(calendar);
 
 export default function Dashboard() {
+  const categories = useSelector((state: RootState) => state.base.categories);
   const [value, setValue] = useState<
     Partial<
       CategorySchemaValues & {
@@ -41,11 +42,6 @@ export default function Dashboard() {
   const queryClient = useQueryClient();
   const [contentType, setContentType] = useState<"FORM" | "PROMPT">("FORM");
   const [open, setOpen] = useState(false);
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => instance.get("/store/categories"),
-  });
 
   const mutation = useMutation({
     mutationFn: () => instance.delete(`/store/category/${value.id}`),
@@ -269,11 +265,7 @@ export default function Dashboard() {
           </DialogTrigger>
         </section>
         <section className="flex w-full h-full gap-8 md:flex-row justify-start">
-          <BaseTable
-            columns={columns}
-            data={data as unknown as any[]}
-            isLoading={isLoading}
-          />
+          <BaseTable columns={columns} data={categories} isLoading={false} />
         </section>
         <DialogContent className="sm:max-w-[425px]">
           {contentType === "FORM" ? (

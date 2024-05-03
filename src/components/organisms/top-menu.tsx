@@ -3,11 +3,13 @@
 import clsx from "clsx";
 import Icon from "@/components/atoms/icon";
 import { Button } from "@/components/atoms/button";
-import { useActionStore } from "@/stores/actionSlice";
 import BrandSideBySide from "../atoms/brand/side-by-side";
 import { useMemo, useEffect, useState, useCallback } from "react";
 import { useWindowScroll } from "react-use";
 import { motion } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { openSideBar, openTopBar } from "@/store/pageSlice";
 
 const closerButton = {
   initial: {},
@@ -40,24 +42,16 @@ const animator = {
   },
 };
 
-function TopMenu({
-  className,
-  isHidden,
-  setHidden,
-}: {
-  className?: string;
-  isHidden: Boolean;
-  setHidden: any;
-}) {
-  // const [isHidden, setHidden] = useState(false);
+function TopMenu({ className }: { className?: string }) {
   const { y } = useWindowScroll();
   const [scrollDirection, setScrollDirection] = useState("IDEAL");
-  const minimize = useActionStore((state) => state.isSideBarMinimized);
-  const setMinimize = useActionStore((state) => state.setSideBarMinimize);
+  const sideBarOpen = useSelector((state: RootState) => state.page.sideBarOpen);
+  const topBarOpen = useSelector((state: RootState) => state.page.topBarOpen);
+  const dispatch = useDispatch();
 
   const callback = useCallback(
     (event: any) => {
-      if (!minimize) {
+      if (sideBarOpen) {
         return setScrollDirection("IDEAL");
       }
       if ((event.wheelDelta && event.wheelDelta > 0) || event.deltaY < 0) {
@@ -66,12 +60,12 @@ function TopMenu({
         setScrollDirection("DOWN");
       }
     },
-    [minimize]
+    [sideBarOpen]
   );
 
   const shouldHide = useMemo(() => {
-    return !isHidden && (y <= 100 || scrollDirection === "UP");
-  }, [isHidden, scrollDirection, y]);
+    return topBarOpen && (y <= 100 || scrollDirection === "UP");
+  }, [topBarOpen, scrollDirection, y]);
 
   useEffect(() => {
     document.body.addEventListener("wheel", callback);
@@ -92,13 +86,13 @@ function TopMenu({
       <Button
         variant={"transparent"}
         className={clsx("flex font-normal absolute left-2", {
-          "text-inactive-foreground": !minimize,
-          "text-primary": minimize,
+          "text-inactive-foreground": sideBarOpen,
+          "text-primary": !sideBarOpen,
         })}
-        onClick={() => setMinimize()}
+        onClick={() => dispatch(openSideBar())}
       >
         <Icon
-          name={minimize ? "HiMenuAlt2" : "IoClose"}
+          name={sideBarOpen ? "IoClose" : "HiMenuAlt2"}
           className={clsx("h-5 w-5")}
         />
       </Button>
@@ -112,23 +106,22 @@ function TopMenu({
       <motion.div
         initial="initial"
         whileTap="pressed"
-        // whileHover={isHidden ? "hover" : "initial"}
         transition={{ type: "spring", stiffness: 100 }}
-        animate={isHidden ? "out" : "in"}
+        animate={topBarOpen ? "in" : "out"}
         variants={closerButton}
         className="absolute right-4 w-auto h-auto hidden md:flex"
       >
         <Button
-          variant={isHidden ? "accent" : "accent"}
+          variant={"accent"}
           className={clsx("flex font-normal p-2")}
           onClick={() => {
-            if (isHidden) {
+            if (!topBarOpen) {
               setScrollDirection("UP");
             }
-            setHidden(!isHidden);
+            dispatch(openTopBar());
           }}
         >
-          <Icon name={isHidden ? "BiHide" : "BiShow"} className={"h-5 w-5"} />
+          <Icon name={topBarOpen ? "BiShow" : "BiHide"} className={"h-5 w-5"} />
         </Button>
       </motion.div>
     </motion.nav>

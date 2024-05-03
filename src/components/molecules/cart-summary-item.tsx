@@ -7,7 +7,7 @@ function CartSummaryItem({
     name: string;
     price: number;
 }) {
- 
+
   return (
     <div className="flex gap-2 justify-between align-middle items-center w-full">
         <span>{name}</span>
@@ -19,7 +19,7 @@ function CartSummaryItem({
         </span>
     </div>
     )
-  
+
 }
 
 export default CartSummaryItem;

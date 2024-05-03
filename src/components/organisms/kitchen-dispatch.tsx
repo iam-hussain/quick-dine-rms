@@ -57,7 +57,9 @@ function KitchenDispatch() {
           <Button variant={"outline"} onClick={() => setOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)}>Dispatch</Button>
+          <Button type="submit" onClick={handleSubmit(onSubmit)}>
+            Dispatch
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -1,48 +1,68 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import clsx from "clsx";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
 import SideMenu from "@/components/organisms/side-menu";
 import TopMenu from "@/components/organisms/top-menu";
-import { useStoreStore } from "@/stores/storeSlice";
-import { Skeleton } from "@/components/atoms/skeleton";
-import instance from "@/lib/instance";
-import { useQuery } from "@tanstack/react-query";
-import clsx from "clsx";
-import { cookieNames, deleteCookie } from "@/lib/cookies";
-import { useActionStore } from "@/stores/actionSlice";
+import { useQueries } from "@tanstack/react-query";
+import fetcher from "@/lib/fetcher";
+import Loader from "@/components/molecules/loader";
+import { setBaseData } from "@/store/baseSlice";
 
 export default function POS({ children }: { children: React.ReactNode }) {
-  const setStoreData = useStoreStore((state) => state.setStoreData);
-  const isTopBarHidden = useActionStore((state) => state.isTopBarHidden);
-  const setHideTopBar = useActionStore((state) => state.setHideTopBar);
+  const topBarOpen = useSelector((state: RootState) => state.page.topBarOpen);
+  const dispatch = useDispatch();
 
-  const { data, isLoading, isError, isSuccess } = useQuery({
-    queryKey: ["store"],
-    queryFn: () => instance.get("/store") as any,
+  const commonRefetchConfig = {
     refetchOnMount: false,
-    refetchOnReconnect: true,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  };
+
+  const combinedQueries = useQueries({
+    queries: [
+      {
+        queryKey: ["store"],
+        queryFn: () => fetcher("/store"),
+        ...commonRefetchConfig,
+      },
+      {
+        queryKey: ["categories"],
+        queryFn: () => fetcher("/store/categories"),
+        ...commonRefetchConfig,
+      },
+      {
+        queryKey: ["products"],
+        queryFn: () => fetcher("/store/products"),
+        ...commonRefetchConfig,
+      },
+      {
+        queryKey: ["me"],
+        queryFn: () => fetcher("/authentication/me"),
+        ...commonRefetchConfig,
+      },
+    ],
+    combine: (results) => {
+      return {
+        data: results.map((result) => result.data),
+        pending: results.some((result) => result.isPending),
+      };
+    },
   });
 
-  useEffect(() => {
-    if (data) {
-      setStoreData(data);
-    }
-  }, [data, setStoreData]);
-
-  if (isError) {
-    deleteCookie(cookieNames.access_token);
-    window.location.href = "/";
+  if (combinedQueries.pending) {
+    return <Loader minFullScreen={true} />;
   }
 
-  if (isLoading || !isSuccess) {
-    return (
-      <div className="flex flex-col space-y-3">
-        <Skeleton className="h-[125px] w-[250px] rounded-xl" />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-[250px]" />
-          <Skeleton className="h-4 w-[200px]" />
-        </div>
-      </div>
+  if (combinedQueries.data.length) {
+    dispatch(
+      setBaseData({
+        store: combinedQueries.data[0],
+        categories: combinedQueries.data[1],
+        products: combinedQueries.data[2],
+        user: combinedQueries.data[3],
+      })
     );
   }
 
@@ -50,16 +70,12 @@ export default function POS({ children }: { children: React.ReactNode }) {
     <div className="main-wrapper">
       <SideMenu />
       <main className={"page-main bg-paper"}>
-        <TopMenu
-          className="block z-30 fixed bg-background w-full"
-          isHidden={isTopBarHidden}
-          setHidden={setHideTopBar}
-        />
+        <TopMenu className="block z-30 fixed bg-background w-full" />
         <div
           className={clsx(
             "h-full min-h-svh w-full transition-all duration-300",
             {
-              "pt-[50px]": !isTopBarHidden,
+              "pt-[50px]": topBarOpen,
             }
           )}
         >

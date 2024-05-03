@@ -21,9 +21,9 @@ function DraftOrder() {
   const { upsert } = useContext(OrderContext);
 
   async function onSubmit({ items, ...data }: OrderUpsertSchemaType) {
+    console.log({ items, data });
     await upsert({
       ...data,
-      status: "DRAFT",
       items: items.map((e) => ({ ...e, status: "DRAFT" })),
     });
     setOpen(false);
@@ -51,7 +51,9 @@ function DraftOrder() {
           <Button variant={"outline"} onClick={() => setOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)}>Draft</Button>
+          <Button type="submit" onClick={handleSubmit(onSubmit)}>
+            Draft
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

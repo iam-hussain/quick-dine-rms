@@ -6,12 +6,14 @@ import clsx from "clsx";
 import { motion } from "framer-motion";
 
 function UserBadge({
-  name,
+  firstName,
+  lastName,
   image,
   minimize = false,
   className,
 }: {
-  name: string;
+  firstName: string;
+  lastName?: string;
   image: string;
   minimize?: Boolean;
   className?: string;
@@ -40,13 +42,13 @@ function UserBadge({
           variants={buttonVariants}
         >
           <Avatar className="cursor-pointer select-none bg-paper h-8 w-8">
-            <AvatarImage src={image} alt={name} />
+            <AvatarImage src={image} alt={firstName} />
             <AvatarFallback className="bg-primary text-primary-foreground text-sm">
-              {name.slice(0, 1)}
+              {firstName.slice(0, 1)}
             </AvatarFallback>
           </Avatar>
         </motion.div>
-        <p className="text-base font-medium text-foreground/80">{name}</p>
+        <p className="text-base font-medium text-foreground/80">{`${firstName}${lastName ? ` ${lastName}` : ""}`}</p>
       </div>
       {/* <motion.div
         whileHover="hover"

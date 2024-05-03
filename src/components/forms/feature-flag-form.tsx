@@ -1,7 +1,8 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 import { Button } from "@/components/atoms/button";
 import {
   Form,
@@ -13,14 +14,14 @@ import {
 } from "@/components/atoms/form";
 import { toast } from "sonner";
 import { Switch } from "@/components/atoms/switch";
-import { useStoreStore } from "@/stores/storeSlice";
 import { getFeatureFlagForm } from "@iam-hussain/qd-copilot";
-import { useEffect } from "react";
 import instance from "@/lib/instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function FeatureFlagForm() {
-  const featureFlags = useStoreStore((state) => state.featureFlags);
+  const featureFlags = useSelector(
+    (state: RootState) => state.base.store?.featureFlags || {}
+  );
   const featureFlagsFormData = getFeatureFlagForm(featureFlags);
 
   const form = useForm({
@@ -63,7 +64,7 @@ export function FeatureFlagForm() {
                 key={each.key}
                 name={each.key}
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm gap-2">
                     <div className="space-y-0.5">
                       <FormLabel>{each.label}</FormLabel>
                       {each.info && (

@@ -1,5 +1,5 @@
 import instance from "@/lib/instance";
-import { useStoreStore } from "@/stores/storeSlice";
+import { useStoreStore } from "@/store/storeSlice";
 import { OrderType, StoreAdditionalType } from "@/types";
 import { ORDER_TYPE, OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -34,7 +34,8 @@ export const OrderContextConsumer = OrderContext.Consumer;
 export const OrderContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
+  const paramId = searchParams.get("id");
   const { enableTables, enableCustomerAdding } = useStoreStore(
     (state) => state.featureFlags
   );
@@ -44,8 +45,6 @@ export const OrderContextProvider: React.FC<{ children: ReactNode }> = ({
     (state: { settings: StoreAdditionalType }) => state.settings
   );
 
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
   const [order, setOrder] = useState<any>(null);
   const { setValue, watch } = useFormContext<OrderUpsertSchemaType>();
 
@@ -55,46 +54,44 @@ export const OrderContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const type = watch("type", ORDER_TYPE.Values.TAKE_AWAY as any);
   const fees = watch("fees", []);
-  const items = watch("items", []);
 
-  const { data: orderData } = useQuery({
-    queryKey: [`order_${id || ""}`],
-    queryFn: () => instance.get(`/store/order/${id}`) as unknown as any,
-    enabled: Boolean(id),
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  });
-
-  useEffect(() => {
-    const fetchedString = JSON.stringify(orderData || {});
-    const existingString = JSON.stringify(order || {});
-
-    if (orderData && fetchedString !== existingString) {
-      history.pushState({}, "", `/store/pos?id=${orderData.shortId}`);
-      setOrder(orderData as any);
-      setValue("shortId", orderData.shortId);
-      setValue("type", orderData.type);
-      setValue("status", orderData.status);
-      // setValue("note", e.note);
-      // setValue("customerId", e.customerId);
-      // setValue("completedAt", e.completedAt);
-      // setValue("deliveredAt", e.deliveredAt);
-      setValue("fees", orderData.fees);
-      setValue("table", orderData.table);
-      setValue("taxes", orderData.taxes);
-      const drafted = orderData?.drafted || [];
-      if (drafted.length && items.length === 0) {
-        drafted.forEach(itemsArray.append);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderData]);
+  const fetchOrder = async (id: string) => {
+    return instance
+      .get(`/store/order/${id}`)
+      .then((data: any) => {
+        console.log({ data });
+        if (data && data?.updatedAt !== order?.updatedAt) {
+          if (!paramId) {
+            history.pushState({}, "", `/store/pos?id=${id}`);
+          }
+          // if (!order?.shortId) {
+          //   setValue("shortId", data.shortId);
+          //   setValue("type", data.type);
+          //   setValue("status", data.status);
+          //   // setValue("note", e.note);
+          //   // setValue("customerId", e.customerId);
+          //   // setValue("completedAt", e.completedAt);
+          //   // setValue("deliveredAt", e.deliveredAt);
+          //   setValue("fees", data.fees);
+          //   setValue("table", data.table);
+          //   setValue("taxes", data.taxes);
+          // }
+          // const drafted = data?.drafted || [];
+          // console.log({ drafted });
+          // if (drafted.length) {
+          //   drafted.forEach(itemsArray.append);
+          // }
+          setOrder(data as any);
+        }
+        return data;
+      })
+      .catch(console.error);
+  };
 
   const upsertOrderMutation = useMutation({
     mutationFn: (variables) => instance.post("/store/order", variables),
     onSuccess: async (data: any, variables: OrderUpsertSchemaType) => {
-      setValue("items", []);
+      // setValue("items", []);
       if (variables.shortId) {
         toast.success(
           `Order ID ${data.shortId} has been successfully updated! 🚀`
@@ -104,9 +101,6 @@ export const OrderContextProvider: React.FC<{ children: ReactNode }> = ({
           `A new order with ID ${data.shortId} has been created! 🌟`
         );
       }
-      await queryClient.invalidateQueries({
-        queryKey: [`order_${data.shortId}`],
-      });
     },
     onError: (error, variables: OrderUpsertSchemaType) => {
       console.error(error);
@@ -170,7 +164,13 @@ export const OrderContextProvider: React.FC<{ children: ReactNode }> = ({
   ]);
 
   const upsert = ({ table, ...variables }: OrderUpsertSchemaType) => {
-    return upsertOrderMutation.mutate({
+    // const { fees, shortId, type, status } = order || {};
+    upsertOrderMutation.mutate({
+      // ...(shortId ? { shortId } : {}),
+      // ...(type ? { type } : {}),
+      // ...(status ? { status } : {}),
+      // ...(fees ? { fees } : {}),
+      // // ...(enableTables && order?.table?.key ? { table: order?.table } : {}),
       ...variables,
       ...(enableTables && table?.key ? { table } : {}),
       ...(enableCustomerAdding ? {} : {}),
