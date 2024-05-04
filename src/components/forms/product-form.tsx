@@ -51,7 +51,10 @@ function ProductForm({
     mode: "onSubmit",
   });
 
-  const { setError } = form;
+  const {
+    setError,
+    formState: { isDirty, isSubmitting },
+  } = form;
 
   const mutation = useMutation({
     mutationFn: (variables) =>
@@ -59,14 +62,19 @@ function ProductForm({
         ? instance.patch(`/store/product/${id}`, variables)
         : instance.post("/store/product", variables),
     onSuccess: async (data: any) => {
+      console.log({ data });
       if (onSuccess) {
         onSuccess();
       }
       await queryClient.invalidateQueries({ queryKey: ["products"] });
       form.reset({
-        name: "",
-        deck: "",
+        name: data.name,
+        deck: data.deck || "",
+        price: data.price,
+        type: data.type,
+        categoryId: data.categoryId,
       });
+
       if (id) {
         toast.success(
           `Product ID ${data.id} has been successfully updated! 🚀`
@@ -171,7 +179,7 @@ function ProductForm({
           name="categoryId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Type</FormLabel>
+              <FormLabel>Category</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <SelectTrigger {...field}>
                   <SelectValue placeholder="Select a category" />
@@ -195,7 +203,7 @@ function ProductForm({
           <Button
             className="md:w-auto w-full"
             type="submit"
-            disabled={mutation.isPending}
+            disabled={!isDirty || isSubmitting || mutation.isPending}
           >
             {id ? "Update" : "Create"}
           </Button>

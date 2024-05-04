@@ -8,7 +8,7 @@ export default function LoginPage() {
         Login.
       </h1>
       <div className="flex flex-col w-full mb-2">
-        <LoginForm redirect={"/stores"} />
+        <LoginForm />
       </div>
       <div className="flex flex-col w-full gap-3 md:max-w-xs pt-2">
         <h6 className="text-md font-sans">Need it for your store?</h6>

@@ -27,6 +27,7 @@ export function FeatureFlagForm() {
   const form = useForm({
     defaultValues: featureFlags,
   });
+
   const {
     formState: { isDirty, isSubmitting },
   } = form;
@@ -87,7 +88,11 @@ export function FeatureFlagForm() {
             ))}
           </div>
         </div>
-        <Button type="submit" disabled={!isDirty || isSubmitting}>
+        <Button
+          className="md:w-auto w-full"
+          type="submit"
+          disabled={!isDirty || isSubmitting || mutation.isPending}
+        >
           Save
         </Button>
       </form>

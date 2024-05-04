@@ -282,7 +282,11 @@ export default function Dashboard() {
               </DialogHeader>
               <CategoryForm
                 defaultValues={value}
-                onSuccess={() => setOpen(false)}
+                onSuccess={() => {
+                  if (!value.id) {
+                    setOpen(false);
+                  }
+                }}
               />
             </>
           ) : (

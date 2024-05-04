@@ -362,7 +362,11 @@ export default function Dashboard() {
               </DialogHeader>
               <ProductForm
                 defaultValues={value}
-                onSuccess={() => setOpen(false)}
+                onSuccess={() => {
+                  if (!value.id) {
+                    setOpen(false);
+                  }
+                }}
                 categories={categories}
               />
             </>

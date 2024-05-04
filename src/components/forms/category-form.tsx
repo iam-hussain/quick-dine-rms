@@ -41,7 +41,10 @@ function CategoryForm({
     mode: "onSubmit",
   });
 
-  const { setError } = form;
+  const {
+    setError,
+    formState: { isDirty, isSubmitting },
+  } = form;
 
   const mutation = useMutation({
     mutationFn: (variables) =>
@@ -49,14 +52,16 @@ function CategoryForm({
         ? instance.patch(`/store/category/${id}`, variables)
         : instance.post("/store/category", variables),
     onSuccess: async (data: any) => {
+      form.reset({
+        name: data.name,
+        deck: data.deck || "",
+        position: data.position,
+      });
       if (onSuccess) {
         onSuccess();
       }
       await queryClient.invalidateQueries({ queryKey: ["categories"] });
-      form.reset({
-        name: "",
-        deck: "",
-      });
+
       if (id) {
         toast.success(
           `Category ID ${data.id} has been successfully updated! 🚀`
@@ -131,7 +136,7 @@ function CategoryForm({
           <Button
             className="md:w-auto w-full"
             type="submit"
-            disabled={mutation.isPending}
+            disabled={!isDirty || isSubmitting || mutation.isPending}
           >
             {id ? "Update" : "Create"}
           </Button>

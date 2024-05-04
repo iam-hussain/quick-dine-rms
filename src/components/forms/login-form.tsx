@@ -21,11 +21,7 @@ import { formValidationSetter } from "@iam-hussain/qd-copilot";
 
 const defaultValues: Partial<LoginSchemaValues> = {};
 
-type LoginFormProps = {
-  redirect: string;
-};
-
-function LoginForm({ redirect }: LoginFormProps) {
+function LoginForm() {
   const router = useRouter();
   const form = useForm<LoginSchemaValues>({
     resolver: zodResolver(schemas.login),
@@ -33,7 +29,10 @@ function LoginForm({ redirect }: LoginFormProps) {
     mode: "onSubmit",
   });
 
-  const { setError } = form;
+  const {
+    setError,
+    formState: { isDirty, isSubmitting },
+  } = form;
 
   const mutation = useMutation({
     mutationFn: (variables) =>
@@ -106,7 +105,7 @@ function LoginForm({ redirect }: LoginFormProps) {
           <Button
             className="w-full"
             type="submit"
-            disabled={mutation.isPending}
+            disabled={!isDirty || isSubmitting || mutation.isPending}
           >
             Sign In
           </Button>
