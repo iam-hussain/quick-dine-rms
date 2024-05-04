@@ -33,7 +33,7 @@ const typeMap = {
   VEGAN: "Vegan",
 };
 
-export default function Dashboard() {
+export default function ProductPage() {
   const categories = useSelector((state: RootState) => state.base.categories);
   const products = useSelector((state: RootState) => state.base.products);
   const [value, setValue] = useState<

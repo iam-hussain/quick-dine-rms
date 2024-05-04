@@ -27,7 +27,7 @@ import { useSelector } from "react-redux";
 
 dayjs.extend(relativeTime);
 
-export default function Dashboard() {
+export default function CategoryPage() {
   const categories = useSelector((state: RootState) => state.base.categories);
   const [value, setValue] = useState<
     Partial<
