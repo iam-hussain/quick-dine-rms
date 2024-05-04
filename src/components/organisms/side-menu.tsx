@@ -10,7 +10,6 @@ import { motion } from "framer-motion";
 import clsx from "clsx";
 import { Separator } from "../atoms/separator";
 import { useEffect } from "react";
-import { useStoreStore } from "@/store/storeSlice";
 import Loader from "../molecules/loader";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -285,13 +284,14 @@ function SideMenu({ className }: { className?: string }) {
               </div>
             </div>
           )}
-
-          <UserBadge
-            firstName={user.firstName}
-            lastName={user.lastName}
-            image=""
-            className={"py-2 px-4"}
-          />
+          {user && (
+            <UserBadge
+              firstName={user.firstName}
+              lastName={user.lastName}
+              image=""
+              className={"py-2 px-4"}
+            />
+          )}
         </motion.div>
       </motion.div>
     </>

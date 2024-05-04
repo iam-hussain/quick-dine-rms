@@ -4,6 +4,7 @@ interface PageState {
   authenticated: boolean;
   user: any | null;
   store: any | null;
+  order: any | null;
   categories: any[];
   products: any[];
 }
@@ -12,6 +13,7 @@ const initialState: PageState = {
   authenticated: false,
   user: null,
   store: null,
+  order: null,
   categories: [],
   products: [],
 };
@@ -24,6 +26,7 @@ export const pageSlice = createSlice({
       state.authenticated = Boolean(action.payload?.user?.id);
       state.user = action.payload?.user || null;
       state.store = action.payload?.store || null;
+      state.order = action.payload?.order || null;
       state.categories = action.payload?.categories || [];
       state.products = action.payload?.products || [];
     },

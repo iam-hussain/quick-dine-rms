@@ -11,7 +11,7 @@ import { Button } from "../atoms/button";
 import useCartItems from "@/hooks/useCartItems";
 import useCartSettings from "@/hooks/useCartSettings";
 
-export function BillOut({ className }: { className?: string }) {
+export default function BillOut({ className }: { className?: string }) {
   const { summary } = useCartItems();
   const { showPushToKot } = useCartSettings();
   return (

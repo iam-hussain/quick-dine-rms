@@ -12,9 +12,7 @@ import { Button } from "@/components/atoms/button";
 import Icon from "@/components/atoms/icon";
 import BaseTable from "@/components/molecules/base-table";
 import { ColumnDef } from "@tanstack/react-table";
-import instance from "@/lib/instance";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import CategoryForm from "@/components/forms/category-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { ProductSchemaValues } from "@/validations";
 import { CaretSortIcon } from "@radix-ui/react-icons";
@@ -24,6 +22,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import ProductForm from "@/components/forms/product-form";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
+import fetcher from "@/lib/fetcher";
 
 dayjs.extend(relativeTime);
 
@@ -51,7 +50,7 @@ export default function ProductPage() {
   const [open, setOpen] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: () => instance.delete(`/store/product/${value.id}`),
+    mutationFn: () => fetcher.delete(`/store/product/${value.id}`),
     onSuccess: async () => {
       setOpen(false);
       await queryClient.invalidateQueries({ queryKey: ["products"] });

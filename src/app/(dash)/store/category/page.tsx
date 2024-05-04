@@ -12,7 +12,6 @@ import { Button } from "@/components/atoms/button";
 import Icon from "@/components/atoms/icon";
 import BaseTable from "@/components/molecules/base-table";
 import { ColumnDef, SortingFnOption } from "@tanstack/react-table";
-import instance from "@/lib/instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import CategoryForm from "@/components/forms/category-form";
 import { useState } from "react";
@@ -24,6 +23,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { zeroLastSortMethod } from "@/lib/utils";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
+import fetcher from "@/lib/fetcher";
 
 dayjs.extend(relativeTime);
 
@@ -44,7 +44,7 @@ export default function CategoryPage() {
   const [open, setOpen] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: () => instance.delete(`/store/category/${value.id}`),
+    mutationFn: () => fetcher.delete(`/store/category/${value.id}`),
     onSuccess: async () => {
       setOpen(false);
       await queryClient.invalidateQueries({ queryKey: ["categories"] });

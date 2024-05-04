@@ -34,7 +34,6 @@ function CartItemForm({ defaultValues, onSuccess }: CartItemFormProps) {
   });
 
   async function onSubmit(variables: CartItemSchemaValues) {
-    console.log({ variables });
     if (onSuccess) {
       onSuccess(variables);
     }

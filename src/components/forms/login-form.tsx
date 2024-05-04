@@ -14,12 +14,15 @@ import {
 import { Input } from "@/components/atoms/input";
 import schemas, { LoginSchemaValues } from "@/validations";
 import { useRouter } from "next/navigation";
-import instance from "@/lib/instance";
 import { useMutation } from "@tanstack/react-query";
-import { cookieNames, setCookie } from "@/lib/cookies";
+import { cookieNames, setCookieAsync } from "@/lib/cookies";
 import { formValidationSetter } from "@iam-hussain/qd-copilot";
+import fetcher from "@/lib/fetcher";
 
-const defaultValues: Partial<LoginSchemaValues> = {};
+const defaultValues: Partial<LoginSchemaValues> = {
+  email: "",
+  password: "",
+};
 
 function LoginForm() {
   const router = useRouter();
@@ -36,10 +39,10 @@ function LoginForm() {
 
   const mutation = useMutation({
     mutationFn: (variables) =>
-      instance.post("/authentication/sign-in", variables),
-    onSuccess: (data: any) => {
+      fetcher.post("/authentication/sign-in", variables),
+    onSuccess: async (data: any) => {
       if (data?.access_token) {
-        setCookie(cookieNames.access_token, data.access_token);
+        await setCookieAsync(cookieNames.access_token, data.access_token);
         if (data?.includes_store) {
           router.push("/store");
         } else {

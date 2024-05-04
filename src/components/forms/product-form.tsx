@@ -13,7 +13,6 @@ import {
 } from "@/components/atoms/form";
 import { Input } from "@/components/atoms/input";
 import schemas, { ProductSchemaValues } from "@/validations";
-import instance from "@/lib/instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { formValidationSetter } from "@iam-hussain/qd-copilot";
 import {
@@ -25,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select";
+import fetcher from "@/lib/fetcher";
 
 type ProductFormProps = {
   defaultValues: Partial<
@@ -46,6 +46,11 @@ function ProductForm({
   const form = useForm<ProductSchemaValues>({
     resolver: zodResolver(schemas.product),
     defaultValues: {
+      name: "",
+      deck: "",
+      price: "",
+      type: undefined,
+      categoryId: "",
       ...values,
     },
     mode: "onSubmit",
@@ -59,10 +64,9 @@ function ProductForm({
   const mutation = useMutation({
     mutationFn: (variables) =>
       id
-        ? instance.patch(`/store/product/${id}`, variables)
-        : instance.post("/store/product", variables),
+        ? fetcher.patch(`/store/product/${id}`, variables)
+        : fetcher.post("/store/product", variables),
     onSuccess: async (data: any) => {
-      console.log({ data });
       if (onSuccess) {
         onSuccess();
       }
@@ -100,7 +104,6 @@ function ProductForm({
   });
 
   async function onSubmit(variables: ProductSchemaValues) {
-    console.log({ variables });
     return await mutation.mutateAsync(variables as any);
   }
 

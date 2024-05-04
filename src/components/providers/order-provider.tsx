@@ -1,9 +1,9 @@
-import instance from "@/lib/instance";
+import fetcher from "@/lib/fetcher";
 import { useStoreStore } from "@/store/storeSlice";
 import { OrderType, StoreAdditionalType } from "@/types";
 import { ORDER_TYPE, OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, {
   createContext,
   useState,
@@ -34,8 +34,7 @@ export const OrderContextConsumer = OrderContext.Consumer;
 export const OrderContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const searchParams = useSearchParams();
-  const paramId = searchParams.get("id");
+  const router = useRouter();
   const { enableTables, enableCustomerAdding } = useStoreStore(
     (state) => state.featureFlags
   );
@@ -55,48 +54,49 @@ export const OrderContextProvider: React.FC<{ children: ReactNode }> = ({
   const type = watch("type", ORDER_TYPE.Values.TAKE_AWAY as any);
   const fees = watch("fees", []);
 
-  const fetchOrder = async (id: string) => {
-    return instance
-      .get(`/store/order/${id}`)
-      .then((data: any) => {
-        console.log({ data });
-        if (data && data?.updatedAt !== order?.updatedAt) {
-          if (!paramId) {
-            history.pushState({}, "", `/store/pos?id=${id}`);
-          }
-          // if (!order?.shortId) {
-          //   setValue("shortId", data.shortId);
-          //   setValue("type", data.type);
-          //   setValue("status", data.status);
-          //   // setValue("note", e.note);
-          //   // setValue("customerId", e.customerId);
-          //   // setValue("completedAt", e.completedAt);
-          //   // setValue("deliveredAt", e.deliveredAt);
-          //   setValue("fees", data.fees);
-          //   setValue("table", data.table);
-          //   setValue("taxes", data.taxes);
-          // }
-          // const drafted = data?.drafted || [];
-          // console.log({ drafted });
-          // if (drafted.length) {
-          //   drafted.forEach(itemsArray.append);
-          // }
-          setOrder(data as any);
-        }
-        return data;
-      })
-      .catch(console.error);
-  };
+  // const fetchOrder = async (id: string) => {
+  //   return instance
+  //     .get(`/store/order/${id}`)
+  //     .then((data: any) => {
+  //       console.log({ data });
+  //       if (data && data?.updatedAt !== order?.updatedAt) {
+  //         if (!paramId) {
+  //           history.pushState({}, "", `/store/pos?id=${id}`);
+  //         }
+  //         // if (!order?.shortId) {
+  //         //   setValue("shortId", data.shortId);
+  //         //   setValue("type", data.type);
+  //         //   setValue("status", data.status);
+  //         //   // setValue("note", e.note);
+  //         //   // setValue("customerId", e.customerId);
+  //         //   // setValue("completedAt", e.completedAt);
+  //         //   // setValue("deliveredAt", e.deliveredAt);
+  //         //   setValue("fees", data.fees);
+  //         //   setValue("table", data.table);
+  //         //   setValue("taxes", data.taxes);
+  //         // }
+  //         // const drafted = data?.drafted || [];
+  //         // console.log({ drafted });
+  //         // if (drafted.length) {
+  //         //   drafted.forEach(itemsArray.append);
+  //         // }
+  //         setOrder(data as any);
+  //       }
+  //       return data;
+  //     })
+  //     .catch(console.error);
+  // };
 
   const upsertOrderMutation = useMutation({
-    mutationFn: (variables) => instance.post("/store/order", variables),
+    mutationFn: (variables) => fetcher.post("/store/order", variables),
     onSuccess: async (data: any, variables: OrderUpsertSchemaType) => {
-      // setValue("items", []);
+      setValue("items", []);
       if (variables.shortId) {
         toast.success(
           `Order ID ${data.shortId} has been successfully updated! 🚀`
         );
       } else {
+        router.push(`/store/pos?orderId=${data.shortId}`);
         toast.success(
           `A new order with ID ${data.shortId} has been created! 🌟`
         );

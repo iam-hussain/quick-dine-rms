@@ -13,9 +13,9 @@ import {
 } from "@/components/atoms/form";
 import { Input } from "@/components/atoms/input";
 import schemas, { CategorySchemaValues } from "@/validations";
-import instance from "@/lib/instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { formValidationSetter } from "@iam-hussain/qd-copilot";
+import fetcher from "@/lib/fetcher";
 
 type CategoryFormProps = {
   defaultValues: Partial<
@@ -35,6 +35,8 @@ function CategoryForm({
   const form = useForm<CategorySchemaValues>({
     resolver: zodResolver(schemas.category),
     defaultValues: {
+      name: "",
+      deck: "",
       position: 0,
       ...values,
     },
@@ -49,8 +51,8 @@ function CategoryForm({
   const mutation = useMutation({
     mutationFn: (variables) =>
       id
-        ? instance.patch(`/store/category/${id}`, variables)
-        : instance.post("/store/category", variables),
+        ? fetcher.patch(`/store/category/${id}`, variables)
+        : fetcher.post("/store/category", variables),
     onSuccess: async (data: any) => {
       form.reset({
         name: data.name,

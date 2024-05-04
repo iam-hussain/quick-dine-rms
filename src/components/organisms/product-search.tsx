@@ -1,5 +1,6 @@
 "use client";
 
+import { useSelector } from "react-redux";
 import { CategoriesSlide } from "@/components/organisms/categories-slide";
 import ProductList from "@/components/organisms/product-list";
 import SearchBar from "@/components/organisms/search-bar";
@@ -7,16 +8,16 @@ import { Button } from "@/components/atoms/button";
 import { useMemo, useState } from "react";
 import { isValidArray } from "@/lib/utils";
 import { ProductAPI } from "@/types";
+import { RootState } from "@/store";
 
 export default function ProductSearch({
-  categories,
-  products,
-  onProductClick,
+  onItemClick,
 }: {
-  categories: any[];
-  products: any[];
-  onProductClick: (e: any, p: ProductAPI) => void;
+  onItemClick: (e: any, p: ProductAPI) => void;
 }) {
+  const categories = useSelector((state: RootState) => state.base.categories);
+  const products = useSelector((state: RootState) => state.base.products);
+
   const [selectedCat, setSelectedCat] = useState("");
 
   const categoriesData: any[] = useMemo(() => {
@@ -53,7 +54,7 @@ export default function ProductSearch({
       <ProductList
         className="flex grow flex-col"
         products={productsData}
-        onClick={onProductClick}
+        onClick={onItemClick}
       />
     </div>
   );

@@ -1,9 +1,9 @@
-import { getCookie, cookieNames, deleteCookie } from "./cookies";
+import { cookieNames, getCookieAsync } from "./cookies";
 
 export interface FetcherPropsOptions {
   method?: string;
-  header?: Record<string, string>;
-  body?: Record<string, any>;
+  header?: any;
+  body?: any;
 }
 
 const fetcher = async (
@@ -12,7 +12,8 @@ const fetcher = async (
 ): Promise<any> => {
   try {
     let token: string | null = null;
-    const tokenData = getCookie(cookieNames.access_token);
+    const tokenData = await getCookieAsync(cookieNames.access_token);
+
     if (tokenData) {
       token = tokenData;
     }
@@ -32,33 +33,31 @@ const fetcher = async (
       }
     );
     const responseData = await response.json();
-    console.log({ responseData });
-
-    if (!response.ok) {
-      const { message = "" } = responseData;
-      switch (message) {
-        case "INVALID_TOKEN":
-        case "TOKEN_NOT_FOUND":
-          deleteCookie(cookieNames.access_token);
-          window.location.href = "/";
-          break;
-        case "TOKEN_FOUND":
-          window.location.href = "/store";
-          break;
-        case "INVALID_STORE_TOKEN":
-          window.location.href = "/stores";
-          break;
-        default:
-          // Handle other error messages
-          break;
-      }
-    }
-
     return responseData;
   } catch (err) {
     console.error(err);
     return {};
   }
+};
+
+// Function to fetch data using the GET method
+fetcher.get = (path: string, header?: any) => {
+  return fetcher(path, { method: "GET", header });
+};
+
+// Function to fetch data using the POST method
+fetcher.post = (path: string, body?: any, header?: any) => {
+  return fetcher(path, { method: "POST", header, body });
+};
+
+// Function to fetch data using the PATCH method
+fetcher.patch = (path: string, body?: any, header?: any) => {
+  return fetcher(path, { method: "PATCH", header, body });
+};
+
+// Function to fetch data using the DELETE method
+fetcher.delete = (path: string, body?: any, header?: any) => {
+  return fetcher(path, { method: "DELETE", header, body });
 };
 
 export default fetcher;

@@ -15,8 +15,8 @@ import {
 import { toast } from "sonner";
 import { Switch } from "@/components/atoms/switch";
 import { getFeatureFlagForm } from "@iam-hussain/qd-copilot";
-import instance from "@/lib/instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import fetcher from "@/lib/fetcher";
 
 export function FeatureFlagForm() {
   const featureFlags = useSelector(
@@ -35,8 +35,7 @@ export function FeatureFlagForm() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (variables) =>
-      instance.patch(`/store/feature-flags`, variables),
+    mutationFn: (variables) => fetcher.patch(`/store/feature-flags`, variables),
     onSuccess: async (data: any) => {
       form.reset(data);
       await queryClient.invalidateQueries({ queryKey: ["store"] });
