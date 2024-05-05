@@ -16,8 +16,11 @@ import usePOSCart from "@/hooks/usePOSCart";
 
 function KitchenDispatch() {
   const [open, setOpen] = React.useState(false);
-  const { handleSubmit } = useFormContext<OrderUpsertSchemaType>();
+  const { handleSubmit, formState, watch } =
+    useFormContext<OrderUpsertSchemaType>();
+  const { isDirty, isSubmitting } = formState;
   const { upsert } = usePOSCart();
+  const items = watch("items", []);
 
   async function onSubmit({ items, ...data }: OrderUpsertSchemaType) {
     await upsert({
@@ -41,6 +44,7 @@ function KitchenDispatch() {
           className={clsx(
             "flex justify-center gap-2 font-normal w-full col-span-2"
           )}
+          disabled={!isDirty || isSubmitting || !items.length}
         >
           Kitchen Dispatch
         </Button>

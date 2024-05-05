@@ -17,6 +17,7 @@ export default function BasePage({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
   const topBarOpen = useSelector((state: RootState) => state.page.topBarOpen);
+  const store = useSelector((state: RootState) => state.base.store);
   const dispatch = useDispatch();
 
   const commonRefetchConfig = {
@@ -88,7 +89,7 @@ export default function BasePage({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [combinedResponse]);
 
-  if (combinedResponse.pending) {
+  if (combinedResponse.pending || !store?.id) {
     return <Loader minFullScreen={true} />;
   }
 

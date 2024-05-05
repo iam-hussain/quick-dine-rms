@@ -1,7 +1,7 @@
 import fetcher from "@/lib/fetcher";
 import { RootState } from "@/store";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -9,7 +9,8 @@ import { toast } from "sonner";
 
 function usePOSCart() {
   const router = useRouter();
-  const { setValue } = useFormContext<OrderUpsertSchemaType>();
+  const queryClient = useQueryClient();
+  const { reset } = useFormContext<OrderUpsertSchemaType>();
   const { enableTables, enableCustomerAdding } = useSelector(
     (state: RootState) => state.base.featureFlags
   );
@@ -29,6 +30,16 @@ function usePOSCart() {
           `A new order with ID ${data.shortId} has been created! 🌟`
         );
       }
+      reset({
+        ...data,
+        ...variables,
+        items: variables.items.filter(
+          (e) => !e.status || e?.status === "DRAFT"
+        ),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [`order_${data.shortId}`],
+      });
     },
     onError: (error, variables: OrderUpsertSchemaType) => {
       console.error(error);

@@ -84,10 +84,10 @@ function OrderCart({ className }: { className?: string }) {
         <div className="flex gap-2 w-full">
           <DeleteOrder />
           <DraftOrder />
-          {showPushToKot && <KitchenDispatch />}
-          <Button className="w-full col-span-2" type="submit">
+          <KitchenDispatch />
+          {/* <Button className="w-full col-span-2" type="submit">
             Bill Out
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>

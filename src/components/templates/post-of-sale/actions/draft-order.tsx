@@ -17,7 +17,8 @@ import usePOSCart from "@/hooks/usePOSCart";
 
 function DraftOrder() {
   const [open, setOpen] = React.useState(false);
-  const { handleSubmit } = useFormContext<OrderUpsertSchemaType>();
+  const { handleSubmit, formState } = useFormContext<OrderUpsertSchemaType>();
+  const { isDirty, isSubmitting } = formState;
   const { upsert } = usePOSCart();
 
   async function onSubmit({ items, ...data }: OrderUpsertSchemaType) {
@@ -36,6 +37,7 @@ function DraftOrder() {
           aria-label="Draft Order"
           variant={"outline"}
           className={clsx("flex justify-center gap-2 font-normal text-lg")}
+          disabled={!isDirty || isSubmitting}
         >
           <Icon name={"FaSave"} className="h-5 w-5" />
         </Button>
