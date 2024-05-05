@@ -12,7 +12,6 @@ import {
   SelectValue,
 } from "@/components/atoms/select";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import { OrderContext } from "../providers/order-provider";
 
 function OrderTypeSelect() {
   const { control } = useFormContext<OrderUpsertSchemaType>();

@@ -1,13 +1,21 @@
-import { useStoreStore } from "@/store/storeSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 import { ScrollArea } from "@/components/atoms/scroll-area";
 import React from "react";
-import ItemsList from "../molecules/items-list";
-import useCartItems from "@/hooks/useCartItems";
+import ItemsList from "../../../molecules/items-list";
 
 function OrderStatus() {
-  const { all, drafted, scheduled, placed, accepted, prepared } =
-    useCartItems();
-  const { enableKDS } = useStoreStore((state) => state.featureFlags);
+  const order = useSelector((state: RootState) => state.base.order);
+  const { enableKDS } = useSelector(
+    (state: RootState) => state.base.featureFlags
+  );
+
+  const all = order?.items || [];
+  const drafted = order?.drafted || [];
+  const scheduled = order?.scheduled || [];
+  const placed = order?.placed || [];
+  const accepted = order?.accepted || [];
+  const prepared = order?.prepared || [];
 
   return (
     <ScrollArea className="w-full flex justify-end grow bg-background px-4 cart">

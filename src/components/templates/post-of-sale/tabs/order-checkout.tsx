@@ -1,19 +1,21 @@
 "use client";
 
-import { ScrollArea } from "@/components/atoms/scroll-area";
+import { useSelector } from "react-redux";
 import React from "react";
-import ItemsList from "../molecules/items-list";
 import clsx from "clsx";
-import { Separator } from "../atoms/separator";
-import CartSummary from "./cart-summary";
-import ButtonToolTip from "../molecules/button-tooltip";
-import { Button } from "../atoms/button";
-import useCartItems from "@/hooks/useCartItems";
+import { ScrollArea } from "@/components/atoms/scroll-area";
+import ItemsList from "../../../molecules/items-list";
+import { Separator } from "../../../atoms/separator";
+import CartSummary from "../../../organisms/cart-summary";
+import ButtonToolTip from "../../../molecules/button-tooltip";
+import { Button } from "../../../atoms/button";
 import useCartSettings from "@/hooks/useCartSettings";
+import { RootState } from "@/store";
 
-export default function BillOut({ className }: { className?: string }) {
-  const { summary } = useCartItems();
-  const { showPushToKot } = useCartSettings();
+export default function OrderCheckOut({ className }: { className?: string }) {
+  const order = useSelector((state: RootState) => state.base.order);
+  const summary = order?.summary || [];
+
   return (
     <div className={clsx("flex flex-col h-full gap-2", className)}>
       <ScrollArea className="w-full flex justify-end grow bg-background px-4 cart">
@@ -45,16 +47,6 @@ export default function BillOut({ className }: { className?: string }) {
             variant={"outline"}
             type="submit"
           />
-
-          {showPushToKot && (
-            <Button
-              className="w-full col-span-2"
-              type="submit"
-              variant={"secondary"}
-            >
-              Kitchen Dispatch
-            </Button>
-          )}
 
           <Button className="w-full col-span-2" type="submit">
             Bill Out

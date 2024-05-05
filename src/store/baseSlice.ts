@@ -1,4 +1,25 @@
+import { StoreAdditionalType } from "@/types";
+import { defaultFeatureFlags, FeatureFlagsType } from "@iam-hussain/qd-copilot";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+const defaultFees = {
+  PACKING: {
+    key: "PACKING",
+    name: "PACKING",
+    rate: 0,
+    type: "VALUE" as any,
+    position: 1,
+    printName: "Packing",
+  },
+  DELIVERY: {
+    key: "DELIVERY",
+    name: "DELIVERY",
+    rate: 35,
+    type: "VALUE" as any,
+    position: 2,
+    printName: "Delivery",
+  },
+};
 
 interface PageState {
   authenticated: boolean;
@@ -7,6 +28,8 @@ interface PageState {
   order: any | null;
   categories: any[];
   products: any[];
+  featureFlags: FeatureFlagsType;
+  settings: StoreAdditionalType;
 }
 
 const initialState: PageState = {
@@ -16,6 +39,12 @@ const initialState: PageState = {
   order: null,
   categories: [],
   products: [],
+  featureFlags: defaultFeatureFlags,
+  settings: {
+    tables: [],
+    fees: defaultFees,
+    taxes: [],
+  },
 };
 
 export const pageSlice = createSlice({
@@ -23,12 +52,20 @@ export const pageSlice = createSlice({
   initialState,
   reducers: {
     setBaseData: (state, action: PayloadAction<any>) => {
+      const { tables, fees, taxes, featureFlags, ...store } =
+        action.payload?.store || {};
       state.authenticated = Boolean(action.payload?.user?.id);
       state.user = action.payload?.user || null;
-      state.store = action.payload?.store || null;
+      state.store = store || null;
       state.order = action.payload?.order || null;
       state.categories = action.payload?.categories || [];
       state.products = action.payload?.products || [];
+      state.settings = {
+        tables: tables || [],
+        fees: fees || defaultFees,
+        taxes: taxes || [],
+      };
+      state.featureFlags = featureFlags || defaultFeatureFlags;
     },
   },
 });

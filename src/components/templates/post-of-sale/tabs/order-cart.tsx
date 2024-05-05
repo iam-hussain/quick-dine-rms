@@ -1,33 +1,33 @@
-import { useStoreStore } from "@/store/storeSlice";
 import { ScrollArea } from "@/components/atoms/scroll-area";
+import { RootState } from "@/store";
 import clsx from "clsx";
 import ButtonToolTip from "@/components/molecules/button-tooltip";
-import React, { useContext } from "react";
+import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import CartItem from "@/components/molecules/cart-item";
 import { Separator } from "@/components/atoms/separator";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import OrderTypeSelect from "../molecules/order-type-select";
-import TableSelection from "./table-selection";
-import { Button } from "../atoms/button";
-import CartSummary from "./cart-summary";
+import OrderTypeSelect from "../../../molecules/order-type-select";
+import TableSelection from "../../../organisms/table-selection";
+import { Button } from "../../../atoms/button";
+import CartSummary from "../../../organisms/cart-summary";
 import useCartSettings from "@/hooks/useCartSettings";
-import { OrderContext } from "../providers/order-provider";
-import useCartItems from "@/hooks/useCartItems";
-import DraftOrder from "./draft-order";
-import DraftItems from "../molecules/draft-items";
-import DeleteOrder from "./delete-order";
-import KitchenDispatch from "./kitchen-dispatch";
+import DraftOrder from "../actions/draft-order";
+import DeleteOrder from "../actions/delete-order";
+import KitchenDispatch from "../actions/kitchen-dispatch";
+import { useSelector } from "react-redux";
 
-function Cart({ className }: { className?: string }) {
+function OrderCart({ className }: { className?: string }) {
+  const { watch } = useFormContext<OrderUpsertSchemaType>();
+  const { enableCustomerAdding } = useSelector(
+    (state: RootState) => state.base.featureFlags
+  );
   const { showPushToKot } = useCartSettings();
 
-  const { enableCustomerAdding } = useStoreStore((state) => state.featureFlags);
+  const items = watch("items", []);
   const { remove, update } = useFieldArray({
     name: "items",
   });
-  const { drafted, cart } = useCartItems();
-  const items = [...drafted, ...cart]; //watch("items", []);
 
   const handleQuantityClick = (type: "ADD" | "SUB" = "ADD", index: number) => {
     if (type === "SUB" && items[index].quantity === 0) {
@@ -65,7 +65,7 @@ function Cart({ className }: { className?: string }) {
           ) : (
             <></>
           )}
-          {cart.map((item, index) => (
+          {items.map((item, index) => (
             <CartItem
               item={item}
               index={index}
@@ -94,4 +94,4 @@ function Cart({ className }: { className?: string }) {
   );
 }
 
-export default Cart;
+export default OrderCart;

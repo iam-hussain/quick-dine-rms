@@ -1,7 +1,9 @@
-import { Button } from "@/components/atoms/button";
 import clsx from "clsx";
-import React, { useContext } from "react";
+import React from "react";
 import { useFormContext } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { Button } from "@/components/atoms/button";
 import {
   Dialog,
   DialogContent,
@@ -13,12 +15,11 @@ import {
 } from "@/components/atoms/dialog";
 import Icon from "@/components/atoms/icon";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import { OrderContext } from "../providers/order-provider";
 
 function DeleteOrder() {
-  const [open, setOpen] = React.useState(false);
+  const order = useSelector((state: RootState) => state.base.order);
   const { handleSubmit } = useFormContext<OrderUpsertSchemaType>();
-  const { order } = useContext(OrderContext);
+  const [open, setOpen] = React.useState(false);
 
   async function onSubmit(data: OrderUpsertSchemaType) {
     console.log({ data });

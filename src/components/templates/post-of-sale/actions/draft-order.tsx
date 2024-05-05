@@ -13,12 +13,12 @@ import {
 } from "@/components/atoms/dialog";
 import Icon from "@/components/atoms/icon";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import { OrderContext } from "../providers/order-provider";
+import usePOSCart from "@/hooks/usePOSCart";
 
 function DraftOrder() {
   const [open, setOpen] = React.useState(false);
   const { handleSubmit } = useFormContext<OrderUpsertSchemaType>();
-  const { upsert } = useContext(OrderContext);
+  const { upsert } = usePOSCart();
 
   async function onSubmit({ items, ...data }: OrderUpsertSchemaType) {
     console.log({ items, data });
