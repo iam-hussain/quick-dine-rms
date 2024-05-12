@@ -23,6 +23,7 @@ function DeleteOrder() {
 
   async function onSubmit(data: OrderUpsertSchemaType) {
     console.log({ data });
+    return true;
   }
 
   return (

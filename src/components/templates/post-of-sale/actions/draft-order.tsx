@@ -28,6 +28,7 @@ function DraftOrder() {
       items: items.map((e) => ({ ...e, status: "DRAFT" })),
     });
     setOpen(false);
+    return true;
   }
 
   return (

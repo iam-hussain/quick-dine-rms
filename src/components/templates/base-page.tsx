@@ -51,7 +51,7 @@ export default function BasePage({ children }: { children: React.ReactNode }) {
 
   if (orderId) {
     combinedQueries.push({
-      queryKey: [`order_${orderId}`],
+      queryKey: ["base_order"],
       queryFn: () => fetcher(`/store/order/${orderId}`),
       ...commonRefetchConfig,
     });
@@ -75,6 +75,9 @@ export default function BasePage({ children }: { children: React.ReactNode }) {
           store: combinedResponse.data[1],
           categories: combinedResponse.data[2],
           products: combinedResponse.data[3],
+          defaultOrder: combinedResponse.data[4]?.id
+            ? combinedResponse.data[4]
+            : null,
           order: combinedResponse.data[4]?.id ? combinedResponse.data[4] : null,
         })
       );

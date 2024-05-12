@@ -39,7 +39,7 @@ export default function OrderCheckOut({ className }: { className?: string }) {
             icon="MdDeleteOutline"
             variant={"outline"}
             className="text-destructive"
-            //  disabled={!order?.shortId}
+            disabled={!order?.shortId}
           />
           <ButtonToolTip
             label="Draft Order"

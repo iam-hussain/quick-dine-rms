@@ -26,6 +26,7 @@ interface PageState {
   user: any | null;
   store: any | null;
   order: any | null;
+  defaultOrder: any | null;
   categories: any[];
   products: any[];
   featureFlags: FeatureFlagsType;
@@ -37,6 +38,7 @@ const initialState: PageState = {
   user: null,
   store: null,
   order: null,
+  defaultOrder: null,
   categories: [],
   products: [],
   featureFlags: defaultFeatureFlags,
@@ -58,6 +60,7 @@ export const pageSlice = createSlice({
       state.user = action.payload?.user || null;
       state.store = store || null;
       state.order = action.payload?.order || null;
+      state.defaultOrder = action.payload?.defaultOrder || null;
       state.categories = action.payload?.categories || [];
       state.products = action.payload?.products || [];
       state.settings = {
@@ -67,9 +70,13 @@ export const pageSlice = createSlice({
       };
       state.featureFlags = featureFlags || defaultFeatureFlags;
     },
+
+    setUpdateOrder: (state, action: PayloadAction<any>) => {
+      state.order = action.payload;
+    },
   },
 });
 
-export const { setBaseData } = pageSlice.actions;
+export const { setBaseData, setUpdateOrder } = pageSlice.actions;
 
 export default pageSlice.reducer;

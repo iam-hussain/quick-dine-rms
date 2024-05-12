@@ -10,7 +10,7 @@ function OrderStatus() {
     (state: RootState) => state.base.featureFlags
   );
 
-  const all = order?.items || [];
+  const items = order?.items || [];
   const drafted = order?.drafted || [];
   const scheduled = order?.scheduled || [];
   const placed = order?.placed || [];
@@ -21,12 +21,12 @@ function OrderStatus() {
     <ScrollArea className="w-full flex justify-end grow bg-background px-4 cart">
       <div className="flex flex-col h-full">
         <div className="flex flex-col gap-4 pt-2 justify-between h-full">
-          {(all.length === drafted.length || all.length === 0) && (
+          {(items.length === drafted.length || items.length === 0) && (
             <p className="text-sm text-foreground/80 text-center w-full py-6">
               No items found
             </p>
           )}
-          {!enableKDS && <ItemsList label="Ordered" items={all} />}
+          {!enableKDS && <ItemsList label="Ordered" items={items} />}
           {enableKDS && (
             <>
               <ItemsList label="Scheduled" items={scheduled} />

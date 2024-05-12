@@ -1,15 +1,18 @@
 import fetcher from "@/lib/fetcher";
 import { RootState } from "@/store";
+import { setUpdateOrder } from "@/store/baseSlice";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useFormContext } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 
 function usePOSCart() {
+  const dispatch = useDispatch();
   const router = useRouter();
-  const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get("orderId");
   const { reset } = useFormContext<OrderUpsertSchemaType>();
   const { enableTables, enableCustomerAdding } = useSelector(
     (state: RootState) => state.base.featureFlags
@@ -17,28 +20,32 @@ function usePOSCart() {
 
   const upsertOrderMutation = useMutation({
     mutationFn: (variables) => fetcher.post("/store/order", variables),
-    onSuccess: async (data: any, variables: OrderUpsertSchemaType) => {
-      console.log({ data, variables });
+    onSuccess: async (order: any, variables: OrderUpsertSchemaType) => {
+      console.log({ order, variables });
       // setValue("items", []);
       if (variables.shortId) {
         toast.success(
-          `Order ID ${data.shortId} has been successfully updated! 🚀`
+          `Order ID ${order.shortId} has been successfully updated! 🚀`
         );
       } else {
-        router.push(`/store/pos?orderId=${data.shortId}`);
+        if (!orderId) {
+          router.push(`/store/pos?orderId=${order.shortId}`);
+        }
         toast.success(
-          `A new order with ID ${data.shortId} has been created! 🌟`
+          `A new order with ID ${order.shortId} has been created! 🌟`
         );
       }
+      const { shortId, drafted = [], table = {}, status } = order || {};
+
+      dispatch(setUpdateOrder(order));
       reset({
-        ...data,
-        ...variables,
-        items: variables.items.filter(
-          (e) => !e.status || e?.status === "DRAFT"
-        ),
-      });
-      await queryClient.invalidateQueries({
-        queryKey: [`order_${data.shortId}`],
+        type: order?.type || "TAKE_AWAY",
+        items: drafted,
+        fees: order?.fees || [],
+        taxes: order?.taxes || [],
+        ...(table.key ? { table } : {}),
+        ...(shortId ? { shortId } : {}),
+        ...(status ? { status } : {}),
       });
     },
     onError: (error, variables: OrderUpsertSchemaType) => {

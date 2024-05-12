@@ -28,7 +28,7 @@ import { useEffect, useMemo } from "react";
 
 export default function PointOfSale() {
   const topBarOpen = useSelector((state: RootState) => state.page.topBarOpen);
-  const order = useSelector((state: RootState) => state.base.order);
+  const order = useSelector((state: RootState) => state.base.defaultOrder);
   const taxes = useSelector((state: RootState) => state.base.settings.taxes);
   const { DELIVERY, PACKING } = useSelector(
     (state: RootState) => state.base.settings.fees
