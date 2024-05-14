@@ -22,7 +22,6 @@ function DraftOrder() {
   const { upsert } = usePOSCart();
 
   async function onSubmit({ items, ...data }: OrderUpsertSchemaType) {
-    console.log({ items, data });
     await upsert({
       ...data,
       items: items.map((e) => ({ ...e, status: "DRAFT" })),

@@ -21,8 +21,6 @@ function usePOSCart() {
   const upsertOrderMutation = useMutation({
     mutationFn: (variables) => fetcher.post("/store/order", variables),
     onSuccess: async (order: any, variables: OrderUpsertSchemaType) => {
-      console.log({ order, variables });
-      // setValue("items", []);
       if (variables.shortId) {
         toast.success(
           `Order ID ${order.shortId} has been successfully updated! 🚀`

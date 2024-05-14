@@ -34,7 +34,6 @@ function KitchenDispatch() {
     setOpen(false);
     return true;
   }
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
