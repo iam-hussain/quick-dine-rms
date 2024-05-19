@@ -14,7 +14,7 @@ export interface OrderItemProps {
   item: OrderItemType & {
     orderShortId?: string;
   };
-  onClick: (
+  onClick?: (
     data: OrderItemType & {
       orderShortId?: string;
     }
@@ -42,7 +42,11 @@ function OrderItem({ item, onClick }: OrderItemProps) {
           <p className="text-base font-medium">{item.quantity} X</p>
           <p className="text-sm">{item?.title || ""}</p>
         </div>
-        <Button variant={"shine"} className="p-2" onClick={() => onClick(item)}>
+        <Button
+          variant={"shine"}
+          className="p-2"
+          onClick={() => onClick && onClick(item)}
+        >
           {item.status === "PLACED" && (
             <Icon name="MdPending" className="w-6 h-6" />
           )}
