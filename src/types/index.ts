@@ -29,6 +29,15 @@ export enum CALC_VALUE_TYPE {
   VALUE_COUNT = "VALUE_COUNT",
 }
 
+export enum ITEM_STATUS {
+  DRAFT = "DRAFT",
+  SCHEDULED = "SCHEDULED",
+  PLACED = "PLACED",
+  ACCEPTED = "ACCEPTED",
+  PROGRESS = "PROGRESS",
+  PREPARED = "PREPARED",
+}
+
 export interface ProductAPI {
   id: string;
   shortId: string;
@@ -91,7 +100,7 @@ export type OrderItem = {
   id: string;
   title: string;
   note: string;
-  type: "VEG" | "NON_VEG" | "VEGAN";
+  type: PRODUCT_TYPE;
   price: number;
   quantity: number;
   total: number;
@@ -99,8 +108,8 @@ export type OrderItem = {
   placeAt: string;
   placedAt: string;
   acceptedAt: string | null;
-  prepared: string | null;
-  status: "PLACED";
+  preparedAt: string | null;
+  status: ITEM_STATUS;
   productId: string;
   orderId: string;
   createdId: string;

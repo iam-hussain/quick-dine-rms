@@ -20,11 +20,11 @@ function CartItem({
   onRemoveClick,
 }: CartItemProps) {
   return (
-    <li className="flex justify-center items-center align-middle gap-2 rounded-md text-sm font-medium text-inactive w-full">
+    <li className="flex justify-center items-center align-middle gap-4 rounded-md text-base font-medium text-inactive w-full">
       <div className="grow">
         <p className=" text-left text-foreground">{item.title}</p>
 
-        <p className="text-xs">
+        <p className="text-sm">
           {"Amount: "}
           {Number(item.price).toLocaleString("en-IN", {
             style: "currency",
@@ -35,7 +35,7 @@ function CartItem({
 
       <div className="grid grid-cols-3 min-w-[90px]">
         <Button
-          className="p-2 rounded-none rounded-tl-lg rounded-bl-lg"
+          className="p-2 rounded-none rounded-tl-lg rounded-bl-lg shadow-none h-full"
           variant={"default"}
           disabled={item.quantity === 1}
           onClick={() => onSubClick(index)}
@@ -47,7 +47,7 @@ function CartItem({
           {item.quantity}
         </span>
         <Button
-          className="p-2 rounded-none rounded-tr-lg rounded-br-lg shadow-none"
+          className="p-2 rounded-none rounded-tr-lg rounded-br-lg shadow-none h-full"
           variant={"default"}
           disabled={item.quantity > 10000}
           onClick={() => onAddClick(index)}

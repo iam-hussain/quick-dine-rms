@@ -26,7 +26,7 @@ export function CategoriesSlide({
           "w-auto min-w-full h-auto whitespace-nowrap transition-all duration-300"
         )}
       >
-        <Container className="grid grid-flow-row auto-cols-max w-full text-bg-foreground px-4 py-2 gap-4">
+        <Container className="grid grid-flow-row auto-rows-max w-full text-bg-foreground px-4 py-2 gap-4">
           <CategoryCard
             name="All Menu"
             active={!selected}

@@ -28,7 +28,7 @@ import { useEffect, useMemo } from "react";
 
 export default function PointOfSale() {
   const topBarOpen = useSelector((state: RootState) => state.page.topBarOpen);
-  const order = useSelector((state: RootState) => state.base.defaultOrder);
+  const order = useSelector((state: RootState) => state.base.order);
   const taxes = useSelector((state: RootState) => state.base.settings.taxes);
   const { DELIVERY, PACKING } = useSelector(
     (state: RootState) => state.base.settings.fees
@@ -150,24 +150,24 @@ export default function PointOfSale() {
           >
             <TabsList className="grid w-full grid-cols-3 gap-x-2 bg-background rounded-none p-0 mt-1 -mb-1">
               <TabsTrigger
-                className="data-[state=active]:shadow-none shadow-none data-[state=active]:bg-paper border-0 select-none text-foreground/60 py-2 rounded-none rounded-tl-lg rounded-tr-lg"
+                className="text-base data-[state=active]:shadow-none shadow-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border-0 select-none text-foreground/80 py-2 rounded-none rounded-tl-lg rounded-tr-lg"
                 value="cart"
               >
-                OrderCart
+                Cart
               </TabsTrigger>
               <TabsTrigger
-                className="data-[state=active]:shadow-none shadow-none data-[state=active]:bg-paper border-0 select-none text-foreground/60 py-2 rounded-none rounded-tl-lg rounded-tr-lg"
+                className="text-base data-[state=active]:shadow-none shadow-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border-0 select-none text-foreground/80 py-2 rounded-none rounded-tl-lg rounded-tr-lg"
                 value="progress"
               >
                 Progress
               </TabsTrigger>
               <TabsTrigger
-                className="data-[state=active]:shadow-none shadow-none data-[state=active]:bg-paper border-0 select-none text-foreground/60 py-2 rounded-none rounded-tl-lg rounded-tr-lg"
+                className="text-base data-[state=active]:shadow-none shadow-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border-0 select-none text-foreground/80 py-2 rounded-none rounded-tl-lg rounded-tr-lg"
                 value="summary"
               >
                 Summary
               </TabsTrigger>
-              <Separator className="bg-paper h-1 my-0 col-span-3" />
+              <Separator className="bg-primary col-span-3" />
             </TabsList>
             {order?.shortId && <OrderDetails order={order} />}
             <TabsContent value="cart" className="grow">

@@ -7,16 +7,18 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
+import _ from "lodash";
+import { useCallback } from "react";
 
 function usePOSCart() {
   const dispatch = useDispatch();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
   const { reset } = useFormContext<OrderUpsertSchemaType>();
   const { enableTables, enableCustomerAdding } = useSelector(
     (state: RootState) => state.base.featureFlags
   );
+  const order = useSelector((state: RootState) => state.base.order);
 
   const upsertOrderMutation = useMutation({
     mutationFn: (variables) => fetcher.post("/store/order", variables),
@@ -27,7 +29,12 @@ function usePOSCart() {
         );
       } else {
         if (!orderId) {
-          router.push(`/store/pos?orderId=${order.shortId}`);
+          // router.push(`/store/pos?orderId=${order.shortId}`);
+          window.history.replaceState(
+            null,
+            `Order: #${order.shortId} || POS || Quick Dine`,
+            `/store/pos?orderId=${order.shortId}`
+          );
         }
         toast.success(
           `A new order with ID ${order.shortId} has been created! 🌟`
@@ -60,20 +67,39 @@ function usePOSCart() {
     },
   });
 
-  const upsert = ({ table, ...variables }: OrderUpsertSchemaType) => {
-    // const { fees, shortId, type, status } = order || {};
-    return upsertOrderMutation.mutateAsync({
-      // ...(shortId ? { shortId } : {}),
-      // ...(type ? { type } : {}),
-      // ...(status ? { status } : {}),
-      // ...(fees ? { fees } : {}),
-      // // ...(enableTables && order?.table?.key ? { table: order?.table } : {}),
-      ...variables,
-      ...(enableTables && table?.key ? { table } : {}),
-      ...(enableCustomerAdding ? {} : {}),
-    });
-  };
+  const refetchOrderMutation = useMutation({
+    mutationFn: ({ shortId }: any) => fetcher(`/store/order/${shortId}`),
+    onSuccess: async (order: any) => {
+      dispatch(setUpdateOrder(order));
+    },
+  });
 
-  return { upsert };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const refetch = useCallback(
+    _.throttle((shortId: string) => {
+      return refetchOrderMutation.mutateAsync({ shortId });
+    }, 3000),
+    []
+  );
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const upsert = useCallback(
+    _.throttle(({ table, ...variables }: OrderUpsertSchemaType) => {
+      // const { fees, shortId, type, status } = order || {};
+      return upsertOrderMutation.mutateAsync({
+        // ...(shortId ? { shortId } : {}),
+        // ...(type ? { type } : {}),
+        // ...(status ? { status } : {}),
+        // ...(fees ? { fees } : {}),
+        // // ...(enableTables && order?.table?.key ? { table: order?.table } : {}),
+        ...variables,
+        ...(enableTables && table?.key ? { table } : {}),
+        ...(enableCustomerAdding ? {} : {}),
+      });
+    }, 2000),
+    []
+  );
+
+  return { upsert, refetch };
 }
 export default usePOSCart;

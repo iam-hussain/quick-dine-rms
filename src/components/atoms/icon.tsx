@@ -56,6 +56,10 @@ import { RiDraftFill } from "react-icons/ri";
 import { MdSummarize } from "react-icons/md";
 import { IoCaretDownOutline } from "react-icons/io5";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { MdPending } from "react-icons/md";
+import { IoCheckmarkDoneCircle } from "react-icons/io5";
+import { IoReload } from "react-icons/io5";
+import { IoReloadCircleSharp } from "react-icons/io5";
 
 const icons = {
   BiRestaurant,
@@ -115,6 +119,10 @@ const icons = {
   MdSummarize,
   IoCaretDownOutline,
   RiDeleteBinLine,
+  MdPending,
+  IoCheckmarkDoneCircle,
+  IoReload,
+  IoReloadCircleSharp,
 };
 
 export type IconKey = keyof typeof icons;

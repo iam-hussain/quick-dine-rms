@@ -79,7 +79,7 @@ function OrderCart({ className }: { className?: string }) {
         {/* {drafted.length && <DraftItems items={drafted} />} */}
       </ScrollArea>
       <Separator />
-      <div className="flex justify-center align-middle items-center gap-4 flex-col text-sm bg-background select-none h-auto px-6">
+      <div className="flex justify-center align-middle items-center gap-4 flex-col text-base bg-background select-none h-auto px-6">
         <CartSummary items={items as any} />
         <div className="flex gap-2 w-full">
           <DeleteOrder />

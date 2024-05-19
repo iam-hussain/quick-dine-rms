@@ -68,7 +68,6 @@ export const pageSlice = createSlice({
         fees: fees || defaultFees,
         taxes: taxes || [],
       };
-      console.log({ featureFlags, action });
       state.featureFlags = featureFlags || defaultFeatureFlags;
     },
 

@@ -30,8 +30,8 @@ function OrderStatus() {
           {enableKDS && (
             <>
               <ItemsList label="Scheduled" items={scheduled} />
-              <ItemsList label="Placed" items={placed} />
-              <ItemsList label="Accepted" items={accepted} />
+              <ItemsList label="Pending" items={placed} />
+              <ItemsList label="Cooking" items={accepted} />
               <ItemsList label="Completed" items={prepared} />
             </>
           )}
