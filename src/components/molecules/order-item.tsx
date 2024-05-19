@@ -1,7 +1,6 @@
 import React from "react";
 import clsx from "clsx";
 import { OrderItem as OrderItemType } from "@/types";
-import { useStoreStore } from "@/store/storeSlice";
 import { string } from "zod";
 
 const animateVariation = {
@@ -17,26 +16,25 @@ export interface OrderItemProps {
 }
 
 function OrderItem({ item }: OrderItemProps) {
-  const featureFlags = useStoreStore((state) => state.featureFlags);
   return (
     <div
       className={clsx(
-        "flex flex-row h-auto w-[320px] justify-center align-middle items-center"
+        "flex flex-row h-auto w-auto justify-center align-middle items-center"
       )}
     >
-      <div className={clsx("flex-col bg-paper p-4 w-full border-l-[20px]", {})}>
+      <div className={clsx("flex-col bg-paper w-full text-left", {})}>
         <div
           className={
-            "text-base font-semibold text-foreground flex w-full justify-between"
+            "text-base font-semibold text-foreground flex w-full justify-between gap-6"
           }
         >
-          <p>{item?.title || ""}</p>
-          <p className="text-base">X {item.quantity}</p>
+          <p className="text-base">{item.quantity}</p>
+          <p className="grow">{item?.title || ""}</p>
         </div>
 
-        <p className="text-xs font-medium text-primary">
+        {/* <p className="text-xs font-medium text-primary">
           Order ID: {item?.orderShortId || item.orderId}
-        </p>
+        </p> */}
       </div>
     </div>
   );

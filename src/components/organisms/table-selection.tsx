@@ -1,4 +1,3 @@
-import { useStoreStore } from "@/store/storeSlice";
 import { Button } from "@/components/atoms/button";
 import clsx from "clsx";
 import React from "react";
@@ -19,15 +18,16 @@ import Icon from "@/components/atoms/icon";
 import { StoreAdditionalType } from "@/types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/atoms/toggle-group";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 function TableSelection({ className }: { className?: string }) {
   const [openTable, setOpenTable] = React.useState(false);
-  const { enableTables } = useStoreStore((state) => state.featureFlags);
-  const { control } = useFormContext<OrderUpsertSchemaType>();
-
-  const { tables } = useStoreStore(
-    (state: { settings: StoreAdditionalType }) => state.settings
+  const { enableTables } = useSelector(
+    (state: RootState) => state.base.featureFlags
   );
+  const { control } = useFormContext<OrderUpsertSchemaType>();
+  const { tables } = useSelector((state: RootState) => state.base.settings);
 
   const table = useWatch({
     control,

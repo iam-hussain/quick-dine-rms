@@ -1,4 +1,3 @@
-import { useStoreStore } from "@/store/storeSlice";
 import React, { useContext } from "react";
 import { Control, useFormContext } from "react-hook-form";
 import { FormField, FormItem, FormMessage } from "@/components/atoms/form";
@@ -12,12 +11,15 @@ import {
   SelectValue,
 } from "@/components/atoms/select";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 function OrderTypeSelect() {
   const { control } = useFormContext<OrderUpsertSchemaType>();
-  const { enableExpressOrder = true } = useStoreStore(
-    (state) => state.featureFlags
+  const featureFlags = useSelector(
+    (state: RootState) => state.base.featureFlags
   );
+  const { enableExpressOrder } = featureFlags;
 
   return (
     <FormField

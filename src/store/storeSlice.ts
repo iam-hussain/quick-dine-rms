@@ -36,7 +36,7 @@ export const useStoreStore = create<ActionState>()(
               rate: 35,
               type: "VALUE" as any,
               position: 2,
-              printName: "Delivery",
+              printName: "Delivery" /*  */,
             },
           },
           taxes: [],

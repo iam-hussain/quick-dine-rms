@@ -1,15 +1,14 @@
 import { useMemo } from "react";
-import { useStoreStore } from "@/store/storeSlice";
 import { useFormContext } from "react-hook-form";
-import { OrderItem, StoreAdditionalType } from "@/types";
+import { OrderItem } from "@/types";
 import { getChargesValue } from "@/lib/utils";
 import { ORDER_TYPE, OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
 
 function useCartSummary({ items }: { items: OrderItem[] }) {
   const { watch } = useFormContext<OrderUpsertSchemaType>();
-  const { taxes } = useStoreStore(
-    (state: { settings: StoreAdditionalType }) => state.settings
-  );
+  const { taxes } = useSelector((state: RootState) => state.base.settings);
 
   const type = watch("type", ORDER_TYPE.Values.TAKE_AWAY as any);
   const fees = watch("fees", []);

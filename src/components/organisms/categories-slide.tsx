@@ -10,37 +10,41 @@ export function CategoriesSlide({
   categories,
   onClick,
   selected,
+  totalItems,
 }: {
   className?: string;
-  categories: { name: string; id: string }[];
+  categories: { name: string; id: string; productsConnected: number }[];
   onClick: (e: any) => void;
   selected: string;
+  totalItems: number;
 }) {
   return (
-    <ScrollArea
-      className={clsx(
-        "w-auto min-w-full h-auto whitespace-nowrap transition-all duration-300",
-        className
-      )}
-    >
-      <Container className="flex w-full text-bg-foreground relative select-none pb-2">
-        <div className="border-b-2 border-accent w-full absolute"></div>
-
-        <CategoryCard
-          name="All"
-          active={!selected}
-          onClick={() => onClick({})}
-        />
-        {categories.map((category, index) => (
+    <div className={clsx("flex w-auto h-auto gap-2 flex-col py-2", className)}>
+      {/* <h1 className="text-xl font-medium">Categories</h1> */}
+      <ScrollArea
+        className={clsx(
+          "w-auto min-w-full h-auto whitespace-nowrap transition-all duration-300"
+        )}
+      >
+        <Container className="grid grid-flow-row auto-cols-max w-full text-bg-foreground px-4 py-2 gap-4">
           <CategoryCard
-            key={`cat_${index}`}
-            {...category}
-            onClick={() => onClick(category)}
-            active={selected === category.id}
+            name="All Menu"
+            active={!selected}
+            onClick={() => onClick({})}
+            numberOfItems={totalItems}
           />
-        ))}
-      </Container>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+          {categories.map((category, index) => (
+            <CategoryCard
+              key={`cat_${index}`}
+              {...category}
+              onClick={() => onClick(category)}
+              active={selected === category.id}
+              numberOfItems={category.productsConnected}
+            />
+          ))}
+        </Container>
+        {/* <ScrollBar orientation="horizontal" /> */}
+      </ScrollArea>
+    </div>
   );
 }

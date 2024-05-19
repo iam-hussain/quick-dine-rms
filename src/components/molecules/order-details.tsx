@@ -1,12 +1,12 @@
-import { useStoreStore } from "@/store/storeSlice";
 import React from "react";
-import { Button } from "../atoms/button";
-import Icon from "../atoms/icon";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 function OrderDetails({ order }: { order: any }) {
-  const { enableCustomerAdding, showUpdatedDate } = useStoreStore(
-    (state) => state.featureFlags
+  const featureFlags = useSelector(
+    (state: RootState) => state.base.featureFlags
   );
+  const { enableCustomerAdding, showUpdatedDate } = featureFlags;
 
   return (
     <div className="flex gap-2 text-xs flex-row justify-between w-full align-middle items-center p-2 px-4 bg-paper rounded-bl-lg rounded-br-lg -mb-2">

@@ -98,7 +98,7 @@ export default function BasePage({ children }: { children: React.ReactNode }) {
 
   return (
     <div
-      className={clsx("h-full min-h-svh w-full transition-all duration-300", {
+      className={clsx("h-full w-full transition-all duration-300", {
         "pt-[50px]": topBarOpen,
       })}
     >

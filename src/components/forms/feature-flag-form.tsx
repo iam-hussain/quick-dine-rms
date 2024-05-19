@@ -17,11 +17,13 @@ import { Switch } from "@/components/atoms/switch";
 import { getFeatureFlagForm } from "@iam-hussain/qd-copilot";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import fetcher from "@/lib/fetcher";
+import Loader from "../molecules/loader";
 
 export function FeatureFlagForm() {
   const featureFlags = useSelector(
-    (state: RootState) => state.base.store?.featureFlags || {}
+    (state: RootState) => state.base.featureFlags
   );
+
   const featureFlagsFormData = getFeatureFlagForm(featureFlags);
 
   const form = useForm({

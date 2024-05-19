@@ -125,11 +125,17 @@ export default function PointOfSale() {
 
   return (
     <div className="flex md:flex-row flex-col w-full h-full">
-      <ProductSearch onItemClick={onItemClick} />
+      <ProductSearch
+        onItemClick={onItemClick}
+        className={clsx("h-[1000px]", {
+          "h-d-screen-top-close": !topBarOpen,
+          "h-d-screen-top-open": topBarOpen,
+        })}
+      />
       <Form {...form}>
         <form
           className={clsx(
-            "flex md:flex-row flex-col md:w-4/12 3xl:w-3/12 w-full duration-300 transition-all",
+            "flex md:flex-row flex-col md:w-4/12 3xl:w-3/12 4xl:2/12 w-full duration-300 transition-all border-l",
             {
               "h-d-screen-top-close": !topBarOpen,
               "h-d-screen-top-open": topBarOpen,

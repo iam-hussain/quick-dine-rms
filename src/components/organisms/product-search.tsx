@@ -9,11 +9,14 @@ import { useMemo, useState } from "react";
 import { isValidArray } from "@/lib/utils";
 import { ProductAPI } from "@/types";
 import { RootState } from "@/store";
+import clsx from "clsx";
 
 export default function ProductSearch({
   onItemClick,
+  className,
 }: {
   onItemClick: (e: any, p: ProductAPI) => void;
+  className?: string;
 }) {
   const categories = useSelector((state: RootState) => state.base.categories);
   const products = useSelector((state: RootState) => state.base.products);
@@ -39,23 +42,32 @@ export default function ProductSearch({
   }, [products, selectedCat]);
 
   return (
-    <div className="flex flex-col md:w-8/12 3xl:w-9/12 w-full h-full py-4">
-      <div className="flex flex-col gap-4 px-4">
+    <div
+      className={clsx(
+        "flex flex-col md:w-8/12 3xl:w-9/12 4xl:w-10/12 w-full h-full pb-4",
+        className
+      )}
+    >
+      <div className="flex flex-col gap-4 p-4 border-b">
         <div className="flex justify-between align-middle items-center gap-4">
           <SearchBar className="" />
           <Button>Order List</Button>
         </div>
+      </div>
+      <div className="flex w-full grow h-5/6">
         <CategoriesSlide
+          className="border-r border-b"
           categories={categoriesData}
           onClick={(e) => setSelectedCat(e.id || "")}
           selected={selectedCat}
+          totalItems={products.length || 0}
+        />
+        <ProductList
+          className="border-b"
+          products={productsData}
+          onClick={onItemClick}
         />
       </div>
-      <ProductList
-        className="flex grow flex-col"
-        products={productsData}
-        onClick={onItemClick}
-      />
     </div>
   );
 }
