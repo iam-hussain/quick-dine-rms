@@ -30,14 +30,14 @@ const AppMenus: Menu[] = [
   },
   {
     icon: "BsPrinterFill",
-    label: "Billing / Orders",
+    label: "Billing App",
     active: true,
     link: "/store/pos",
   },
   {
     icon: "SiAirtable",
-    label: "Table Orders",
-    link: "/store/table",
+    label: "Orders List",
+    link: "/store/orders",
   },
   {
     icon: "MdSoupKitchen",
@@ -67,10 +67,16 @@ const SettingMenus: Menu[] = [
     label: "Products",
     link: "/store/product",
   },
+  
   {
     icon: "FaTags",
     label: "Category",
     link: "/store/category",
+  },
+  {
+    icon: "FaRegObjectGroup",
+    label: "Kitchen Group",
+    link: "/store/group",
   },
   {
     icon: "FaSave",

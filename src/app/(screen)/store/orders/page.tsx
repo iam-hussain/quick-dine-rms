@@ -28,7 +28,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 
-export default function Kitchen() {
+export default function Orders() {
   const { data, isPending, isLoading, refetch } = useQuery({
     queryKey: ["orders-kot"],
     queryFn: () => fetcher("/store/orders/kot"),
@@ -82,7 +82,7 @@ export default function Kitchen() {
     return <Loader />;
   }
 
-  const { items = {}, orders = [], tokens } = data;
+  const { items = {}, orders = [] } = data;
   const { placed = [], accepted = [], prepared = [] } = items;
 
   return (
@@ -121,39 +121,37 @@ export default function Kitchen() {
             value="progress"
             className="grid grid-flow-col auto-cols-max justify-start align-top items-start gap-4"
           >
-            {tokens
-              .filter((e: any) => e.items?.all.length)
-              .map((order: any) => (
-                <div
-                  key={order.id}
-                  className="h-full w-auto min-w-[300px] overflow-auto border rounded-md"
-                >
-                  <div className="p-4 border flex">
-                    <div>
-                      <p className="text-base font-medium ">
-                        Order: #{order.shortId}
-                      </p>
-                      <p className="text-foreground/80">10:22</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2 p-2">
-                    {order.items.all.map(
-                      (
-                        item: OrderItemType & {
-                          orderShortId?: string | undefined;
-                        },
-                        index: number
-                      ) => (
-                        <OrderItem
-                          item={item}
-                          key={index}
-                          onClick={itemOnClickHandler}
-                        />
-                      )
-                    )}
+            {orders.map((order: OrderType) => (
+              <div
+                key={order.id}
+                className="h-full w-auto min-w-[300px] overflow-auto border rounded-md"
+              >
+                <div className="p-4 border flex">
+                  <div>
+                    <p className="text-base font-medium ">
+                      Order: #{order.shortId}
+                    </p>
+                    <p className="text-foreground/80">10:22</p>
                   </div>
                 </div>
-              ))}
+                <div className="flex flex-col gap-2 p-2">
+                  {order.items.map(
+                    (
+                      item: OrderItemType & {
+                        orderShortId?: string | undefined;
+                      },
+                      index: number
+                    ) => (
+                      <OrderItem
+                        item={item}
+                        key={index}
+                        onClick={itemOnClickHandler}
+                      />
+                    )
+                  )}
+                </div>
+              </div>
+            ))}
           </TabsContent>
           <TabsContent value="completed"></TabsContent>
         </div>

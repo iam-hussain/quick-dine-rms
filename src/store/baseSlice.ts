@@ -28,6 +28,7 @@ interface PageState {
   order: any | null;
   defaultOrder: any | null;
   categories: any[];
+  kitchenCategories: any[];
   products: any[];
   featureFlags: FeatureFlagsType;
   settings: StoreAdditionalType;
@@ -40,6 +41,7 @@ const initialState: PageState = {
   order: null,
   defaultOrder: null,
   categories: [],
+  kitchenCategories: [],
   products: [],
   featureFlags: defaultFeatureFlags,
   settings: {
@@ -62,6 +64,7 @@ export const pageSlice = createSlice({
       state.order = action.payload?.order || null;
       state.defaultOrder = action.payload?.defaultOrder || null;
       state.categories = action.payload?.categories || [];
+      state.kitchenCategories = action.payload?.kitchenCategories || [];
       state.products = action.payload?.products || [];
       state.settings = {
         tables: tables || [],

@@ -12,32 +12,38 @@ import {
   FormLabel,
 } from "@/components/atoms/form";
 import { Input } from "@/components/atoms/input";
-import schemas, { CategorySchemaValues } from "@/validations";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { formValidationSetter } from "@iam-hussain/qd-copilot";
+import {
+  CategoryCreateSchema,
+  CategoryCreateSchemaType,
+  formValidationSetter,
+} from "@iam-hussain/qd-copilot";
 import fetcher from "@/lib/fetcher";
 
 type CategoryFormProps = {
   defaultValues: Partial<
-    CategorySchemaValues & {
+    CategoryCreateSchemaType & {
       id?: string;
     }
   >;
   onSuccess?: () => void;
+  type?: "DEFAULT" | "KITCHEN";
 };
 
 function CategoryForm({
   defaultValues: { id, ...values },
   onSuccess,
+  type,
 }: CategoryFormProps) {
   const queryClient = useQueryClient();
 
-  const form = useForm<CategorySchemaValues>({
-    resolver: zodResolver(schemas.category),
+  const form = useForm<CategoryCreateSchemaType>({
+    resolver: zodResolver(CategoryCreateSchema),
     defaultValues: {
       name: "",
       deck: "",
       position: 0,
+      type,
       ...values,
     },
     mode: "onSubmit",
@@ -88,7 +94,7 @@ function CategoryForm({
     },
   });
 
-  async function onSubmit(variables: CategorySchemaValues) {
+  async function onSubmit(variables: CategoryCreateSchemaType) {
     return await mutation.mutateAsync(variables as any);
   }
 

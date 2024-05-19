@@ -73,7 +73,12 @@ export default function BasePage({ children }: { children: React.ReactNode }) {
         setBaseData({
           user: combinedResponse.data[0],
           store: combinedResponse.data[1],
-          categories: combinedResponse.data[2],
+          categories: combinedResponse.data[2].filter(
+            (e: { type: string }) => e.type === "DEFAULT"
+          ),
+          kitchenCategories: combinedResponse.data[2].filter(
+            (e: { type: string }) => e.type === "KITCHEN"
+          ),
           products: combinedResponse.data[3],
           defaultOrder: combinedResponse.data[4]?.id
             ? combinedResponse.data[4]

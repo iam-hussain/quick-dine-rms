@@ -34,6 +34,7 @@ const typeMap = {
 
 export default function ProductPage() {
   const categories = useSelector((state: RootState) => state.base.categories);
+  const kitchenCategories = useSelector((state: RootState) => state.base.kitchenCategories);
   const products = useSelector((state: RootState) => state.base.products);
   const [value, setValue] = useState<
     Partial<
@@ -224,6 +225,52 @@ export default function ProductPage() {
       ),
     },
     {
+      size: 120,
+      minSize: 120,
+      maxSize: 120,
+      accessorKey: "kitchenCategoryId",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className={clsx("w-full px-0", {
+            "font-bold": column.getIsSorted(),
+          })}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Kitchen Group ID
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="text-foreground/70 text-center">
+          {row.getValue("kitchenCategoryId")}
+        </div>
+      ),
+    },
+    {
+      size: 120,
+      minSize: 120,
+      maxSize: 120,
+      accessorKey: "kitchenCategoryName",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className={clsx("w-full px-0", {
+            "font-bold": column.getIsSorted(),
+          })}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Kitchen Group
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="text-foreground/70 text-center">
+          {row.getValue("kitchenCategoryName")}
+        </div>
+      ),
+    },
+    {
       size: 230,
       minSize: 230,
       maxSize: 230,
@@ -325,7 +372,7 @@ export default function ProductPage() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <div className="flex flex-col justify-start align-top items-start grow w-full h-full p-6 max-w-screen-2xl m-auto">
+      <div className="flex flex-col justify-start align-top items-start grow w-full h-full p-6 max-w-screen-3xl m-auto">
         <section className="flex justify-between w-full h-auto mb-4">
           <h1 className="text-xl md:text-2xl font-semibold">Manage Product</h1>
           <DialogTrigger asChild>
@@ -367,6 +414,7 @@ export default function ProductPage() {
                   }
                 }}
                 categories={categories}
+                kitchenCategories={kitchenCategories}
               />
             </>
           ) : (

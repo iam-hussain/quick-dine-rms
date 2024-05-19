@@ -12,9 +12,12 @@ import {
   FormLabel,
 } from "@/components/atoms/form";
 import { Input } from "@/components/atoms/input";
-import schemas, { ProductSchemaValues } from "@/validations";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { formValidationSetter } from "@iam-hussain/qd-copilot";
+import {
+  formValidationSetter,
+  ProductCreateSchema,
+  ProductCreateSchemaType,
+} from "@iam-hussain/qd-copilot";
 import {
   Select,
   SelectContent,
@@ -28,29 +31,32 @@ import fetcher from "@/lib/fetcher";
 
 type ProductFormProps = {
   defaultValues: Partial<
-    ProductSchemaValues & {
+    ProductCreateSchemaType & {
       id?: string;
     }
   >;
   onSuccess?: () => void;
   categories?: { id: string; name: string }[];
+  kitchenCategories?: { id: string; name: string }[];
 };
 
 function ProductForm({
   defaultValues: { id, ...values },
   onSuccess,
-  categories,
+  categories = [],
+  kitchenCategories = [],
 }: ProductFormProps) {
   const queryClient = useQueryClient();
 
-  const form = useForm<ProductSchemaValues>({
-    resolver: zodResolver(schemas.product),
+  const form = useForm<ProductCreateSchemaType>({
+    resolver: zodResolver(ProductCreateSchema),
     defaultValues: {
       name: "",
       deck: "",
-      price: "",
+      price: 0,
       type: undefined,
       categoryId: "",
+      kitchenCategoryId: "",
       ...values,
     },
     mode: "onSubmit",
@@ -77,6 +83,7 @@ function ProductForm({
         price: data.price,
         type: data.type,
         categoryId: data.categoryId,
+        kitchenCategoryId: data.kitchenCategoryId || "",
       });
 
       if (id) {
@@ -103,7 +110,7 @@ function ProductForm({
     },
   });
 
-  async function onSubmit(variables: ProductSchemaValues) {
+  async function onSubmit(variables: ProductCreateSchemaType) {
     return await mutation.mutateAsync(variables as any);
   }
 
@@ -191,6 +198,31 @@ function ProductForm({
                   <SelectGroup>
                     <SelectLabel>Category</SelectLabel>
                     {categories?.map((e) => (
+                      <SelectItem key={e.id} value={e.id}>
+                        {e.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="kitchenCategoryId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Kitchen Group</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger {...field}>
+                  <SelectValue placeholder="Select a kitchen group" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Kitchen Group</SelectLabel>
+                    {kitchenCategories?.map((e) => (
                       <SelectItem key={e.id} value={e.id}>
                         {e.name}
                       </SelectItem>

@@ -27,8 +27,10 @@ import fetcher from "@/lib/fetcher";
 
 dayjs.extend(relativeTime);
 
-export default function CategoryPage() {
-  const categories = useSelector((state: RootState) => state.base.categories);
+export default function KitchenGroupPage() {
+  const categories = useSelector(
+    (state: RootState) => state.base.kitchenCategories
+  );
   const [value, setValue] = useState<
     Partial<
       CategorySchemaValues & {
@@ -50,13 +52,13 @@ export default function CategoryPage() {
       await queryClient.invalidateQueries({ queryKey: ["categories"] });
 
       toast.success(
-        `Category with ID ${value.id} has been successfully deleted. 🎉`
+        `Kitchen Group with ID ${value.id} has been successfully deleted. 🎉`
       );
     },
     onError: (err) => {
       setOpen(false);
       toast.error(
-        `Unable to delete the category with ID ${value.id}. Please try again later. If the issue persists, contact support for assistance.`
+        `Unable to delete the kitchen group with ID ${value.id}. Please try again later. If the issue persists, contact support for assistance.`
       );
       console.error(err);
     },
@@ -248,7 +250,9 @@ export default function CategoryPage() {
     <Dialog open={open} onOpenChange={setOpen}>
       <div className="flex flex-col justify-start align-top items-start grow w-full h-full p-6 max-w-screen-3xl m-auto">
         <section className="flex justify-between w-full h-auto mb-4">
-          <h1 className="text-xl md:text-2xl font-semibold">Manage Category</h1>
+          <h1 className="text-xl md:text-2xl font-semibold">
+            Manage Kitchen Group
+          </h1>
           <DialogTrigger asChild>
             <Button
               className="flex gap-2"
@@ -272,15 +276,16 @@ export default function CategoryPage() {
             <>
               <DialogHeader>
                 <DialogTitle>
-                  {value.id ? "Edit" : "Create"} category
+                  {value.id ? "Edit" : "Create"} kitchen group
                 </DialogTitle>
                 <DialogDescription>
                   {value.id
-                    ? `You are editing the category with id: ${value.id}.`
-                    : "You can create a category here."}
+                    ? `You are editing the kitchen group with id: ${value.id}.`
+                    : "You can create a kitchen group here."}
                 </DialogDescription>
               </DialogHeader>
               <CategoryForm
+                type="KITCHEN"
                 defaultValues={value}
                 onSuccess={() => {
                   if (!value.id) {
@@ -292,9 +297,9 @@ export default function CategoryPage() {
           ) : (
             <>
               <DialogHeader>
-                <DialogTitle>Delete category</DialogTitle>
+                <DialogTitle>Delete kitchen group</DialogTitle>
                 <DialogDescription>
-                  Are you sure you want to delete the category with ID{" "}
+                  Are you sure you want to delete the kitchen group with ID{" "}
                   <strong className="text-destructive">{value.id}</strong> and
                   the name{" "}
                   <strong className="text-destructive">{value.name}</strong>?
