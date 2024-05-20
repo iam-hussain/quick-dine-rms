@@ -29,6 +29,7 @@ import {
 import { toast } from "sonner";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
+import { Button } from "@/components/atoms/button";
 
 export default function Kitchen() {
   const { enableKitchenCategory } = useSelector(
@@ -64,6 +65,36 @@ export default function Kitchen() {
       );
     },
   });
+
+  const updateToken = useMutation({
+    mutationFn: ({ id, shortId, ...variables }) =>
+      fetcher.patch(`/store/token/${id}`, variables),
+    onSuccess: async (order: any, variables: any) => {
+      refetch();
+      toast.success(
+        `A new order with ID ${variables.shortId} has been created! 🌟`
+      );
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.success(
+        "Failed to create order. Please verify the provided details and attempt again. If the problem persists, reach out to support for additional help."
+      );
+    },
+  });
+
+  const tokenCompleteHandler = async (token: any) => {
+    if (token.items.all.length !== token.items.prepared.length) {
+      return true;
+    }
+    await updateToken.mutateAsync({
+      id: token?.id,
+      shortId: token?.shortId,
+      completedAt: new Date(),
+      completed: true,
+      orderId: token?.order?.id,
+    });
+  };
 
   const itemOnClickHandler = async (
     data: OrderItemType & {
@@ -146,7 +177,7 @@ export default function Kitchen() {
             {tokens.placed.map((token: any) => (
               <div
                 key={token.id}
-                className="h-full w-auto min-w-[300px] overflow-auto border rounded-md"
+                className="h-full w-auto min-w-[300px] overflow-auto border rounded-md p-2"
               >
                 <div className="p-4 border flex">
                   <div>
@@ -156,7 +187,9 @@ export default function Kitchen() {
                     <p className="text-base font-medium ">
                       Token: #{token.shortId}
                     </p>
-                    <p className="text-foreground/80">10:22</p>
+                    <p className="text-foreground/80">
+                      {token.kitchenCategory?.name}
+                    </p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2 p-2">
@@ -175,10 +208,58 @@ export default function Kitchen() {
                     )
                   )}
                 </div>
+                <Button
+                  className="w-full my-2"
+                  onClick={() => tokenCompleteHandler(token)}
+                  disabled={
+                    token.items.all.length !== token.items.prepared.length
+                  }
+                >
+                  Completed
+                </Button>
               </div>
             ))}
           </TabsContent>
-          <TabsContent value="completed"></TabsContent>
+          <TabsContent value="completed">
+            {tokens.completed.length === 0 && (
+              <p className="text-sm text-foreground/80 text-center w-full py-8 m-auto grow grid-cols-12">
+                No items found (You will see only completed token in last 5
+                hours)
+              </p>
+            )}
+            {tokens.completed.map((token: any) => (
+              <div
+                key={token.id}
+                className="h-full w-auto min-w-[300px] overflow-auto border rounded-md p-2"
+              >
+                <div className="p-4 border flex">
+                  <div>
+                    <p className="text-base font-medium ">
+                      Order: #{token.order.shortId}
+                    </p>
+                    <p className="text-base font-medium ">
+                      Token: #{token.shortId}
+                    </p>
+                    <p className="text-foreground/80">
+                      {token.kitchenCategory?.name}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2 p-2">
+                  {token.items.all.map(
+                    (
+                      item: OrderItemType & {
+                        orderShortId?: string | undefined;
+                      },
+                      index: number
+                    ) => (
+                      <OrderItem item={item} key={index} onClick={() => {}} />
+                    )
+                  )}
+                </div>
+              </div>
+            ))}
+          </TabsContent>
         </div>
       </Tabs>
     </div>
