@@ -24,10 +24,10 @@ import OrderDetails from "@/components/molecules/order-details";
 import OrderStatus from "@/components/templates/post-of-sale/tabs/order-status";
 import OrderCart from "@/components/templates/post-of-sale/tabs/order-cart";
 import OrderCheckOut from "@/components/templates/post-of-sale/tabs/order-checkout";
-import { useEffect, useMemo , useState} from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function PointOfSale() {
-  const [tabValue, setTabValue] = useState('cart')
+  const [tabValue, setTabValue] = useState("cart");
   const topBarOpen = useSelector((state: RootState) => state.page.topBarOpen);
   const order = useSelector((state: RootState) => state.base.order);
   const taxes = useSelector((state: RootState) => state.base.settings.taxes);
@@ -105,7 +105,7 @@ export default function PointOfSale() {
 
   const onItemClick = (e: any, product: ProductAPI) => {
     e.preventDefault();
-    setTabValue('cart')
+    setTabValue("cart");
     const index = items.findIndex((e) => e.productId === product.id);
     if (index >= 0) {
       itemsControl.update(index, {
@@ -121,6 +121,9 @@ export default function PointOfSale() {
         position: items.length + 1,
         productId: product.id,
         type: product.type,
+        ...(product.kitchenCategoryId
+          ? { kitchenCategoryId: product.kitchenCategoryId }
+          : {}),
       });
     }
   };
@@ -145,8 +148,8 @@ export default function PointOfSale() {
           )}
         >
           <Tabs
-            defaultValue={'cart'}
-            value={tabValue} 
+            defaultValue={"cart"}
+            value={tabValue}
             onValueChange={setTabValue}
             className={clsx(
               "flex gap-4 flex-col w-full h-full bg-background p-4"

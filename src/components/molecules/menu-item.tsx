@@ -37,11 +37,11 @@ function MenuItem({
     <Link
       className={clsx(
         "h-9",
-        "inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
-        "flex gap-2 font-normal hover:bg-paper hover:text-foreground align-middle items-center",
+        "inline-flex items-center whitespace-nowrap rounded-md text-sm uppercase font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+        "flex gap-4 hover:bg-paper hover:text-foreground align-middle items-center font-medium",
         {
-          "text-primary bg-paper/70": link === pathname,
-          "text-foreground/70": link !== pathname,
+          "text-primary bg-paper/70 font-semibold": link === pathname,
+          "text-foreground/70 text-sm": link !== pathname,
           "justify-center p-2": !isSmallDevice && minimize,
           "justify-start px-4 py-2": !minimize,
         }
@@ -49,7 +49,7 @@ function MenuItem({
       onClick={onRedirect}
       href={link || "#"}
     >
-      <Icon name={icon} className="h-5 w-5" />
+      <Icon name={icon} className="h-7 w-7" />
       <motion.div
         transition={{ ease: "circInOut" }}
         initial="hide"

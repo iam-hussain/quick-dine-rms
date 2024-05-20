@@ -15,9 +15,8 @@ function usePOSCart() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
   const { reset } = useFormContext<OrderUpsertSchemaType>();
-  const { enableTables, enableCustomerAdding } = useSelector(
-    (state: RootState) => state.base.featureFlags
-  );
+  const { enableTables, enableCustomerAdding, enableKitchenCategory } =
+    useSelector((state: RootState) => state.base.featureFlags);
   const order = useSelector((state: RootState) => state.base.order);
 
   const upsertOrderMutation = useMutation({
@@ -95,6 +94,7 @@ function usePOSCart() {
         ...variables,
         ...(enableTables && table?.key ? { table } : {}),
         ...(enableCustomerAdding ? {} : {}),
+        enableKitchenCategory,
       });
     }, 2000),
     []

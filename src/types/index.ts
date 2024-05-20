@@ -49,6 +49,8 @@ export interface ProductAPI {
   type: PRODUCT_TYPE;
   categoryName: string;
   categoryId: string;
+  kitchenCategoryName?: string;
+  kitchenCategoryId?: string;
   image: {
     primary: {
       caption: string;

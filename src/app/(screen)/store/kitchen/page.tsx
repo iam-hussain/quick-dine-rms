@@ -27,11 +27,24 @@ import {
   Key,
 } from "react";
 import { toast } from "sonner";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
 
 export default function Kitchen() {
-  const { data, isPending, isLoading, refetch } = useQuery({
+  const { enableKitchenCategory } = useSelector(
+    (state: RootState) => state.base.featureFlags
+  );
+  const {
+    data: tokens,
+    isPending,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["orders-kot"],
-    queryFn: () => fetcher("/store/orders/kot"),
+    queryFn: () =>
+      fetcher(
+        `/store/tokens?category=${enableKitchenCategory ? "true" : "false"}`
+      ),
   });
 
   const updateItem = useMutation({
@@ -57,7 +70,6 @@ export default function Kitchen() {
       orderShortId?: string;
     }
   ) => {
-    console.log({ data });
     const { id, orderId, status } = data;
     const updateData: any = {
       id,
@@ -82,9 +94,6 @@ export default function Kitchen() {
     return <Loader />;
   }
 
-  const { items = {}, orders = [], tokens } = data;
-  const { placed = [], accepted = [], prepared = [] } = items;
-
   return (
     <div className="flex flex-col w-full h-full justify-center align-middle items-center bg-paper p-4">
       <Tabs
@@ -92,13 +101,15 @@ export default function Kitchen() {
         className={clsx("flex gap-4 flex-col w-full h-full p-4")}
       >
         <TabsList className="flex justify-between align-middle w-full gap-x-h ">
-          <h1 className="text-2xl font-semibold text-foreground">Orders</h1>
+          <h1 className="text-2xl font-semibold text-foreground">
+            Kitchen Tokens Display
+          </h1>
           <div className="flex gap-4">
             <TabsTrigger
               className="min-w-[100px] text-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-              value="draft"
+              value="scheduled"
             >
-              Draft
+              Scheduled
             </TabsTrigger>
             <TabsTrigger
               className="min-w-[100px] text-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
@@ -115,45 +126,57 @@ export default function Kitchen() {
           </div>
           {/* <Separator className="bg-paper h-1 my-0 col-span-3" /> */}
         </TabsList>
-        <div className="p-4 bg-background h-full">
+        <div className="p-6 bg-background h-full">
           <TabsContent value="draft"></TabsContent>
           <TabsContent
             value="progress"
-            className="grid grid-flow-col auto-cols-max justify-start align-top items-start gap-4"
+            className={clsx(
+              "grid grid-flow-col auto-cols-max align-top items-start gap-4 m-0",
+              {
+                "justify-start": tokens.placed.length !== 0,
+                "justify-center": tokens.placed.length === 0,
+              }
+            )}
           >
-            {tokens
-              .filter((e: any) => e.items?.all.length)
-              .map((order: any) => (
-                <div
-                  key={order.id}
-                  className="h-full w-auto min-w-[300px] overflow-auto border rounded-md"
-                >
-                  <div className="p-4 border flex">
-                    <div>
-                      <p className="text-base font-medium ">
-                        Order: #{order.shortId}
-                      </p>
-                      <p className="text-foreground/80">10:22</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2 p-2">
-                    {order.items.all.map(
-                      (
-                        item: OrderItemType & {
-                          orderShortId?: string | undefined;
-                        },
-                        index: number
-                      ) => (
-                        <OrderItem
-                          item={item}
-                          key={index}
-                          onClick={itemOnClickHandler}
-                        />
-                      )
-                    )}
+            {tokens.placed.length === 0 && (
+              <p className="text-sm text-foreground/80 text-center w-full py-8 m-auto grow grid-cols-12">
+                No items found
+              </p>
+            )}
+            {tokens.placed.map((token: any) => (
+              <div
+                key={token.id}
+                className="h-full w-auto min-w-[300px] overflow-auto border rounded-md"
+              >
+                <div className="p-4 border flex">
+                  <div>
+                    <p className="text-base font-medium ">
+                      Order: #{token.order.shortId}
+                    </p>
+                    <p className="text-base font-medium ">
+                      Token: #{token.shortId}
+                    </p>
+                    <p className="text-foreground/80">10:22</p>
                   </div>
                 </div>
-              ))}
+                <div className="flex flex-col gap-2 p-2">
+                  {token.items.all.map(
+                    (
+                      item: OrderItemType & {
+                        orderShortId?: string | undefined;
+                      },
+                      index: number
+                    ) => (
+                      <OrderItem
+                        item={item}
+                        key={index}
+                        onClick={itemOnClickHandler}
+                      />
+                    )
+                  )}
+                </div>
+              </div>
+            ))}
           </TabsContent>
           <TabsContent value="completed"></TabsContent>
         </div>

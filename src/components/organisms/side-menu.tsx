@@ -5,7 +5,6 @@ import Icon, { IconKey } from "@/components/atoms/icon";
 import MenuItem from "@/components/molecules/menu-item";
 import { ScrollArea } from "@/components/atoms/scroll-area";
 import UserBadge from "../molecules/user-badge";
-import { useMedia } from "react-use";
 import { motion } from "framer-motion";
 import clsx from "clsx";
 import { Separator } from "../atoms/separator";
@@ -31,12 +30,11 @@ const AppMenus: Menu[] = [
   {
     icon: "BsPrinterFill",
     label: "Billing App",
-    active: true,
     link: "/store/pos",
   },
   {
     icon: "SiAirtable",
-    label: "Orders List",
+    label: "Orders Display",
     link: "/store/orders",
   },
   {
@@ -67,7 +65,7 @@ const SettingMenus: Menu[] = [
     label: "Products",
     link: "/store/product",
   },
-  
+
   {
     icon: "FaTags",
     label: "Category",
@@ -87,73 +85,20 @@ const SettingMenus: Menu[] = [
 
 const variants = {
   initial: {
-    width: 60,
-    x: -60,
-  },
-  mobInitial: {
-    width: 280,
-    x: -280,
+    x: -500,
   },
   full: {
-    width: 280,
-    x: 0,
+    x: -185,
     transition: {
       delayChildren: 0.5,
     },
-  },
-  half: {
-    width: 60,
-    x: 0,
-    transition: {
-      delayChildren: 0.5,
-    },
-  },
-  close: {
-    width: 60,
-    x: -60,
-  },
-};
-
-const hideShow = {
-  hide: { opacity: 0, scale: 0 },
-  show: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      delay: 0.2,
-    },
-  },
-};
-
-const fader = {
-  hide: { opacity: 0, scale: 0 },
-  show: {
-    opacity: 1,
-    scale: 1,
   },
 };
 
 const closerButton = {
   initial: { scale: 1 },
-  hover: { scale: 1.1 },
-  pressed: { scale: 0.9 },
-  minimize: {
-    ease: "linear",
-    opacity: 0,
-    scale: 0,
-    transition: {
-      duration: 0.5,
-    },
-  },
-  expand: {
-    x: 180,
-    opacity: 1,
-    scale: 1,
-    transition: {
-      delay: 0.2,
-    },
-    ease: "linear",
-  },
+  hover: { scale: 1.2 },
+  pressed: { scale: 0.8 },
 };
 
 const decorator = {
@@ -179,7 +124,6 @@ const decorator = {
 };
 
 function SideMenu({ className }: { className?: string }) {
-  const smallScreen = useMedia("(max-width: 767px)", false);
   const sideBarOpen = useSelector((state: RootState) => state.page.sideBarOpen);
   const dispatch = useDispatch();
   const store = useSelector((state: RootState) => state.base.store);
@@ -204,101 +148,94 @@ function SideMenu({ className }: { className?: string }) {
       ></motion.div>
       <motion.div
         initial="initial"
-        animate={sideBarOpen ? "full" : "mobInitial"}
+        animate={sideBarOpen ? "full" : "initial"}
         variants={variants}
-        transition={{ type: "spring", stiffness: 100 }}
-        className={clsx("side-menu py-4 bg-background px-2 z-50", className)}
+        transition={{ type: "spring", stiffness: 700, damping: 30 }}
+        style={{ width: "500px" }}
+        className={clsx(
+          "side-menu py-4 bg-background px-2 z-50 items-end relative",
+          className
+        )}
       >
-        <div
-          className={clsx(
-            "flex w-auto gap-2 justify-start align-middle items-center select-none text-right m-auto my-4 relative"
-          )}
-        >
-          <div className="flex flex-col gap-0 justify-center align-middle items-center">
-            <div className="flex flex-col justify-center align-middle items-center gap-0">
-              <motion.div
-                whileHover="hover"
-                whileTap="pressed"
-                variants={closerButton}
-                className="cursor-pointer flex gap-1 justify-center align-middle items-center"
-                onClick={() => dispatch(openSideBar())}
-              >
-                <Icon
-                  name="FaBowlFood"
-                  className="text-primary text-2xl font-thin my-[2px]"
-                />
-                <motion.h1
-                  className={clsx("text-xl font-display", {
-                    hidden: !smallScreen && !sideBarOpen,
-                  })}
-                  initial="hide"
-                  animate={!sideBarOpen && !smallScreen ? "hide" : "show"}
-                  variants={fader}
-                >
-                  QuickDine
-                </motion.h1>
-              </motion.div>
+        <div className="flex justify-center align-middle items-center flex-col h-full w-[300px]">
+          <div
+            className={clsx(
+              "flex gap-2 justify-start align-middle items-center select-none text-right m-auto my-4"
+            )}
+          >
+            <motion.div
+              whileHover="hover"
+              whileTap="pressed"
+              variants={closerButton}
+              className="absolute cursor-pointer top-3 right-3"
+              onClick={() => dispatch(openSideBar())}
+            >
+              <Icon name="IoClose" className="h-6 w-6" />
+            </motion.div>
+            <div className="flex flex-col gap-0 justify-center align-middle items-center">
+              <div className="flex flex-col justify-center align-middle items-center gap-0">
+                <div className="cursor-pointer flex gap-2 justify-center align-middle items-center">
+                  <Icon
+                    name="FaBowlFood"
+                    className="text-primary text-3xl font-thin my-[2px]"
+                  />
+                  <h1 className={clsx("text-2xl font-display")}>QuickDine</h1>
+                </div>
+              </div>
+              <Separator className="my-2 select-none" />
             </div>
-            <Separator className="my-2 select-none" />
+          </div>
+
+          <ScrollArea className="grow w-full flex justify-end py-4">
+            <Container className="flex flex-col gap-3 text-right my-2 px-1">
+              {AppMenus.map((each, key) => (
+                <MenuItem
+                  {...each}
+                  key={key}
+                  onRedirect={() => dispatch(openSideBar())}
+                />
+              ))}
+              <Separator className="my-2 select-none" />
+              {SettingMenus.map((each, key) => (
+                <MenuItem
+                  {...each}
+                  key={key}
+                  onRedirect={() => dispatch(openSideBar())}
+                />
+              ))}
+            </Container>
+          </ScrollArea>
+
+          <div className="grow w-full h-auto flex justify-end flex-col">
+            {!store && <Loader />}
+            {store && (
+              <div className={"text-center w-full px-4 h-auto m-0 mt-auto"}>
+                <p className="text-md font-semibold pb-1 text-foreground/90">
+                  {store?.name || ""}
+                </p>
+                <div>
+                  {store?.printDeck &&
+                    store?.printDeck?.map((e: string, i: number) => (
+                      <p
+                        className="text-xs text-foreground/90"
+                        key={`printDeck_${i}`}
+                      >
+                        {e}
+                      </p>
+                    ))}
+                </div>
+              </div>
+            )}
+            {user && (
+              <UserBadge
+                firstName={user.firstName}
+                lastName={user.lastName}
+                image=""
+                className={"py-2 px-4"}
+              />
+            )}
           </div>
         </div>
-
-        <ScrollArea className="grow w-full flex justify-end py-4">
-          <Container className="flex flex-col gap-2 text-right my-2 px-1">
-            {AppMenus.map((each, key) => (
-              <MenuItem
-                {...each}
-                key={key}
-                onRedirect={() => dispatch(openSideBar())}
-              />
-            ))}
-            <Separator className="my-2 select-none" />
-            {SettingMenus.map((each, key) => (
-              <MenuItem
-                {...each}
-                key={key}
-                onRedirect={() => dispatch(openSideBar())}
-              />
-            ))}
-          </Container>
-        </ScrollArea>
-
-        <motion.div
-          className={clsx("flex flex-col gap-2", {
-            hidden: !sideBarOpen,
-          })}
-          initial="hide"
-          animate={"show"}
-          variants={hideShow}
-        >
-          {!store && <Loader />}
-          {store && (
-            <div className={"text-center m-auto w-full px-4"}>
-              <p className="text-md font-semibold pb-1 text-foreground/90">
-                {store?.name || ""}
-              </p>
-              <div>
-                {store?.printDeck &&
-                  store?.printDeck?.map((e: string, i: number) => (
-                    <p
-                      className="text-xs text-foreground/90"
-                      key={`printDeck_${i}`}
-                    >
-                      {e}
-                    </p>
-                  ))}
-              </div>
-            </div>
-          )}
-          {user && (
-            <UserBadge
-              firstName={user.firstName}
-              lastName={user.lastName}
-              image=""
-              className={"py-2 px-4"}
-            />
-          )}
-        </motion.div>
       </motion.div>
     </>
   );
