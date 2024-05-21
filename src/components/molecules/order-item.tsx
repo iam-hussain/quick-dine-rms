@@ -38,13 +38,13 @@ function OrderItem({ item, onClick }: OrderItemProps) {
             "text-base font-normal text-foreground flex w-full justify-start items-center align-middle gap-6"
           }
         >
-          <p className="text-base font-medium">{item.quantity}</p>
-          <p className="text-sm font-medium">{item?.title || ""}</p>
+          <p className="text-lg font-medium">{item.quantity}</p>
+          <p className="text-base font-medium">{item?.title || ""}</p>
         </div>
         {(isPlaced || isAccepted) && (
           <Button
             variant={"transparent"}
-            className="p-0 text-red-500"
+            className="p-0 text-red-700"
             onClick={() => onClick && onClick(item.id, "REJECT")}
           >
             <Icon name="MdDeleteOutline" className="w-6 h-6" />

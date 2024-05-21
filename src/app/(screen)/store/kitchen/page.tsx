@@ -153,11 +153,7 @@ export default function Kitchen() {
           <TabsContent
             value="progress"
             className={clsx(
-              "grid grid-cols-7 align-top items-start gap-4 m-0",
-              {
-                "justify-start": tokens.placed.length !== 0,
-                "justify-center": tokens.placed.length === 0,
-              }
+              "flex flex-wrap align-top items-start gap-4 m-0 justify-center"
             )}
           >
             {tokens.placed.length === 0 && (
@@ -168,24 +164,26 @@ export default function Kitchen() {
             {tokens.placed.map((token) => (
               <div
                 key={token.id}
-                className="h-auto w-auto min-w-[300px] bg-paper overflow-auto rounded-md p-4"
+                className="h-auto w-auto min-w-[300px] bg-paper/40 overflow-auto rounded-md p-4 border-2 border-foreground/70"
               >
                 <div className="pb-1 border-b border-foreground/50 flex">
                   <div className="w-full flex flex-col gap-2">
                     <div className="flex justify-between w-full gap-2">
-                      <p className="text-base font-medium ">
-                        #{token.displayId}
-                      </p>
-                      <p className="font-medium text-sm text-foreground/70">
-                        Order:{" "}
-                        <span className="text-foreground/90">
-                          #{token.order.shortId}
-                        </span>
-                      </p>
+                      <p className="text-lg font-medium ">#{token.displayId}</p>
+                      <div className="flex flex-col justify-center align-middle items-end">
+                        <p className="font-medium text-sm text-foreground/70">
+                          Order:{" "}
+                          <span className="text-foreground/90">
+                            #{token.order.shortId}
+                          </span>
+                        </p>
+                        {token.kitchenCategory?.name && (
+                          <p className="text-foreground/90 font-medium text-base">
+                            {token.kitchenCategory?.name}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-foreground/80">
-                      {token.kitchenCategory?.name}
-                    </p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2 p-2">
