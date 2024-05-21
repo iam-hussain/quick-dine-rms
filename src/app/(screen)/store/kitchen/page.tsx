@@ -1,12 +1,6 @@
 "use client";
 
 import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/atoms/resizable";
-import { Separator } from "@/components/atoms/separator";
-import {
   Tabs,
   TabsContent,
   TabsList,
@@ -14,18 +8,10 @@ import {
 } from "@/components/atoms/tabs";
 import Loader from "@/components/molecules/loader";
 import OrderItem from "@/components/molecules/order-item";
-import { ITEM_STATUS, OrderItem as OrderItemType, OrderType } from "@/types";
+import { SortTokensResult } from "@/types";
 import fetcher from "@/lib/fetcher";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import {
-  ReactElement,
-  JSXElementConstructor,
-  ReactNode,
-  ReactPortal,
-  AwaitedReactNode,
-  Key,
-} from "react";
 import { toast } from "sonner";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
@@ -40,8 +26,8 @@ export default function Kitchen() {
     isPending,
     isLoading,
     refetch,
-  } = useQuery({
-    queryKey: ["orders-kot"],
+  } = useQuery<SortTokensResult>({
+    queryKey: ["tokens"],
     queryFn: () =>
       fetcher(
         `/store/tokens?category=${enableKitchenCategory ? "true" : "false"}`
@@ -69,7 +55,7 @@ export default function Kitchen() {
   const updateToken = useMutation({
     mutationFn: ({ id, shortId, ...variables }) =>
       fetcher.patch(`/store/token/${id}`, variables),
-    onSuccess: async (order: any, variables: any) => {
+    onSuccess: async (_: any, variables: any) => {
       refetch();
       toast.success(
         `A new order with ID ${variables.shortId} has been created! 🌟`
@@ -83,45 +69,50 @@ export default function Kitchen() {
     },
   });
 
-  const tokenCompleteHandler = async (token: any) => {
-    if (token.items.all.length !== token.items.prepared.length) {
+  const tokenCompleteHandler = async (
+    id: string,
+    shortId: string,
+    orderId: string,
+    isValid: boolean
+  ) => {
+    if (isValid || !orderId) {
       return true;
     }
     await updateToken.mutateAsync({
-      id: token?.id,
-      shortId: token?.shortId,
+      id,
+      shortId,
       completedAt: new Date(),
-      completed: true,
-      orderId: token?.order?.id,
+      orderId,
     });
   };
 
   const itemOnClickHandler = async (
-    data: OrderItemType & {
-      orderShortId?: string;
-    }
+    id: string,
+    type: "ACCEPT" | "COMPLETE" | "REJECT",
+    orderId?: string | null
   ) => {
-    const { id, orderId, status } = data;
-    const updateData: any = {
-      id,
-      orderId,
-      status: ITEM_STATUS.PLACED,
-    };
-
-    if (status === ITEM_STATUS.PLACED) {
-      updateData.status = ITEM_STATUS.ACCEPTED;
-      updateData.acceptedAt = new Date();
+    if (!orderId) {
+      return true;
+    }
+    if (type === "ACCEPT") {
+      await updateItem.mutateAsync({ id, orderId, acceptedAt: new Date() });
     }
 
-    if (status === ITEM_STATUS.ACCEPTED) {
-      updateData.status = ITEM_STATUS.PREPARED;
-      updateData.preparedAt = new Date();
+    if (type === "COMPLETE") {
+      await updateItem.mutateAsync({ id, orderId, completedAt: new Date() });
     }
 
-    await updateItem.mutateAsync(updateData);
+    if (type === "REJECT") {
+      await updateItem.mutateAsync({
+        id,
+        orderId,
+        rejectedAt: new Date(),
+        rejected: true,
+      });
+    }
   };
 
-  if (isPending || isLoading) {
+  if (isPending || isLoading || !tokens) {
     return <Loader />;
   }
 
@@ -162,7 +153,7 @@ export default function Kitchen() {
           <TabsContent
             value="progress"
             className={clsx(
-              "grid grid-flow-col auto-cols-max align-top items-start gap-4 m-0",
+              "grid grid-cols-7 align-top items-start gap-4 m-0",
               {
                 "justify-start": tokens.placed.length !== 0,
                 "justify-center": tokens.placed.length === 0,
@@ -174,45 +165,67 @@ export default function Kitchen() {
                 No items found
               </p>
             )}
-            {tokens.placed.map((token: any) => (
+            {tokens.placed.map((token) => (
               <div
                 key={token.id}
-                className="h-full w-auto min-w-[300px] overflow-auto border rounded-md p-2"
+                className="h-auto w-auto min-w-[300px] bg-paper overflow-auto rounded-md p-4"
               >
-                <div className="p-4 border flex">
-                  <div>
-                    <p className="text-base font-medium ">
-                      Order: #{token.order.shortId}
-                    </p>
-                    <p className="text-base font-medium ">
-                      Token: #{token.shortId}
-                    </p>
+                <div className="pb-1 border-b border-foreground/50 flex">
+                  <div className="w-full flex flex-col gap-2">
+                    <div className="flex justify-between w-full gap-2">
+                      <p className="text-base font-medium ">
+                        #{token.displayId}
+                      </p>
+                      <p className="font-medium text-sm text-foreground/70">
+                        Order:{" "}
+                        <span className="text-foreground/90">
+                          #{token.order.shortId}
+                        </span>
+                      </p>
+                    </div>
                     <p className="text-foreground/80">
                       {token.kitchenCategory?.name}
                     </p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2 p-2">
-                  {token.items.all.map(
-                    (
-                      item: OrderItemType & {
-                        orderShortId?: string | undefined;
-                      },
-                      index: number
-                    ) => (
-                      <OrderItem
-                        item={item}
-                        key={index}
-                        onClick={itemOnClickHandler}
-                      />
-                    )
+                  {token.items.valid.map((item) => (
+                    <OrderItem
+                      item={item}
+                      key={item.id}
+                      onClick={(id, type) =>
+                        itemOnClickHandler(id, type, token.orderId)
+                      }
+                    />
+                  ))}
+                  {Boolean(token.items.rejected.length) && (
+                    <div className="text-sm text-foreground/60 p-2 pt-4 flex gap-1 flex-col">
+                      {token.items.rejected.map((item) => (
+                        <div className="flex gap-6" key={item.id}>
+                          <p>{item.quantity}</p>
+                          <p>{item.title}</p>
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </div>
                 <Button
+                  variant={
+                    token.items.valid.length !== token.items.completed.length
+                      ? "accent"
+                      : "secondary"
+                  }
                   className="w-full my-2"
-                  onClick={() => tokenCompleteHandler(token)}
+                  onClick={() =>
+                    tokenCompleteHandler(
+                      token.id,
+                      token.shortId,
+                      token.orderId || "",
+                      token.items.valid.length !== token.items.completed.length
+                    )
+                  }
                   disabled={
-                    token.items.all.length !== token.items.prepared.length
+                    token.items.valid.length !== token.items.completed.length
                   }
                 >
                   Completed
@@ -227,7 +240,7 @@ export default function Kitchen() {
                 hours)
               </p>
             )}
-            {tokens.completed.map((token: any) => (
+            {tokens.completed.map((token) => (
               <div
                 key={token.id}
                 className="h-full w-auto min-w-[300px] overflow-auto border rounded-md p-2"
@@ -246,16 +259,15 @@ export default function Kitchen() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2 p-2">
-                  {token.items.all.map(
-                    (
-                      item: OrderItemType & {
-                        orderShortId?: string | undefined;
-                      },
-                      index: number
-                    ) => (
-                      <OrderItem item={item} key={index} onClick={() => {}} />
-                    )
-                  )}
+                  {token.items.valid.map((item) => (
+                    <OrderItem
+                      item={item}
+                      key={item.id}
+                      onClick={(id) =>
+                        itemOnClickHandler(id, "ACCEPT", token.orderId)
+                      }
+                    />
+                  ))}
                 </div>
               </div>
             ))}

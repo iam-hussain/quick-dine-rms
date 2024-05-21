@@ -29,7 +29,7 @@ const AppMenus: Menu[] = [
   },
   {
     icon: "BsPrinterFill",
-    label: "Billing App",
+    label: "Billing System",
     link: "/store/pos",
   },
   {

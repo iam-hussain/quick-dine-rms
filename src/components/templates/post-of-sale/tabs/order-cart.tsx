@@ -22,7 +22,6 @@ function OrderCart({ className }: { className?: string }) {
   const { enableCustomerAdding } = useSelector(
     (state: RootState) => state.base.featureFlags
   );
-  const { showPushToKot } = useCartSettings();
 
   const items = watch("items", []);
   const { remove, update } = useFieldArray({

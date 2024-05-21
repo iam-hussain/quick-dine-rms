@@ -5,7 +5,6 @@ export enum PRODUCT_TYPE {
 }
 
 export enum ORDER_TYPE {
-  PRE_DINING = "PRE_DINING",
   DINING = "DINING",
   TAKE_AWAY = "TAKE_AWAY",
   PICK_UP = "PICK_UP",
@@ -15,12 +14,10 @@ export enum ORDER_TYPE {
 
 export enum ORDER_STATUS {
   DRAFT = "DRAFT",
-  PLACED = "PLACED",
-  ACCEPTED = "ACCEPTED",
-  PROGRESS = "PROGRESS",
-  READY = "READY",
-  OUT_FOR_DELIVERY = "OUT_FOR_DELIVERY",
+  IN_PROGRESS = "IN_PROGRESS",
   COMPLETED = "COMPLETED",
+  DELIVERY_PENDING = "DELIVERY_PENDING",
+  DELIVERED = "DELIVERED",
 }
 
 export enum CALC_VALUE_TYPE {
@@ -29,16 +26,84 @@ export enum CALC_VALUE_TYPE {
   VALUE_COUNT = "VALUE_COUNT",
 }
 
-export enum ITEM_STATUS {
-  DRAFT = "DRAFT",
-  SCHEDULED = "SCHEDULED",
-  PLACED = "PLACED",
-  ACCEPTED = "ACCEPTED",
-  PROGRESS = "PROGRESS",
-  PREPARED = "PREPARED",
+export type ChargesType = "VALUE" | "PERCENTAGE" | "VALUE_COUNT";
+
+export interface ItemType {
+  id: string;
+  title: string | null;
+  note: string | null;
+  type: PRODUCT_TYPE;
+  price: number;
+  quantity: number;
+  total: number;
+  position: number;
+  scheduledAt: Date | string | null;
+  placedAt: Date | string | null;
+  acceptedAt: Date | string | null;
+  completedAt: Date | string | null;
+  rejectedAt: Date | string | null;
+  rejected: boolean;
+  productId: string;
+  orderId: string | null;
+  tokenId: string | null;
+  createdId: string | null;
+  createdAt: string;
+  updatedId: string | null;
+  updatedAt: Date | string;
 }
 
-export interface ProductAPI {
+export type SortItemsResult = {
+  // all: Item[]; // All items
+  drafted: ItemType[]; // Drafted items
+  rejected: ItemType[]; // Rejected items
+  valid: ItemType[]; // Non-drafted, non-rejected items
+  summary: ItemType[]; // Type for getGroupedItems return value
+  scheduled: ItemType[]; // Scheduled items
+  placed: ItemType[]; // Placed items
+  accepted: ItemType[]; // Accepted items
+  completed: ItemType[]; // Completed items
+};
+
+export interface TokenType {
+  id: string;
+  note: string | null;
+  shortId: string;
+  displayId: string;
+  printedAt: Date | string | null;
+  placedAt: Date | string;
+  completedAt: Date | string | null;
+  scheduledAt: Date | string | null;
+  orderId: string | null;
+  kitchenCategoryId: string | null;
+  storeId: string;
+  createdId: string | null;
+  createdAt: Date | string;
+  updatedId: string | null;
+  updatedAt: Date | string;
+  items: SortItemsResult;
+  order: {
+    id: string;
+    shortId: string;
+    type: ORDER_TYPE;
+    status: ORDER_STATUS;
+  };
+  kitchenCategory: CategoryType;
+}
+
+export type SortTokensResult = {
+  scheduled: TokenType[]; // Scheduled tokens
+  placed: TokenType[]; // Placed tokens
+  completed: TokenType[]; // Completed tokens
+};
+
+export type ImageType = {
+  caption: string;
+  altText: string;
+  value: string;
+  type: string;
+};
+
+export interface ProductAPIType {
   id: string;
   shortId: string;
   name: string;
@@ -52,124 +117,77 @@ export interface ProductAPI {
   kitchenCategoryName?: string;
   kitchenCategoryId?: string;
   image: {
-    primary: {
-      caption: string;
-      altText: string;
-      value: string;
-      type: string;
-    } | null;
+    primary: ImageType | null;
   };
 }
 
-export type ChargesType = "VALUE" | "PERCENTAGE" | "VALUE_COUNT";
-
-export type StoreAdditionalType = {
-  tables: {
-    key: string;
-    name: string;
-    printName: string;
-    position: number;
-  }[];
-  taxes: {
-    key: string;
-    name: string;
-    printName: string;
-    rate: number;
-    position: number;
-    type: CALC_VALUE_TYPE;
-  }[];
-  fees: {
-    DELIVERY: {
-      key: string;
-      name: string;
-      printName: string;
-      rate: number;
-      position: number;
-      type: CALC_VALUE_TYPE;
-    };
-    PACKING: {
-      key: string;
-      name: string;
-      printName: string;
-      rate: number;
-      position: number;
-      type: CALC_VALUE_TYPE;
-    };
-  };
-};
-
-export type OrderItem = {
-  id: string;
-  title: string;
-  note: string;
-  type: PRODUCT_TYPE;
-  price: number;
-  quantity: number;
-  total: number;
-  position: number;
-  placeAt: string;
-  placedAt: string;
-  acceptedAt: string | null;
-  preparedAt: string | null;
-  status: ITEM_STATUS;
-  productId: string;
-  orderId: string;
-  createdId: string;
-  createdAt: string;
-  updatedId: string | null;
-  updatedAt: string | null;
-  billId: string | null;
-};
-
-export type OrderType = {
+export interface CategoryType {
   id: string;
   shortId: string;
-  type: "DINING" | "TAKE_AWAY" | "PICK_UP" | "DELIVERY" | "PLATFORM";
-  status:
-    | "DRAFT"
-    | "PLACED"
-    | "ACCEPTED"
-    | "PROGRESS"
-    | "READY"
-    | "OUT_FOR_DELIVERY"
-    | "COMPLETED";
+  name: string;
+  deck: string | null;
+  position: number;
+  image: ImageType | null;
+  type: "DEFAULT" | "KITCHEN";
+  storeId: string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+
+export type TaxType = {
+  key: string;
+  name: string;
+  printName: string;
+  rate: number;
+  position: number;
+  type: CALC_VALUE_TYPE;
+};
+
+export type FeeItemType = {
+  key: string;
+  name: string;
+  printName: string;
+  rate: number;
+  position: number;
+  type: CALC_VALUE_TYPE;
+};
+
+export type TableType = {
+  key: string;
+  name: string;
+  printName: string;
+  position: number;
+};
+
+export type FeeType = {
+  DELIVERY: FeeItemType;
+  PACKING: FeeItemType;
+};
+
+export type StoreAdditionalType = {
+  tables: TableType[];
+  taxes: TaxType[];
+  fees: FeeType;
+};
+
+export type OrderAPIType = {
+  id: string;
+  shortId: string;
+  type: ORDER_TYPE;
+  status: ORDER_STATUS;
   note: string | null;
-  table: {
-    key: string;
-    name: string;
-    position: number;
-    printName: string;
-  };
-  taxes: {
-    key: string;
-    name: string;
-    rate: number;
-    type: "VALUE" | "PERCENTAGE" | "VALUE_COUNT";
-    position: number;
-    printName: string;
-  }[];
-  fees: {
-    key: string;
-    name: string;
-    rate: number;
-    type: "VALUE" | "PERCENTAGE" | "VALUE_COUNT";
-    position: number;
-    printName: string;
-  }[];
+  table: TableType;
+  taxes: TaxType[];
+  fees: FeeItemType[];
   extra: Record<string, never>;
-  completedAt: string | null;
-  deliveredAt: string | null;
+  completedAt: Date | string | null;
+  deliveredAt: Date | string | null;
   customerId: string | null;
   createdId: string;
-  createdAt: string;
+  createdAt: Date | string;
   updatedId: string | null;
-  updatedAt: string | null;
+  updatedAt: Date | string | null;
   storeId: string;
-  items: OrderItem[];
-  summary: OrderItem[];
-  drafted: OrderItem[];
-  scheduled: OrderItem[];
-  placed: OrderItem[];
-  accepted: OrderItem[];
-  prepared: OrderItem[];
+  items: SortItemsResult;
+  tokens: SortTokensResult;
 };

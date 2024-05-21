@@ -7,7 +7,7 @@ import SearchBar from "@/components/organisms/search-bar";
 import { Button } from "@/components/atoms/button";
 import { useMemo, useState } from "react";
 import { isValidArray } from "@/lib/utils";
-import { ProductAPI } from "@/types";
+import { ProductAPIType } from "@/types";
 import { RootState } from "@/store";
 import clsx from "clsx";
 
@@ -15,7 +15,7 @@ export default function ProductSearch({
   onItemClick,
   className,
 }: {
-  onItemClick: (e: any, p: ProductAPI) => void;
+  onItemClick: (e: any, p: ProductAPIType) => void;
   className?: string;
 }) {
   const categories = useSelector((state: RootState) => state.base.categories);

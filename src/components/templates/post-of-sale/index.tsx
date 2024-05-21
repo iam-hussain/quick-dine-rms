@@ -5,7 +5,7 @@ import { RootState } from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Form } from "@/components/atoms/form";
-import { ProductAPI } from "@/types";
+import { ProductAPIType } from "@/types";
 import {
   ORDER_TYPE,
   OrderUpsertSchema,
@@ -35,16 +35,15 @@ export default function PointOfSale() {
     (state: RootState) => state.base.settings.fees
   );
 
-  const { shortId, drafted = [], table = {}, status } = order || {};
+  const { shortId, table, status } = order || {};
 
   const defaultValues: Partial<OrderUpsertSchemaType> = {
     type: order?.type || "TAKE_AWAY",
-    items: drafted,
+    items: (order?.items?.drafted || []) as any,
     fees: order?.fees || [],
     taxes: order?.taxes || taxes || [],
-    ...(table.key ? { table } : {}),
+    ...(table?.key ? { table } : {}),
     ...(shortId ? { shortId } : {}),
-    ...(status ? { status } : {}),
   };
 
   const form = useForm<OrderUpsertSchemaType>({
@@ -103,7 +102,7 @@ export default function PointOfSale() {
     }
   }, [DELIVERY, PACKING, deliveryIndex, feesControl, packagingIndex, type]);
 
-  const onItemClick = (e: any, product: ProductAPI) => {
+  const onItemClick = (e: any, product: ProductAPIType) => {
     e.preventDefault();
     setTabValue("cart");
     const index = items.findIndex((e) => e.productId === product.id);

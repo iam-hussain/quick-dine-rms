@@ -3,7 +3,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { AspectRatio } from "@/components/atoms/aspect-ratio";
-import { ProductAPI } from "@/types";
+import { ProductAPIType } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 
@@ -14,8 +14,8 @@ const animateVariation = {
 };
 
 export interface ProductCardProps {
-  product: ProductAPI;
-  onClick: (e: any, p: ProductAPI) => void;
+  product: ProductAPIType;
+  onClick: (e: any, p: ProductAPIType) => void;
 }
 
 function ProductCard({ product, onClick, ...props }: ProductCardProps) {

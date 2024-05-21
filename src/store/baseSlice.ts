@@ -1,4 +1,9 @@
-import { StoreAdditionalType } from "@/types";
+import {
+  CategoryType,
+  OrderAPIType,
+  ProductAPIType,
+  StoreAdditionalType,
+} from "@/types";
 import { defaultFeatureFlags, FeatureFlagsType } from "@iam-hussain/qd-copilot";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -25,11 +30,11 @@ interface PageState {
   authenticated: boolean;
   user: any | null;
   store: any | null;
-  order: any | null;
-  defaultOrder: any | null;
-  categories: any[];
-  kitchenCategories: any[];
-  products: any[];
+  order: OrderAPIType | null;
+  defaultOrder: OrderAPIType | null;
+  categories: CategoryType[];
+  kitchenCategories: CategoryType[];
+  products: ProductAPIType[];
   featureFlags: FeatureFlagsType;
   settings: StoreAdditionalType;
 }

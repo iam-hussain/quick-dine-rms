@@ -2,14 +2,14 @@ import React from "react";
 import CartSummaryItem from "../molecules/cart-summary-item";
 import useCartSummary from "@/hooks/useCartSummary";
 import useCartSettings from "@/hooks/useCartSettings";
-import { OrderItem } from "@/types";
+import { ItemType } from "@/types";
 
 function CartSummary({
   className,
   items,
 }: {
   className?: string;
-  items: OrderItem[];
+  items: ItemType[];
 }) {
   const { shouldAddPackingCharge, shouldAddDeliveryCharge, showPushToKot } =
     useCartSettings();

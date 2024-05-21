@@ -1,8 +1,9 @@
 import React from "react";
 import clsx from "clsx";
-import { OrderItem as OrderItemType } from "@/types";
+import { ItemType } from "@/types";
 import Icon from "../atoms/icon";
 import { Button } from "../atoms/button";
+import { Separator } from "../atoms/separator";
 
 const animateVariation = {
   initial: { scale: 1 },
@@ -11,27 +12,25 @@ const animateVariation = {
 };
 
 export interface OrderItemProps {
-  item: OrderItemType & {
-    orderShortId?: string;
-  };
-  onClick?: (
-    data: OrderItemType & {
-      orderShortId?: string;
-    }
-  ) => void;
+  item: ItemType;
+  onClick?: (data: string, type: "ACCEPT" | "COMPLETE" | "REJECT") => void;
 }
 
 function OrderItem({ item, onClick }: OrderItemProps) {
+  const isPlaced =
+    Boolean(item.placedAt) && !item.acceptedAt && !item.completedAt;
+  const isAccepted = item.acceptedAt && !item.completedAt;
+  const isCompleted = item.completedAt;
+
   return (
     <div
       className={clsx(
-        "flex flex-row h-auto w-auto justify-center align-middle items-center"
+        "flex flex-col h-auto w-auto justify-center align-middle items-center"
       )}
     >
       <div
         className={clsx(
-          "flex w-full justify-between align-middle items-center text-left px-2",
-          {}
+          "flex w-full justify-between align-middle items-center text-left px-2 gap-4"
         )}
       >
         <div
@@ -39,29 +38,51 @@ function OrderItem({ item, onClick }: OrderItemProps) {
             "text-base font-normal text-foreground flex w-full justify-start items-center align-middle gap-6"
           }
         >
-          <p className="text-base font-medium">{item.quantity} X</p>
-          <p className="text-sm">{item?.title || ""}</p>
+          <p className="text-base font-medium">{item.quantity}</p>
+          <p className="text-sm font-medium">{item?.title || ""}</p>
         </div>
-        <Button
-          variant={"shine"}
-          className="p-2"
-          onClick={() => onClick && onClick(item)}
-        >
-          {item.status === "PLACED" && (
-            <Icon name="MdPending" className="w-6 h-6" />
-          )}
-          {item.status === "ACCEPTED" && (
-            <Icon name="PiCookingPotFill" className="w-6 h-6" />
-          )}
-          {item.status === "PREPARED" && (
-            <Icon name="IoCheckmarkDoneCircle" className="w-6 h-6" />
-          )}
-        </Button>
+        {(isPlaced || isAccepted) && (
+          <Button
+            variant={"transparent"}
+            className="p-0 text-red-500"
+            onClick={() => onClick && onClick(item.id, "REJECT")}
+          >
+            <Icon name="MdDeleteOutline" className="w-6 h-6" />
+          </Button>
+        )}
+
+        {isPlaced && (
+          <Button
+            variant={"transparent"}
+            className="p-0 text-yellow-500"
+            onClick={() => onClick && onClick(item.id, "ACCEPT")}
+          >
+            <Icon name="MdPending" className="w-8 h-8" />
+          </Button>
+        )}
+
+        {isAccepted && (
+          <Button
+            variant={"transparent"}
+            className="p-0 text-blue-600"
+            onClick={() => onClick && onClick(item.id, "COMPLETE")}
+          >
+            <Icon name="PiCookingPotFill" className="w-8 h-8" />
+          </Button>
+        )}
+
+        {isCompleted && (
+          <Icon
+            name="IoCheckmarkDoneCircle"
+            className="w-9 h-9 text-green-600"
+          />
+        )}
+
         {/* <p className="text-xs font-medium text-primary">
           Order ID: {item?.orderShortId || item.orderId}
         </p> */}
-        {/* <Separator className="h-1 bg-paper/50" /> */}
       </div>
+      <Separator className="" />
     </div>
   );
 }

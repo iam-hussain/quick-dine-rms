@@ -3,7 +3,7 @@ import { ScrollArea, ScrollBar } from "@/components/atoms/scroll-area";
 import ProductCard from "@/components/molecules/product-card";
 import { Container } from "@/components/atoms/container";
 import clsx from "clsx";
-import { ProductAPI } from "@/types";
+import { ProductAPIType } from "@/types";
 
 function ProductList({
   className,
@@ -11,8 +11,8 @@ function ProductList({
   onClick,
 }: {
   className?: string;
-  products: ProductAPI[];
-  onClick: (e: any, p: ProductAPI) => void;
+  products: ProductAPIType[];
+  onClick: (e: any, p: ProductAPIType) => void;
 }) {
   return (
     <div

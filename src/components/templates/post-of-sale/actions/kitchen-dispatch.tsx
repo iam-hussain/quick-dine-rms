@@ -25,10 +25,10 @@ function KitchenDispatch() {
     await upsert({
       ...data,
       status: "IN_PROGRESS",
-      items: items.map((e) => ({
+      items: items.map((e, i) => ({
         ...e,
-        status: "PLACED",
         placedAt: new Date().toISOString(),
+        position: i,
       })),
     });
     setOpen(false);

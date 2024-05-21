@@ -24,7 +24,7 @@ function DraftOrder() {
   async function onSubmit({ items, ...data }: OrderUpsertSchemaType) {
     await upsert({
       ...data,
-      items: items.map((e) => ({ ...e, status: "DRAFT" })),
+      items: items.map((e, i) => ({ ...e, position: i })),
     });
     setOpen(false);
     return true;

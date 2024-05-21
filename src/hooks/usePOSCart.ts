@@ -17,7 +17,7 @@ function usePOSCart() {
   const { reset } = useFormContext<OrderUpsertSchemaType>();
   const { enableTables, enableCustomerAdding, enableKitchenCategory } =
     useSelector((state: RootState) => state.base.featureFlags);
-  const order = useSelector((state: RootState) => state.base.order);
+  // const order = useSelector((state: RootState) => state.base.order);
 
   const upsertOrderMutation = useMutation({
     mutationFn: (variables) => fetcher.post("/store/order", variables),

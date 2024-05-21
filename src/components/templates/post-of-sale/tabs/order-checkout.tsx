@@ -14,7 +14,7 @@ import { RootState } from "@/store";
 
 export default function OrderCheckOut({ className }: { className?: string }) {
   const order = useSelector((state: RootState) => state.base.order);
-  const summary = order?.summary || [];
+  const summary = order?.items?.summary || [];
 
   return (
     <div className={clsx("flex flex-col h-full gap-2", className)}>
