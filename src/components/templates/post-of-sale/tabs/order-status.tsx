@@ -22,29 +22,31 @@ function OrderStatus() {
   const allItems = order?.items || [];
 
   return (
-    <ScrollArea className="w-full flex justify-end grow bg-background px-4 cart">
-      <div className="flex flex-col h-full">
-        <div className="flex flex-col gap-4 pt-2 justify-between h-full">
-          {valid.length === 0 && (
-            <p className="text-sm text-foreground/80 text-center w-full py-6">
-              No items found
-            </p>
-          )}
-          {!enableKDS && <ItemsList label="Ordered" items={valid} />}
-          {enableKDS && (
-            <>
-              <ItemsList label="Scheduled" items={scheduled} />
-              <ItemsList label="Pending" items={placed} />
-              <ItemsList label="Cooking" items={accepted} />
-              <ItemsList label="Completed" items={completed} />
-            </>
-          )}
-          {Boolean(rejected.length) && (
-            <ItemsList label="Rejected" items={rejected} />
-          )}
+    <div className={"flex flex-col h-full gap-2"}>
+      <ScrollArea className="w-full flex justify-end grow bg-background px-4 cart">
+        <div className="flex flex-col h-full">
+          <div className="flex flex-col gap-4 pt-2 justify-between">
+            {valid.length === 0 && (
+              <p className="text-sm text-foreground/80 text-center w-full py-6">
+                No items found
+              </p>
+            )}
+            {!enableKDS && <ItemsList label="Ordered" items={valid} />}
+            {enableKDS && (
+              <>
+                <ItemsList label="Scheduled" items={scheduled} />
+                <ItemsList label="Pending" items={placed} />
+                <ItemsList label="Cooking" items={accepted} />
+                <ItemsList label="Completed" items={completed} />
+              </>
+            )}
+            {Boolean(rejected.length) && (
+              <ItemsList label="Rejected" items={rejected} />
+            )}
+          </div>
         </div>
-      </div>
-    </ScrollArea>
+      </ScrollArea>
+    </div>
   );
 }
 

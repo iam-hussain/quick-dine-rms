@@ -176,10 +176,10 @@ export default function PointOfSale() {
               <Separator className="bg-primary col-span-3" />
             </TabsList>
             {order?.shortId && <OrderDetails order={order} />}
-            <TabsContent value="cart" className="grow">
+            <TabsContent value="cart" className="flex">
               <OrderCart />
             </TabsContent>
-            <TabsContent value="progress" className="grow">
+            <TabsContent value="progress" className="flex">
               <OrderStatus />
             </TabsContent>
             <TabsContent value="summary" className="grow">

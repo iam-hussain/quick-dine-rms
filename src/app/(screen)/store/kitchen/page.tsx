@@ -7,7 +7,7 @@ import {
   TabsTrigger,
 } from "@/components/atoms/tabs";
 import Loader from "@/components/molecules/loader";
-import OrderItem from "@/components/molecules/order-item";
+import TokenItem from "@/components/molecules/token-item";
 import { SortTokensResult } from "@/types";
 import fetcher from "@/lib/fetcher";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -16,6 +16,8 @@ import { toast } from "sonner";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import { Button } from "@/components/atoms/button";
+import { ScrollArea } from "@/components/atoms/scroll-area";
+import TokenCollection from "@/components/organisms/token-collection";
 
 export default function Kitchen() {
   const { enableKitchenCategory } = useSelector(
@@ -69,13 +71,16 @@ export default function Kitchen() {
     },
   });
 
-  const tokenCompleteHandler = async (
-    id: string,
-    shortId: string,
-    orderId: string,
-    isValid: boolean
-  ) => {
-    if (isValid || !orderId) {
+  const tokenOnCompleteClickHandler = async ({
+    id,
+    shortId,
+    orderId,
+  }: {
+    id: string;
+    shortId: string;
+    orderId?: string | null;
+  }) => {
+    if (!orderId) {
       return true;
     }
     await updateToken.mutateAsync({
@@ -86,11 +91,15 @@ export default function Kitchen() {
     });
   };
 
-  const itemOnClickHandler = async (
-    id: string,
-    type: "ACCEPT" | "COMPLETE" | "REJECT",
-    orderId?: string | null
-  ) => {
+  const itemOnClickHandler = async ({
+    id,
+    type,
+    orderId,
+  }: {
+    id: string;
+    orderId?: string | null;
+    type: "ACCEPT" | "COMPLETE" | "REJECT";
+  }) => {
     if (!orderId) {
       return true;
     }
@@ -117,10 +126,10 @@ export default function Kitchen() {
   }
 
   return (
-    <div className="flex flex-col w-full h-full justify-center align-middle items-center bg-paper p-4">
+    <div className="flex flex-col w-full h-full justify-center align-middle items-center bg-paper py-4 px-6">
       <Tabs
         defaultValue="progress"
-        className={clsx("flex gap-4 flex-col w-full h-full p-4")}
+        className={clsx("flex gap-4 flex-col w-full h-full")}
       >
         <TabsList className="flex justify-between align-middle w-full gap-x-h ">
           <h1 className="text-2xl font-semibold text-foreground">
@@ -146,130 +155,37 @@ export default function Kitchen() {
               Completed
             </TabsTrigger>
           </div>
-          {/* <Separator className="bg-paper h-1 my-0 col-span-3" /> */}
         </TabsList>
-        <div className="p-6 bg-background h-full">
-          <TabsContent value="draft"></TabsContent>
-          <TabsContent
-            value="progress"
-            className={clsx(
-              "flex flex-wrap align-top items-start gap-4 m-0 justify-center"
-            )}
-          >
-            {tokens.placed.length === 0 && (
-              <p className="text-sm text-foreground/80 text-center w-full py-8 m-auto grow grid-cols-12">
-                No items found
-              </p>
-            )}
-            {tokens.placed.map((token) => (
-              <div
-                key={token.id}
-                className="h-auto w-auto min-w-[300px] bg-paper/40 overflow-auto rounded-md p-4 border-2 border-foreground/70"
-              >
-                <div className="pb-1 border-b border-foreground/50 flex">
-                  <div className="w-full flex flex-col gap-2">
-                    <div className="flex justify-between w-full gap-2">
-                      <p className="text-lg font-medium ">#{token.displayId}</p>
-                      <div className="flex flex-col justify-center align-middle items-end">
-                        <p className="font-medium text-sm text-foreground/70">
-                          Order:{" "}
-                          <span className="text-foreground/90">
-                            #{token.order.shortId}
-                          </span>
-                        </p>
-                        {token.kitchenCategory?.name && (
-                          <p className="text-foreground/90 font-medium text-base">
-                            {token.kitchenCategory?.name}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2 p-2">
-                  {token.items.valid.map((item) => (
-                    <OrderItem
-                      item={item}
-                      key={item.id}
-                      onClick={(id, type) =>
-                        itemOnClickHandler(id, type, token.orderId)
-                      }
-                    />
-                  ))}
-                  {Boolean(token.items.rejected.length) && (
-                    <div className="text-sm text-foreground/60 p-2 pt-4 flex gap-1 flex-col">
-                      {token.items.rejected.map((item) => (
-                        <div className="flex gap-6" key={item.id}>
-                          <p>{item.quantity}</p>
-                          <p>{item.title}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <Button
-                  variant={
-                    token.items.valid.length !== token.items.completed.length
-                      ? "accent"
-                      : "secondary"
-                  }
-                  className="w-full my-2"
-                  onClick={() =>
-                    tokenCompleteHandler(
-                      token.id,
-                      token.shortId,
-                      token.orderId || "",
-                      token.items.valid.length !== token.items.completed.length
-                    )
-                  }
-                  disabled={
-                    token.items.valid.length !== token.items.completed.length
-                  }
-                >
-                  Completed
-                </Button>
-              </div>
-            ))}
-          </TabsContent>
-          <TabsContent value="completed">
-            {tokens.completed.length === 0 && (
-              <p className="text-sm text-foreground/80 text-center w-full py-8 m-auto grow grid-cols-12">
-                No items found (You will see only completed token in last 5
-                hours)
-              </p>
-            )}
-            {tokens.completed.map((token) => (
-              <div
-                key={token.id}
-                className="h-full w-auto min-w-[300px] overflow-auto border rounded-md p-2"
-              >
-                <div className="p-4 border flex">
-                  <div>
-                    <p className="text-base font-medium ">
-                      Order: #{token.order.shortId}
-                    </p>
-                    <p className="text-base font-medium ">
-                      Token: #{token.shortId}
-                    </p>
-                    <p className="text-foreground/80">
-                      {token.kitchenCategory?.name}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2 p-2">
-                  {token.items.valid.map((item) => (
-                    <OrderItem
-                      item={item}
-                      key={item.id}
-                      onClick={(id) =>
-                        itemOnClickHandler(id, "ACCEPT", token.orderId)
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </TabsContent>
+        <div className="p-6 bg-background flex grow h-4/6 ">
+          <ScrollArea className={clsx("w-full h-full pr-4")}>
+            <TabsContent value="scheduled">
+              <TokenCollection
+                tokens={tokens.scheduled}
+                itemType="scheduled"
+                onItemClick={itemOnClickHandler}
+                onCompleteClick={tokenOnCompleteClickHandler}
+              />
+            </TabsContent>
+            <TabsContent value="progress">
+              <TokenCollection
+                tokens={tokens.placed}
+                itemType="placed"
+                onItemClick={itemOnClickHandler}
+                onCompleteClick={tokenOnCompleteClickHandler}
+              />
+            </TabsContent>
+            <TabsContent value="completed">
+              <TokenCollection
+                tokens={tokens.completed}
+                itemType="completed"
+                onItemClick={itemOnClickHandler}
+                onCompleteClick={tokenOnCompleteClickHandler}
+                noItemMessage={
+                  "No items found (You will see only completed token in last 5 hours)"
+                }
+              />
+            </TabsContent>
+          </ScrollArea>
         </div>
       </Tabs>
     </div>

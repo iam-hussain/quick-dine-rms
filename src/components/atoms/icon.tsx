@@ -59,8 +59,12 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { MdPending } from "react-icons/md";
 import { IoCheckmarkDoneCircle } from "react-icons/io5";
 import { IoReload } from "react-icons/io5";
-import { IoReloadCircleSharp } from "react-icons/io5";import { FaRegObjectGroup } from "react-icons/fa";
-
+import { IoReloadCircleSharp } from "react-icons/io5";
+import { FaRegObjectGroup } from "react-icons/fa";
+import { MdOutlinePendingActions } from "react-icons/md";
+import { FcCancel } from "react-icons/fc";
+import { MdCancelPresentation } from "react-icons/md";
+import { TiCancel } from "react-icons/ti";
 
 const icons = {
   BiRestaurant,
@@ -124,7 +128,11 @@ const icons = {
   IoCheckmarkDoneCircle,
   IoReload,
   IoReloadCircleSharp,
-  FaRegObjectGroup
+  FaRegObjectGroup,
+  MdOutlinePendingActions,
+  FcCancel,
+  MdCancelPresentation,
+  TiCancel,
 };
 
 export type IconKey = keyof typeof icons;

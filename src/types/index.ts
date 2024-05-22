@@ -50,6 +50,7 @@ export interface ItemType {
   createdAt: string;
   updatedId: string | null;
   updatedAt: Date | string;
+  variant: keyof SortItemsResult;
 }
 
 export type SortItemsResult = {
