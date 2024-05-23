@@ -8,7 +8,7 @@ const animateVariation = {
   pressed: { scale: 0.95 },
 };
 
-function CategoryCard({
+function CategoryItem({
   name,
   active = false,
   onClick,
@@ -52,4 +52,4 @@ function CategoryCard({
   );
 }
 
-export default CategoryCard;
+export default CategoryItem;

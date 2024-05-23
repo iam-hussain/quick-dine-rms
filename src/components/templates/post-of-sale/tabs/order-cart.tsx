@@ -16,8 +16,11 @@ import DraftOrder from "../actions/draft-order";
 import DeleteOrder from "../actions/delete-order";
 import KitchenDispatch from "../actions/kitchen-dispatch";
 import { useSelector } from "react-redux";
+import { FormField } from "@/components/atoms/form";
+import ScheduleDispatch from "../actions/schedule-dispatch";
 
 function OrderCart({ className }: { className?: string }) {
+  const { control } = useFormContext<OrderUpsertSchemaType>();
   const { watch } = useFormContext<OrderUpsertSchemaType>();
   const { enableCustomerAdding } = useSelector(
     (state: RootState) => state.base.featureFlags
@@ -83,6 +86,7 @@ function OrderCart({ className }: { className?: string }) {
         <div className="flex gap-2 w-full">
           <DeleteOrder />
           <DraftOrder />
+          <ScheduleDispatch />
           <KitchenDispatch />
           {/* <Button className="w-full col-span-2" type="submit">
             Bill Out

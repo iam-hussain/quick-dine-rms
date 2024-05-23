@@ -4,17 +4,27 @@ import TokenCard from "../molecules/token-card";
 
 export interface TokenCollectionProps {
   tokens: TokenType[];
-  type: keyof SortTokensResult;
+  variant: keyof SortTokensResult;
   noItemMessage?: string;
   onItemClick?: ({
     id,
-    type,
+    mode,
   }: {
     id: string;
+    shortId: string;
     orderId?: string | null;
-    type: "ACCEPT" | "COMPLETE" | "REJECT";
+    mode: "ACCEPT" | "COMPLETE" | "REJECT";
   }) => void;
   onCompleteClick?: ({
+    id,
+    shortId,
+    orderId,
+  }: {
+    id: string;
+    shortId: string;
+    orderId?: string | null;
+  }) => void;
+  onDispatchClick?: ({
     id,
     shortId,
     orderId,

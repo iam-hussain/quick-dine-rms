@@ -37,19 +37,18 @@ export default function Kitchen() {
   });
 
   const updateItem = useMutation({
-    mutationFn: ({ id, ...variables }) =>
+    mutationFn: ({ id, shortId, ...variables }) =>
       fetcher.post(`/store/order/item/${id}`, variables),
     onSuccess: async (order: any, variables: any) => {
-      console.log({ variables });
       refetch();
       toast.success(
-        `A new order with ID ${order.shortId} has been created! 🌟`
+        `Item of the Token ID ${variables.shortId} has been successfully updated! 🚀`
       );
     },
     onError: (error, variables: any) => {
       console.error(error);
       toast.success(
-        "Failed to create order. Please verify the provided details and attempt again. If the problem persists, reach out to support for additional help."
+        `Unable to update item of the token ID ${variables.shortId}. Please review the entered information and try again. If the issue persists, contact support for further assistance`
       );
     },
   });
@@ -60,13 +59,13 @@ export default function Kitchen() {
     onSuccess: async (_: any, variables: any) => {
       refetch();
       toast.success(
-        `A new order with ID ${variables.shortId} has been created! 🌟`
+        `Token ID ${variables.shortId.split("-")[1]} of the order ID ${variables.shortId} has been successfully updated! 🚀`
       );
     },
-    onError: (error) => {
+    onError: (error, variables) => {
       console.error(error);
       toast.success(
-        "Failed to create order. Please verify the provided details and attempt again. If the problem persists, reach out to support for additional help."
+        `Unable to update token with ID ${variables.shortId.split("-")[1]} of the order ID ${variables.orderId}. Please review the entered information and try again. If the issue persists, contact support for further assistance`
       );
     },
   });
@@ -86,32 +85,64 @@ export default function Kitchen() {
     await updateToken.mutateAsync({
       id,
       shortId,
-      completedAt: new Date(),
+      completedAt: new Date().toISOString(),
+      orderId,
+    });
+  };
+
+  const tokenOnDispatchClickHandler = async ({
+    id,
+    shortId,
+    orderId,
+  }: {
+    id: string;
+    shortId: string;
+    orderId?: string | null;
+  }) => {
+    if (!orderId) {
+      return true;
+    }
+    await updateToken.mutateAsync({
+      id,
+      shortId,
+      placedAt: new Date().toISOString(),
       orderId,
     });
   };
 
   const itemOnClickHandler = async ({
     id,
-    type,
+    shortId,
+    mode,
     orderId,
   }: {
     id: string;
+    shortId: string;
     orderId?: string | null;
-    type: "ACCEPT" | "COMPLETE" | "REJECT";
+    mode: "ACCEPT" | "COMPLETE" | "REJECT";
   }) => {
     if (!orderId) {
       return true;
     }
-    if (type === "ACCEPT") {
-      await updateItem.mutateAsync({ id, orderId, acceptedAt: new Date() });
+    if (mode === "ACCEPT") {
+      await updateItem.mutateAsync({
+        id,
+        orderId,
+        shortId,
+        acceptedAt: new Date(),
+      });
     }
 
-    if (type === "COMPLETE") {
-      await updateItem.mutateAsync({ id, orderId, completedAt: new Date() });
+    if (mode === "COMPLETE") {
+      await updateItem.mutateAsync({
+        id,
+        orderId,
+        shortId,
+        completedAt: new Date(),
+      });
     }
 
-    if (type === "REJECT") {
+    if (mode === "REJECT") {
       await updateItem.mutateAsync({
         id,
         orderId,
@@ -137,19 +168,19 @@ export default function Kitchen() {
           </h1>
           <div className="flex gap-4">
             <TabsTrigger
-              className="min-w-[100px] text-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              className="min-w-[100px] text-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground cursor-pointer"
               value="scheduled"
             >
               Scheduled
             </TabsTrigger>
             <TabsTrigger
-              className="min-w-[100px] text-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              className="min-w-[100px] text-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground cursor-pointer"
               value="progress"
             >
               InProgress
             </TabsTrigger>
             <TabsTrigger
-              className="min-w-[100px] text-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              className="min-w-[100px] text-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground cursor-pointer"
               value="completed"
             >
               Completed
@@ -161,15 +192,14 @@ export default function Kitchen() {
             <TabsContent value="scheduled">
               <TokenCollection
                 tokens={tokens.scheduled}
-                itemType="scheduled"
-                onItemClick={itemOnClickHandler}
-                onCompleteClick={tokenOnCompleteClickHandler}
+                variant="scheduled"
+                onDispatchClick={tokenOnDispatchClickHandler}
               />
             </TabsContent>
             <TabsContent value="progress">
               <TokenCollection
                 tokens={tokens.placed}
-                itemType="placed"
+                variant="placed"
                 onItemClick={itemOnClickHandler}
                 onCompleteClick={tokenOnCompleteClickHandler}
               />
@@ -177,9 +207,7 @@ export default function Kitchen() {
             <TabsContent value="completed">
               <TokenCollection
                 tokens={tokens.completed}
-                itemType="completed"
-                onItemClick={itemOnClickHandler}
-                onCompleteClick={tokenOnCompleteClickHandler}
+                variant="completed"
                 noItemMessage={
                   "No items found (You will see only completed token in last 5 hours)"
                 }

@@ -1,8 +1,8 @@
 "use client";
 
 import { useSelector } from "react-redux";
-import { CategoriesSlide } from "@/components/organisms/categories-slide";
-import ProductList from "@/components/organisms/product-list";
+import CategoryCollection from "@/components/organisms/category-collection";
+import ProductCollection from "@/components/organisms/product-collection";
 import SearchBar from "@/components/organisms/search-bar";
 import { Button } from "@/components/atoms/button";
 import { useMemo, useState } from "react";
@@ -10,8 +10,14 @@ import { isValidArray } from "@/lib/utils";
 import { ProductAPIType } from "@/types";
 import { RootState } from "@/store";
 import clsx from "clsx";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "../atoms/tabs-primary";
 
-export default function ProductSearch({
+export default function POSExplorer({
   onItemClick,
   className,
 }: {
@@ -42,32 +48,38 @@ export default function ProductSearch({
   }, [products, selectedCat]);
 
   return (
-    <div
+    <Tabs
+      defaultValue="products"
       className={clsx(
-        "flex flex-col md:w-8/12 3xl:w-9/12 4xl:w-10/12 w-full h-full pb-4",
-        className
+        "flex flex-col md:w-8/12 3xl:w-9/12 4xl:w-10/12 w-full h-full pb-4"
       )}
     >
       <div className="flex flex-col gap-4 p-4 border-b">
         <div className="flex justify-between align-middle items-center gap-4">
           <SearchBar className="" />
-          <Button>Order List</Button>
+          <TabsList className="justify-end">
+            <TabsTrigger value="products">Products</TabsTrigger>
+            <TabsTrigger value="orders">Orders</TabsTrigger>
+          </TabsList>
         </div>
       </div>
       <div className="flex w-full grow h-5/6">
-        <CategoriesSlide
-          className="border-r border-b"
-          categories={categoriesData}
-          onClick={(e) => setSelectedCat(e.id || "")}
-          selected={selectedCat}
-          totalItems={products.length || 0}
-        />
-        <ProductList
-          className="border-b"
-          products={productsData}
-          onClick={onItemClick}
-        />
+        <TabsContent value="products" className="flex w-full">
+          <CategoryCollection
+            className="border-r border-b"
+            categories={categoriesData}
+            onClick={(e) => setSelectedCat(e.id || "")}
+            selected={selectedCat}
+            productCount={products.length || 0}
+          />
+          <ProductCollection
+            className="border-b"
+            products={productsData}
+            onClick={onItemClick}
+          />
+        </TabsContent>
+        <TabsContent value="orders">Orders List</TabsContent>
       </div>
-    </div>
+    </Tabs>
   );
 }

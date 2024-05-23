@@ -5,8 +5,26 @@ import { Separator } from "../atoms/separator";
 import Icon from "../atoms/icon";
 import { Button } from "../atoms/button";
 import usePOSCart from "@/hooks/usePOSCart";
+import { OrderAPIType } from "@/types";
+import { dateTimeFormat } from "@/lib/date-time";
 
-function OrderDetails({ order }: { order: any }) {
+const OrderStatusValues = {
+  DRAFT: "Draft",
+  IN_PROGRESS: "In-Progress",
+  COMPLETED: "Completed",
+  DELIVERY_PENDING: "Ready to Deliver",
+  DELIVERED: "In Delivery",
+};
+
+const OrderTypeValues = {
+  DINING: "Dine In",
+  TAKE_AWAY: "Take Away",
+  PICK_UP: "Express",
+  DELIVERY: "Delivery",
+  PLATFORM: "Platform",
+};
+
+function OrderDetails({ order }: { order: OrderAPIType }) {
   const featureFlags = useSelector(
     (state: RootState) => state.base.featureFlags
   );
@@ -39,18 +57,19 @@ function OrderDetails({ order }: { order: any }) {
             </p>
           )}
         </div>
-        <div className="text-sm text-right flex flex-col gap-1">
-          <p className="">
-            {order?.status || "Unsaved"} {order?.type ? ` / ${order.type}` : ""}
+        <div className="text-sm text-right flex flex-col gap-1 font-medium">
+          <p className="uppercase">
+            {OrderStatusValues[order?.status] || "Unsaved"}{" "}
+            {order?.type ? ` / ${OrderTypeValues[order.type]}` : ""}
           </p>
           {showUpdatedDate && order?.updatedAt && (
             <p className="text-foreground/80">
-              {new Date(order.updatedAt).toLocaleString()}
+              {dateTimeFormat(order.updatedAt)}
             </p>
           )}
           {!showUpdatedDate && order?.createdAt && (
             <p className="text-foreground/80">
-              {new Date(order.createdAt).toLocaleString()}
+              {dateTimeFormat(order.createdAt)}
             </p>
           )}
         </div>

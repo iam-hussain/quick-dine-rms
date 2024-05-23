@@ -18,7 +18,7 @@ export interface ProductCardProps {
   onClick: (e: any, p: ProductAPIType) => void;
 }
 
-function ProductCard({ product, onClick, ...props }: ProductCardProps) {
+function ProductItem({ product, onClick, ...props }: ProductCardProps) {
   const featureFlags = useSelector(
     (state: RootState) => state.base.featureFlags
   );
@@ -85,4 +85,4 @@ function ProductCard({ product, onClick, ...props }: ProductCardProps) {
   );
 }
 
-export default ProductCard;
+export default ProductItem;

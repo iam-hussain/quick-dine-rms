@@ -65,6 +65,7 @@ import { MdOutlinePendingActions } from "react-icons/md";
 import { FcCancel } from "react-icons/fc";
 import { MdCancelPresentation } from "react-icons/md";
 import { TiCancel } from "react-icons/ti";
+import { RxLapTimer } from "react-icons/rx";
 
 const icons = {
   BiRestaurant,
@@ -133,6 +134,7 @@ const icons = {
   FcCancel,
   MdCancelPresentation,
   TiCancel,
+  RxLapTimer,
 };
 
 export type IconKey = keyof typeof icons;

@@ -1,22 +1,22 @@
 "use client";
 import * as React from "react";
-import CategoryCard from "@/components/molecules/category-card";
+import CategoryItem from "@/components/molecules/category-item";
 import { Container } from "@/components/atoms/container";
 import { ScrollArea, ScrollBar } from "@/components/atoms/scroll-area";
 import clsx from "clsx";
 
-export function CategoriesSlide({
+export default function CategoryCollection({
   className,
   categories,
   onClick,
   selected,
-  totalItems,
+  productCount,
 }: {
   className?: string;
   categories: { name: string; id: string; productsConnected: number }[];
   onClick: (e: any) => void;
   selected: string;
-  totalItems: number;
+  productCount: number;
 }) {
   return (
     <div className={clsx("flex w-auto h-auto gap-2 flex-col py-2", className)}>
@@ -27,14 +27,14 @@ export function CategoriesSlide({
         )}
       >
         <Container className="grid grid-flow-row auto-rows-max w-full text-bg-foreground px-4 py-2 gap-4">
-          <CategoryCard
+          <CategoryItem
             name="All Menu"
             active={!selected}
             onClick={() => onClick({})}
-            numberOfItems={totalItems}
+            numberOfItems={productCount}
           />
           {categories.map((category, index) => (
-            <CategoryCard
+            <CategoryItem
               key={`cat_${index}`}
               {...category}
               onClick={() => onClick(category)}

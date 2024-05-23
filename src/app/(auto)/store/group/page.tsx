@@ -18,14 +18,11 @@ import { useState } from "react";
 import { CategorySchemaValues } from "@/validations";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 import { zeroLastSortMethod } from "@/lib/utils";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import fetcher from "@/lib/fetcher";
-
-dayjs.extend(relativeTime);
+import { dateTimeDifferent, dateTimeFormat } from "@/lib/date-time";
 
 export default function KitchenGroupPage() {
   const categories = useSelector(
@@ -168,7 +165,7 @@ export default function KitchenGroupPage() {
       ),
       cell: ({ row }) => (
         <div className="text-foreground/70 text-center">
-          {dayjs(row.getValue("createdAt")).format("MMM DD YYYY hh:mm A")}
+          {dateTimeFormat(row.getValue("createdAt"))}
         </div>
       ),
     },
@@ -191,7 +188,7 @@ export default function KitchenGroupPage() {
       ),
       cell: ({ row }) => (
         <div className="text-foreground/70 text-center">
-          {dayjs(row.getValue("updatedAt")).fromNow()}
+          {dateTimeDifferent(row.getValue("updatedAt"))}
         </div>
       ),
     },

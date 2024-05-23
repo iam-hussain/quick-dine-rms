@@ -17,14 +17,11 @@ import { useState } from "react";
 import { ProductSchemaValues } from "@/validations";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 import ProductForm from "@/components/forms/product-form";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import fetcher from "@/lib/fetcher";
-
-dayjs.extend(relativeTime);
+import { dateTimeDifferent, dateTimeFormat } from "@/lib/date-time";
 
 const typeMap = {
   VEG: "Veg",
@@ -34,7 +31,9 @@ const typeMap = {
 
 export default function ProductPage() {
   const categories = useSelector((state: RootState) => state.base.categories);
-  const kitchenCategories = useSelector((state: RootState) => state.base.kitchenCategories);
+  const kitchenCategories = useSelector(
+    (state: RootState) => state.base.kitchenCategories
+  );
   const products = useSelector((state: RootState) => state.base.products);
   const [value, setValue] = useState<
     Partial<
@@ -289,7 +288,7 @@ export default function ProductPage() {
       ),
       cell: ({ row }) => (
         <div className="text-foreground/70 text-center">
-          {dayjs(row.getValue("createdAt")).format("MMM DD YYYY hh:mm A")}
+          {dateTimeFormat(row.getValue("createdAt"))}
         </div>
       ),
     },
@@ -312,7 +311,7 @@ export default function ProductPage() {
       ),
       cell: ({ row }) => (
         <div className="text-foreground/70 text-center">
-          {dayjs(row.getValue("updatedAt")).fromNow()}
+          {dateTimeDifferent(row.getValue("updatedAt"))}
         </div>
       ),
     },

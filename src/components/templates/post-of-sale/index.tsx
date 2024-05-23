@@ -13,7 +13,7 @@ import {
 } from "@iam-hussain/qd-copilot";
 import clsx from "clsx";
 import { Separator } from "@/components/atoms/separator";
-import ProductSearch from "@/components/organisms/product-search";
+import POSExplorer from "@/components/organisms/pos-explorer";
 import {
   Tabs,
   TabsContent,
@@ -25,6 +25,7 @@ import OrderStatus from "@/components/templates/post-of-sale/tabs/order-status";
 import OrderCart from "@/components/templates/post-of-sale/tabs/order-cart";
 import OrderCheckOut from "@/components/templates/post-of-sale/tabs/order-checkout";
 import { useEffect, useMemo, useState } from "react";
+import POSCart from "@/components/organisms/pos-cart";
 
 export default function PointOfSale() {
   const [tabValue, setTabValue] = useState("cart");
@@ -129,7 +130,7 @@ export default function PointOfSale() {
 
   return (
     <div className="flex md:flex-row flex-col w-full h-full">
-      <ProductSearch
+      <POSExplorer
         onItemClick={onItemClick}
         className={clsx("h-[1000px]", {
           "h-d-screen-top-close": !topBarOpen,
@@ -146,46 +147,7 @@ export default function PointOfSale() {
             }
           )}
         >
-          <Tabs
-            defaultValue={"cart"}
-            value={tabValue}
-            onValueChange={setTabValue}
-            className={clsx(
-              "flex gap-4 flex-col w-full h-full bg-background p-4"
-            )}
-          >
-            <TabsList className="grid w-full grid-cols-3 gap-x-2 bg-background rounded-none p-0 mt-1 -mb-1">
-              <TabsTrigger
-                className="text-base data-[state=active]:shadow-none shadow-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border-0 select-none text-foreground/80 py-2 rounded-none rounded-tl-lg rounded-tr-lg"
-                value="cart"
-              >
-                Cart
-              </TabsTrigger>
-              <TabsTrigger
-                className="text-base data-[state=active]:shadow-none shadow-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border-0 select-none text-foreground/80 py-2 rounded-none rounded-tl-lg rounded-tr-lg"
-                value="progress"
-              >
-                Progress
-              </TabsTrigger>
-              <TabsTrigger
-                className="text-base data-[state=active]:shadow-none shadow-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border-0 select-none text-foreground/80 py-2 rounded-none rounded-tl-lg rounded-tr-lg"
-                value="summary"
-              >
-                Summary
-              </TabsTrigger>
-              <Separator className="bg-primary col-span-3" />
-            </TabsList>
-            {order?.shortId && <OrderDetails order={order} />}
-            <TabsContent value="cart" className="flex">
-              <OrderCart />
-            </TabsContent>
-            <TabsContent value="progress" className="flex">
-              <OrderStatus />
-            </TabsContent>
-            <TabsContent value="summary" className="grow">
-              <OrderCheckOut />
-            </TabsContent>
-          </Tabs>
+          <POSCart tabValue={tabValue} setTabValue={setTabValue} />
         </form>
       </Form>
     </div>

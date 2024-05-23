@@ -27,24 +27,24 @@ function usePOSCart() {
           `Order ID ${order.shortId} has been successfully updated! 🚀`
         );
       } else {
-        if (!orderId) {
-          // router.push(`/store/pos?orderId=${order.shortId}`);
-          window.history.replaceState(
-            null,
-            `Order: #${order.shortId} || POS || Quick Dine`,
-            `/store/pos?orderId=${order.shortId}`
-          );
-        }
+        // if (!orderId) {
+        //   router.push(`/store/pos?orderId=${order.shortId}`);
+        //   window.history.replaceState(
+        //     null,
+        //     `Order: #${order.shortId} || POS || Quick Dine`,
+        //     `/store/pos?orderId=${order.shortId}`
+        //   );
+        // }
         toast.success(
           `A new order with ID ${order.shortId} has been created! 🌟`
         );
       }
-      const { shortId, drafted = [], table = {}, status } = order || {};
+      const { shortId, items, table = {}, status } = order || {};
 
       dispatch(setUpdateOrder(order));
       reset({
         type: order?.type || "TAKE_AWAY",
-        items: drafted,
+        items: items?.drafted || [],
         fees: order?.fees || [],
         taxes: order?.taxes || [],
         ...(table.key ? { table } : {}),

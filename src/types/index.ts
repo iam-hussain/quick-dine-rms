@@ -63,6 +63,7 @@ export type SortItemsResult = {
   placed: ItemType[]; // Placed items
   accepted: ItemType[]; // Accepted items
   completed: ItemType[]; // Completed items
+  validCount: number;
 };
 
 export interface TokenType {

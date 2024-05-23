@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 
-const formatTimeDifference = (startDate: number, endDate: number) => {
-  const differenceInMilliseconds = endDate - startDate;
+const formatTimeDifference = (endDate: number, startDate: number) => {
+  const differenceInMilliseconds = Math.max(0, endDate - startDate); // Ensure non-negative
   const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
   const minutes = Math.floor(differenceInSeconds / 60);
   const seconds = differenceInSeconds % 60;
@@ -21,37 +21,39 @@ function roundToEven(num: number) {
   return rounded;
 }
 
-interface CountUpProps {
+interface CountDownProps {
   inputTime?: string | Date;
 }
 
-const CountUp: React.FC<CountUpProps> = ({ inputTime }) => {
+const CountDown: React.FC<CountDownProps> = ({ inputTime }) => {
   const [timeDifference, setTimeDifference] = useState("00:00");
-  const [elapsedMinutes, setElapsedMinutes] = useState(0);
+  const [remainingMinutes, setRemainingMinutes] = useState(0);
   const colors = [
-    "text-foreground/70",
-    "text-foreground/80",
+    "text-green-700",
+    "text-green-600",
+    "text-green-500",
+    "text-green-400",
+    "text-green-400",
+    "text-green-400",
+    "text-green-400",
     "text-foreground/90",
-    "text-red-400",
-    "text-red-400",
-    "text-red-400",
-    "text-red-400",
-    "text-red-500",
-    "text-red-600",
-    "text-red-700",
+    "text-foreground/80",
+    "text-foreground/70",
   ];
 
   const colorClass =
-    elapsedMinutes <= 10 ? colors[roundToEven(elapsedMinutes)] : "text-red-700";
+    remainingMinutes <= 10
+      ? colors[roundToEven(remainingMinutes)]
+      : "text-foreground/70";
 
   useEffect(() => {
-    const start = new Date(inputTime || "").getTime();
+    const end = new Date(inputTime || "").getTime();
     const update = () => {
       const now = new Date().getTime();
-      if (start <= now) {
-        const { display, minutes } = formatTimeDifference(start, now);
+      if (end >= now) {
+        const { display, minutes } = formatTimeDifference(end, now);
         setTimeDifference(display);
-        setElapsedMinutes(minutes);
+        setRemainingMinutes(minutes);
       }
     };
     update();
@@ -66,4 +68,4 @@ const CountUp: React.FC<CountUpProps> = ({ inputTime }) => {
   );
 };
 
-export default CountUp;
+export default CountDown;

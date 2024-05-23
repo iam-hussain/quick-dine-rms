@@ -11,24 +11,26 @@ export interface TokenTypeProps {
   item: ItemType;
   variant: keyof SortItemsResult;
   hideDivider?: boolean;
+  editMode?: boolean;
   onClick?: ({
     id,
-    type,
+    mode,
   }: {
     id: string;
-    type: "ACCEPT" | "COMPLETE" | "REJECT";
+    mode: "ACCEPT" | "COMPLETE" | "REJECT";
   }) => void;
 }
 
 function TokenItem({
   item,
   hideDivider = false,
+  editMode = false,
   variant,
   onClick,
 }: TokenTypeProps) {
-  const onClickHandler = (type: "ACCEPT" | "COMPLETE" | "REJECT") => {
+  const onClickHandler = (mode: "ACCEPT" | "COMPLETE" | "REJECT") => {
     if (onClick) {
-      onClick({ id: item.id, type });
+      onClick({ id: item.id, mode });
     }
   };
 
@@ -56,34 +58,40 @@ function TokenItem({
           <p className="">{item?.title || ""}</p>
         </div>
 
-        {/* {["placed", "accepted"].includes(variant) && (
-          <Button
-            variant={"transparent"}
-            className={clsx("p-0 text-rose-400", buttonAnimateClass)}
-            onClick={() => onClickHandler("REJECT")}
-          >
-            <Icon name="TiCancel" className="w-6 h-6" />
-          </Button>
-        )} */}
+        {editMode ? (
+          <>
+            {["placed", "accepted"].includes(variant) && (
+              <Button
+                variant={"transparent"}
+                className={clsx("p-0 text-rose-400", buttonAnimateClass)}
+                onClick={() => onClickHandler("REJECT")}
+              >
+                <Icon name="TiCancel" className="w-8 h-8" />
+              </Button>
+            )}
+          </>
+        ) : (
+          <>
+            {variant === "placed" && (
+              <Button
+                variant={"transparent"}
+                className={clsx("p-0 text-sky-600", buttonAnimateClass)}
+                onClick={() => onClickHandler("ACCEPT")}
+              >
+                <Icon name="MdOutlinePendingActions" className="w-8 h-8" />
+              </Button>
+            )}
 
-        {variant === "placed" && (
-          <Button
-            variant={"transparent"}
-            className={clsx("p-0 text-sky-600", buttonAnimateClass)}
-            onClick={() => onClickHandler("ACCEPT")}
-          >
-            <Icon name="MdOutlinePendingActions" className="w-8 h-8" />
-          </Button>
-        )}
-
-        {variant === "accepted" && (
-          <Button
-            variant={"transparent"}
-            className={clsx("p-0 text-lime-600", buttonAnimateClass)}
-            onClick={() => onClickHandler("COMPLETE")}
-          >
-            <Icon name="GiCampCookingPot" className="w-8 h-8" />
-          </Button>
+            {variant === "accepted" && (
+              <Button
+                variant={"transparent"}
+                className={clsx("p-0 text-lime-600", buttonAnimateClass)}
+                onClick={() => onClickHandler("COMPLETE")}
+              >
+                <Icon name="GiCampCookingPot" className="w-8 h-8" />
+              </Button>
+            )}
+          </>
         )}
 
         {variant === "completed" && (
