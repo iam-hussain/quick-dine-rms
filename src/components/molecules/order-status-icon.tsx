@@ -21,10 +21,12 @@ export const orderStatusObject = {
 function OrderStatusIcon({
   value,
   classNames,
+  wrapperClassNames,
   withLabel,
 }: {
   value: ORDER_STATUS;
   classNames?: string;
+  wrapperClassNames?: string;
   withLabel?: boolean;
 }) {
   // value === ORDER_STATUS.IN_PROGRESS
@@ -67,7 +69,12 @@ function OrderStatusIcon({
 
   if (withLabel) {
     return (
-      <div className="w-fit min-h-[40px] flex justify-center align-middle items-center gap-2 uppercase border px-2 py-1 rounded-lg min-w-[145px]">
+      <div
+        className={clsx(
+          "w-fit min-h-[40px] flex justify-center align-middle items-center gap-2 uppercase border px-2 py-1 rounded-lg min-w-[145px] bg-background",
+          wrapperClassNames
+        )}
+      >
         <IconComp />
         <p className="text-sm font-medium">{orderStatusObject[value]}</p>
       </div>

@@ -28,6 +28,7 @@ export default function POSExplorer({
   onNewOrderClick: () => void;
   className?: string;
 }) {
+  const [tabValue, setTabValue] = useState("products");
   const categories = useSelector((state: RootState) => state.base.categories);
   const products = useSelector((state: RootState) => state.base.products);
   const { fetch } = usePOSCart();
@@ -51,9 +52,16 @@ export default function POSExplorer({
     return [];
   }, [products, selectedCat]);
 
+  const handleNewOrderClick = () => {
+    onNewOrderClick();
+    setTabValue("products");
+  };
+
   return (
     <Tabs
       defaultValue="products"
+      value={tabValue}
+      onValueChange={setTabValue}
       className={clsx(
         "flex flex-col md:w-8/12 3xl:w-9/12 4xl:w-10/12 w-full h-full pb-4"
       )}
@@ -62,7 +70,7 @@ export default function POSExplorer({
         <div className="flex justify-between align-middle items-center gap-4">
           <div className="justify-start flex gap-4">
             <SearchBar className="" />
-            <Button variant={"secondary"} onClick={() => onNewOrderClick()}>
+            <Button variant={"secondary"} onClick={() => handleNewOrderClick()}>
               New Order
             </Button>
           </div>

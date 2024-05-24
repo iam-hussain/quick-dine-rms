@@ -1,21 +1,11 @@
 "use client";
 
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/atoms/tabs";
 import Loader from "@/components/molecules/loader";
-import { OrderAPIType, SortTokensResult } from "@/types";
+import { ORDER_STATUS, OrderAPIType } from "@/types";
 import fetcher from "@/lib/fetcher";
 import { useQuery } from "@tanstack/react-query";
-import clsx from "clsx";
-import { ScrollArea } from "@/components/atoms/scroll-area";
-import { Button } from "../atoms/button";
-import { dateTimeFormat } from "@/lib/date-time";
-import OrderStatusIcon from "../molecules/order-status-icon";
-import OrderTypeIcon from "../molecules/order-type-icon";
+import OrderItem from "./order-item";
+import { Separator } from "../atoms/separator";
 
 export default function OrderCollection({
   onItemClick,
@@ -31,7 +21,6 @@ export default function OrderCollection({
     queryKey: ["tokens"],
     queryFn: () => fetcher(`/store/orders/open`),
   });
-
   if (isPending || isLoading || !orders || !Array.isArray(orders)) {
     return <Loader />;
   }
@@ -50,58 +39,100 @@ export default function OrderCollection({
     );
   }
 
-  return (
-    <div className="flex align-top items-start justify-center p-6 rounded-lg gap-4 flex-wrap w-full">
-      {orders.map((order) => (
-        <div
-          key={order.id}
-          className="border-2 border-foreground/40 rounded-lg h-auto p-4 flex flex-col justify-between align-middle items-center w-full gap-4 max-w-[400px]"
-        >
-          <div className="flex flex-col justify-start align-middle items-center gap-4">
-            <h3 className="text-xl font-medium">#{order.shortId}</h3>
-            <div className="flex gap-2 flex-wrap justify-end align-middle items-end">
-              <OrderStatusIcon
-                value={order.status}
-                classNames="text-foreground/90"
-                withLabel={true}
-              />
-              {order?.type && (
-                <OrderTypeIcon
-                  value={order.type}
-                  classNames="text-foreground/90"
-                  withLabel={true}
-                />
-              )}
-            </div>
-          </div>
-          <div>
-            <p className="text-foreground/90 font-medium text-base w-full text-right">
-              <span className="text-foreground/80 text-sm">Created @ </span>{" "}
-              {dateTimeFormat(order?.createdAt || "")}
-            </p>
-            <p className="text-foreground/90 font-medium text-base w-full text-right">
-              <span className="text-foreground/80 text-sm">Updated @ </span>{" "}
-              {dateTimeFormat(order?.updatedAt || "")}
-            </p>
-          </div>
+  const draftOrders = orders.filter((e) => e.status === ORDER_STATUS.DRAFT);
+  const progressOrders = orders.filter(
+    (e) => e.status === ORDER_STATUS.IN_PROGRESS
+  );
+  const deliveryOrders = orders.filter(
+    (e) => e.status === ORDER_STATUS.DELIVERED
+  );
+  const inDeliveryOrders = orders.filter(
+    (e) => e.status === ORDER_STATUS.DELIVERY_PENDING
+  );
+  const completedOrders = orders.filter(
+    (e) => e.status === ORDER_STATUS.COMPLETED
+  );
 
-          <div className="flex gap-2 text-sm font-medium text-foreground/80">
-            <p>Valid Items: {order.items.validCount}</p>
-            <p>Scheduled Items: {order.items.scheduled.length}</p>
-            <p>Dispatched Items: {order.items.placed.length}</p>
-            <p>Cooking Items: {order.items.accepted.length}</p>
-            <p>Rejected Items: {order.items.rejected.length}</p>
-          </div>
-          <div className="flex h-full w-full">
-            <Button
-              variant={"secondary"}
-              onClick={() => onItemClickHandler(order.shortId)}
-              className="h-full w-full"
-            >
-              Open
-            </Button>
-          </div>
+  return (
+    <div className="flex align-top items-start justify-center p-6 pb-20 rounded-lg gap-6 flex-wrap w-full">
+      {Boolean(draftOrders.length) && (
+        <div className="flex flex-col justify-center text-xl uppercase pb-2 w-full px-6">
+          <span className="bg-background text-foreground/80">Draft</span>
+          <Separator />
         </div>
+      )}
+
+      {draftOrders.map((order) => (
+        <OrderItem
+          key={order.id}
+          order={order}
+          onItemClick={onItemClickHandler}
+        />
+      ))}
+
+      {Boolean(progressOrders.length) && (
+        <div className="flex flex-col justify-center text-xl uppercase pb-2 w-full px-6">
+          <span className="bg-background text-foreground/80">In Progress</span>
+          <Separator />
+        </div>
+      )}
+
+      {progressOrders.map((order) => (
+        <OrderItem
+          key={order.id}
+          order={order}
+          onItemClick={onItemClickHandler}
+        />
+      ))}
+
+      {Boolean(deliveryOrders.length) && (
+        <div className="flex flex-col justify-center text-xl uppercase pb-2 w-full px-6">
+          <span className="bg-background text-foreground/80">
+            Ready to Delivery
+          </span>
+          <Separator />
+        </div>
+      )}
+
+      {deliveryOrders.map((order) => (
+        <OrderItem
+          key={order.id}
+          order={order}
+          onItemClick={onItemClickHandler}
+        />
+      ))}
+
+      {Boolean(inDeliveryOrders.length) && (
+        <div className="flex flex-col justify-center text-xl uppercase pb-2 w-full px-6">
+          <span className="bg-background text-foreground/80">
+            In Delivery Process
+          </span>
+          <Separator />
+        </div>
+      )}
+
+      {inDeliveryOrders.map((order) => (
+        <OrderItem
+          key={order.id}
+          order={order}
+          onItemClick={onItemClickHandler}
+        />
+      ))}
+      {Boolean(completedOrders.length) && (
+        <div className="flex flex-col justify-center text-xl uppercase pb-2 w-full px-6">
+          <span className="bg-background text-foreground/80">
+            Recently Completed
+          </span>
+          <Separator />
+        </div>
+      )}
+
+      {completedOrders.map((order) => (
+        <OrderItem
+          key={order.id}
+          order={order}
+          onItemClick={onItemClickHandler}
+        />
       ))}
     </div>
   );
