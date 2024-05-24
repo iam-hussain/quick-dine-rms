@@ -6,6 +6,7 @@ import clsx from "clsx";
 import CountUp from "./count-up";
 import Icon from "../atoms/icon";
 import CountDown from "./count-down";
+import { orderTypeObject } from "./order-type-icon";
 
 export interface TokenCardProps {
   token: Omit<TokenType, "items">;
@@ -92,7 +93,7 @@ function TokenCard({
     <div
       key={token.id}
       className={clsx(
-        "flex flex-col h-auto gap-4 w-auto min-w-[300px] overflow-auto rounded-lg p-4 border-2 bg-paper",
+        "flex flex-col h-auto gap-4 w-auto min-w-[300px] overflow-auto rounded-lg p-4 border-2 border-foreground/40",
         {
           "border-rose-400": editMode,
           "border-paper": !editMode,
@@ -102,7 +103,7 @@ function TokenCard({
       <div className="pb-1 border-b border-foreground/50 flex">
         <div className="w-full flex flex-col gap-2">
           <div className="flex justify-between w-full gap-2">
-            <div className="flex flex-col justify-start align-middle items-center">
+            <div className="flex flex-col justify-start align-middle items-start">
               <div className="flex justify-start align-middle items-center gap-2 w-full">
                 <p className="text-lg font-medium ">#{token.displayId}</p>
                 {variant === "placed" && (
@@ -121,6 +122,9 @@ function TokenCard({
                   </Button>
                 )}
               </div>
+              <p className="uppercase text-sm">
+                {orderTypeObject[token.order.type]}
+              </p>
             </div>
             <div className="flex flex-col justify-center align-middle items-end">
               <p className="font-medium text-sm text-foreground/70">
@@ -225,7 +229,7 @@ function TokenCard({
       )}
       {variant === "placed" && (
         <Button
-          variant={isCompleted ? "secondary" : "accent"}
+          variant={isCompleted ? "secondary" : "outline"}
           className="w-full"
           onClick={() => onCompletedClickHandler()}
           disabled={!isCompleted}

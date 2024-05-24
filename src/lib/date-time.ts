@@ -5,7 +5,7 @@ export const dateTimeDifferent = (input: string | Date) => {
 };
 
 export const dateTimeFormat = (input: string | Date = new Date()) => {
-  return format(new Date(input), "PPPp");
+  return format(new Date(input), "PPp");
 };
 
 export const timeFormat = (input: string | Date) => {

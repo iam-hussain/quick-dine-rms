@@ -66,6 +66,15 @@ import { FcCancel } from "react-icons/fc";
 import { MdCancelPresentation } from "react-icons/md";
 import { TiCancel } from "react-icons/ti";
 import { RxLapTimer } from "react-icons/rx";
+import { FaClipboardCheck } from "react-icons/fa6";
+import { FaTruckField } from "react-icons/fa6";
+import { FaTruckLoading } from "react-icons/fa";
+import { BsFillCheckCircleFill } from "react-icons/bs";
+import { LuClipboardList } from "react-icons/lu";
+import { BsFastForwardCircleFill } from "react-icons/bs";
+import { TfiPackage } from "react-icons/tfi";
+import { RiEBike2Fill } from "react-icons/ri";
+import { MdBookOnline } from "react-icons/md";
 
 const icons = {
   BiRestaurant,
@@ -135,6 +144,15 @@ const icons = {
   MdCancelPresentation,
   TiCancel,
   RxLapTimer,
+  FaClipboardCheck,
+  FaTruckField,
+  FaTruckLoading,
+  BsFillCheckCircleFill,
+  LuClipboardList,
+  BsFastForwardCircleFill,
+  TfiPackage,
+  RiEBike2Fill,
+  MdBookOnline,
 };
 
 export type IconKey = keyof typeof icons;

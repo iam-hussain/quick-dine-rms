@@ -7,22 +7,8 @@ import { Button } from "../atoms/button";
 import usePOSCart from "@/hooks/usePOSCart";
 import { OrderAPIType } from "@/types";
 import { dateTimeFormat } from "@/lib/date-time";
-
-const OrderStatusValues = {
-  DRAFT: "Draft",
-  IN_PROGRESS: "In-Progress",
-  COMPLETED: "Completed",
-  DELIVERY_PENDING: "Ready to Deliver",
-  DELIVERED: "In Delivery",
-};
-
-const OrderTypeValues = {
-  DINING: "Dine In",
-  TAKE_AWAY: "Take Away",
-  PICK_UP: "Express",
-  DELIVERY: "Delivery",
-  PLATFORM: "Platform",
-};
+import OrderStatusIcon from "./order-status-icon";
+import OrderTypeIcon from "./order-type-icon";
 
 function OrderDetails({ order }: { order: OrderAPIType }) {
   const featureFlags = useSelector(
@@ -32,48 +18,62 @@ function OrderDetails({ order }: { order: OrderAPIType }) {
   const { refetch } = usePOSCart();
 
   return (
-    <div className="flex gap-2 text-sm flex-col justify-between w-full align-middle items-center p-2 px-4">
-      <div className="flex gap-2 text-sm flex-row justify-between w-full align-middle items-center">
-        <div className="flex justify-between align-middle items-center gap-1">
-          {enableCustomerAdding && order?.customerId && (
-            <p className="font-medium">
-              {order?.customerId ? order.customerId : "Unknown Name"}
-            </p>
-          )}
-          {order?.shortId && (
-            <p className="text-foreground/80 flex justify-start align-middle items-center gap-2">
+    <div className="flex flex-col gap-2 py-2 px-4 justify-center align-middle items-center">
+      <div className="flex justify-between align-middle items-center w-full gap-2">
+        <div className="flex w-max justify-center items-center align-middle">
+          <div className="flex justify-center align-middle items-center gap-2">
+            <p className="text-foreground/80 w-max">
               Order:{" "}
               <span className="text-foreground font-medium text-base">
                 #{order?.shortId}
                 {order?.table?.key ? ` / ${order?.table?.key}` : ""}
               </span>
-              <Button
-                variant={"transparent"}
-                className="p-0 hover:scale-110 active:scale-95"
-                onClick={() => order?.shortId && refetch(order?.shortId)}
-              >
-                <Icon name="IoReloadCircleSharp" className="h-8 w-8" />
-              </Button>
+            </p>
+            <Button
+              variant={"transparent"}
+              className="p-0 hover:scale-110 active:scale-95"
+              onClick={() => order?.shortId && refetch(order?.shortId)}
+            >
+              <Icon name="IoReloadCircleSharp" className="h-8 w-8" />
+            </Button>
+          </div>
+
+          {enableCustomerAdding && order?.customerId && (
+            <p className="font-medium">
+              {order?.customerId ? order.customerId : "Unknown Name"}
             </p>
           )}
         </div>
-        <div className="text-sm text-right flex flex-col gap-1 font-medium">
-          <p className="uppercase">
-            {OrderStatusValues[order?.status] || "Unsaved"}{" "}
-            {order?.type ? ` / ${OrderTypeValues[order.type]}` : ""}
+        <div className="flex flex-col justify-center align-middle items-end gap-2">
+          <div className="flex gap-2 flex-wrap justify-end align-middle items-end">
+            <OrderStatusIcon
+              value={order.status}
+              classNames="text-foreground/90"
+              withLabel={true}
+            />
+            {order?.type && (
+              <OrderTypeIcon
+                value={order.type}
+                classNames="text-foreground/90"
+                withLabel={true}
+              />
+            )}
+          </div>
+          <p className="text-foreground/90 font-medium text-sm w-full text-right">
+            <span className="text-foreground/80 text-xs">
+              {showUpdatedDate && order?.updatedAt
+                ? "Updated @ "
+                : "Created @ "}
+            </span>{" "}
+            {dateTimeFormat(
+              showUpdatedDate && order?.updatedAt
+                ? order?.updatedAt
+                : order.createdAt
+            )}
           </p>
-          {showUpdatedDate && order?.updatedAt && (
-            <p className="text-foreground/80">
-              {dateTimeFormat(order.updatedAt)}
-            </p>
-          )}
-          {!showUpdatedDate && order?.createdAt && (
-            <p className="text-foreground/80">
-              {dateTimeFormat(order.createdAt)}
-            </p>
-          )}
         </div>
       </div>
+
       <Separator className="bg-accent" />
     </div>
   );

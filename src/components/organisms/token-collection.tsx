@@ -48,7 +48,7 @@ function TokenCollection({
     );
   }
   return (
-    <div className="flex flex-wrap align-top items-start gap-4 m-0 justify-center">
+    <div className="flex flex-wrap align-top items-start gap-6 m-0 justify-center">
       {tokens.map(({ items, ...token }) => (
         <TokenCard key={token.id} token={token} items={items} {...props} />
       ))}
