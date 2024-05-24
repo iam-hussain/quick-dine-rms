@@ -1,5 +1,5 @@
-import PointOfSale from "@/components/templates/post-of-sale";
+import POSForm from "@/components/organisms/point-of-sale/pos-form";
 
 export default function POS() {
-  return <PointOfSale />;
+  return <POSForm />;
 }

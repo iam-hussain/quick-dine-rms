@@ -16,17 +16,21 @@ import {
   TabsTrigger,
   TabsContent,
 } from "../atoms/tabs-primary";
+import OrderCollection from "./order-collection";
+import usePOSCart from "@/hooks/usePOSCart";
 
 export default function POSExplorer({
   onItemClick,
+  onNewOrderClick,
   className,
 }: {
   onItemClick: (e: any, p: ProductAPIType) => void;
+  onNewOrderClick: () => void;
   className?: string;
 }) {
   const categories = useSelector((state: RootState) => state.base.categories);
   const products = useSelector((state: RootState) => state.base.products);
-
+  const { fetch } = usePOSCart();
   const [selectedCat, setSelectedCat] = useState("");
 
   const categoriesData: any[] = useMemo(() => {
@@ -54,9 +58,14 @@ export default function POSExplorer({
         "flex flex-col md:w-8/12 3xl:w-9/12 4xl:w-10/12 w-full h-full pb-4"
       )}
     >
-      <div className="flex flex-col gap-4 p-4 border-b">
+      <div className="flex flex-col gap-4 p-4 border-b w-full">
         <div className="flex justify-between align-middle items-center gap-4">
-          <SearchBar className="" />
+          <div className="justify-start flex gap-4">
+            <SearchBar className="" />
+            <Button variant={"secondary"} onClick={() => onNewOrderClick()}>
+              New Order
+            </Button>
+          </div>
           <TabsList className="justify-end">
             <TabsTrigger value="products">Products</TabsTrigger>
             <TabsTrigger value="orders">Orders</TabsTrigger>
@@ -64,21 +73,25 @@ export default function POSExplorer({
         </div>
       </div>
       <div className="flex w-full grow h-5/6">
-        <TabsContent value="products" className="flex w-full">
-          <CategoryCollection
-            className="border-r border-b"
-            categories={categoriesData}
-            onClick={(e) => setSelectedCat(e.id || "")}
-            selected={selectedCat}
-            productCount={products.length || 0}
-          />
-          <ProductCollection
-            className="border-b"
-            products={productsData}
-            onClick={onItemClick}
-          />
+        <TabsContent value="products" className=" grow w-full">
+          <div className="flex">
+            <CategoryCollection
+              className="border-r border-b"
+              categories={categoriesData}
+              onClick={(e) => setSelectedCat(e.id || "")}
+              selected={selectedCat}
+              productCount={products.length || 0}
+            />
+            <ProductCollection
+              className="border-b"
+              products={productsData}
+              onClick={onItemClick}
+            />
+          </div>
         </TabsContent>
-        <TabsContent value="orders">Orders List</TabsContent>
+        <TabsContent value="orders" className=" grow w-full">
+          <OrderCollection onItemClick={fetch} />
+        </TabsContent>
       </div>
     </Tabs>
   );

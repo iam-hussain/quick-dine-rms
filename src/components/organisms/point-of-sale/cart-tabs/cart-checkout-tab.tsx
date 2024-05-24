@@ -4,15 +4,14 @@ import { useSelector } from "react-redux";
 import React from "react";
 import clsx from "clsx";
 import { ScrollArea } from "@/components/atoms/scroll-area";
-import ItemsList from "../../../molecules/items-list";
-import { Separator } from "../../../atoms/separator";
-import CartSummary from "../../../organisms/cart-summary";
-import ButtonToolTip from "../../../molecules/button-tooltip";
-import { Button } from "../../../atoms/button";
-import useCartSettings from "@/hooks/useCartSettings";
+import ItemsList from "@/components/molecules/items-list";
+import { Separator } from "@/components/atoms/separator";
+import CartSummary from "@/components/organisms/cart-summary";
+import ButtonToolTip from "@/components/molecules/button-tooltip";
+import { Button } from "@/components/atoms/button";
 import { RootState } from "@/store";
 
-export default function OrderCheckOut({ className }: { className?: string }) {
+export default function CartCheckOutTab({ className }: { className?: string }) {
   const order = useSelector((state: RootState) => state.base.order);
   const summary = order?.items?.summary || [];
 

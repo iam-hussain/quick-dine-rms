@@ -12,22 +12,25 @@ import {
   FormLabel,
 } from "@/components/atoms/form";
 import { Input } from "@/components/atoms/input";
-import schemas, { LoginSchemaValues } from "@/validations";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { cookieNames, setCookieAsync } from "@/lib/cookies";
-import { formValidationSetter } from "@iam-hussain/qd-copilot";
+import {
+  formValidationSetter,
+  SignInSchemaType,
+  SignInSchema,
+} from "@iam-hussain/qd-copilot";
 import fetcher from "@/lib/fetcher";
 
-const defaultValues: Partial<LoginSchemaValues> = {
+const defaultValues: Partial<SignInSchemaType> = {
   email: "",
   password: "",
 };
 
 function LoginForm() {
   const router = useRouter();
-  const form = useForm<LoginSchemaValues>({
-    resolver: zodResolver(schemas.login),
+  const form = useForm<SignInSchemaType>({
+    resolver: zodResolver(SignInSchema),
     defaultValues,
     mode: "onSubmit",
   });
@@ -53,7 +56,7 @@ function LoginForm() {
     onError: (err) => formValidationSetter(err, setError),
   });
 
-  async function onSubmit(variables: LoginSchemaValues) {
+  async function onSubmit(variables: SignInSchemaType) {
     return await mutation.mutateAsync(variables as any);
   }
 

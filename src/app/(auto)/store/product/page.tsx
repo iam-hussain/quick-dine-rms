@@ -14,7 +14,6 @@ import BaseTable from "@/components/molecules/base-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ProductSchemaValues } from "@/validations";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import ProductForm from "@/components/forms/product-form";
@@ -22,6 +21,7 @@ import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import fetcher from "@/lib/fetcher";
 import { dateTimeDifferent, dateTimeFormat } from "@/lib/date-time";
+import { ProductUpdateSchemaType } from "@iam-hussain/qd-copilot";
 
 const typeMap = {
   VEG: "Veg",
@@ -37,7 +37,7 @@ export default function ProductPage() {
   const products = useSelector((state: RootState) => state.base.products);
   const [value, setValue] = useState<
     Partial<
-      ProductSchemaValues & {
+      ProductUpdateSchemaType & {
         id: string;
       }
     >

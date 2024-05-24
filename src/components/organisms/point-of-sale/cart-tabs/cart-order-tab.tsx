@@ -7,19 +7,16 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import CartItem from "@/components/molecules/cart-item";
 import { Separator } from "@/components/atoms/separator";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import OrderTypeSelect from "../../../molecules/order-type-select";
-import TableSelection from "../../../organisms/table-selection";
-import { Button } from "../../../atoms/button";
-import CartSummary from "../../../organisms/cart-summary";
-import useCartSettings from "@/hooks/useCartSettings";
+import OrderTypeSelect from "@/components/molecules/order-type-select";
+import TableSelection from "@/components/organisms/table-selection";
+import CartSummary from "@/components/organisms/cart-summary";
 import DraftOrder from "../actions/draft-order";
 import DeleteOrder from "../actions/delete-order";
 import KitchenDispatch from "../actions/kitchen-dispatch";
 import { useSelector } from "react-redux";
-import { FormField } from "@/components/atoms/form";
 import ScheduleDispatch from "../actions/schedule-dispatch";
 
-function OrderCart({ className }: { className?: string }) {
+function CartOrderTab({ className }: { className?: string }) {
   const { control } = useFormContext<OrderUpsertSchemaType>();
   const { watch } = useFormContext<OrderUpsertSchemaType>();
   const { enableCustomerAdding } = useSelector(
@@ -97,4 +94,4 @@ function OrderCart({ className }: { className?: string }) {
   );
 }
 
-export default OrderCart;
+export default CartOrderTab;

@@ -5,9 +5,8 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/atoms/tabs";
+} from "@/components/atoms/tabs-primary";
 import Loader from "@/components/molecules/loader";
-import TokenItem from "@/components/molecules/token-item";
 import { SortTokensResult } from "@/types";
 import fetcher from "@/lib/fetcher";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -15,7 +14,6 @@ import clsx from "clsx";
 import { toast } from "sonner";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
-import { Button } from "@/components/atoms/button";
 import { ScrollArea } from "@/components/atoms/scroll-area";
 import TokenCollection from "@/components/organisms/token-collection";
 
@@ -167,24 +165,9 @@ export default function Kitchen() {
             Kitchen Tokens Display
           </h1>
           <div className="flex gap-4">
-            <TabsTrigger
-              className="min-w-[100px] text-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground cursor-pointer"
-              value="scheduled"
-            >
-              Scheduled
-            </TabsTrigger>
-            <TabsTrigger
-              className="min-w-[100px] text-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground cursor-pointer"
-              value="progress"
-            >
-              InProgress
-            </TabsTrigger>
-            <TabsTrigger
-              className="min-w-[100px] text-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground cursor-pointer"
-              value="completed"
-            >
-              Completed
-            </TabsTrigger>
+            <TabsTrigger value="scheduled">Scheduled</TabsTrigger>
+            <TabsTrigger value="progress">InProgress</TabsTrigger>
+            <TabsTrigger value="completed">Completed</TabsTrigger>
           </div>
         </TabsList>
         <div className="p-6 bg-background flex grow h-4/6 ">

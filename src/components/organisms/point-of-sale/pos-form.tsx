@@ -1,6 +1,6 @@
 "use client";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -12,22 +12,13 @@ import {
   OrderUpsertSchemaType,
 } from "@iam-hussain/qd-copilot";
 import clsx from "clsx";
-import { Separator } from "@/components/atoms/separator";
 import POSExplorer from "@/components/organisms/pos-explorer";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/atoms/tabs";
-import OrderDetails from "@/components/molecules/order-details";
-import OrderStatus from "@/components/templates/post-of-sale/tabs/order-status";
-import OrderCart from "@/components/templates/post-of-sale/tabs/order-cart";
-import OrderCheckOut from "@/components/templates/post-of-sale/tabs/order-checkout";
 import { useEffect, useMemo, useState } from "react";
-import POSCart from "@/components/organisms/pos-cart";
+import POSCartTabs from "@/components/organisms/point-of-sale/pos-cart-tabs";
+import { setUpdateOrder } from "@/store/baseSlice";
 
-export default function PointOfSale() {
+export default function POSForm() {
+  const dispatch = useDispatch();
   const [tabValue, setTabValue] = useState("cart");
   const topBarOpen = useSelector((state: RootState) => state.page.topBarOpen);
   const order = useSelector((state: RootState) => state.base.order);
@@ -36,13 +27,14 @@ export default function PointOfSale() {
     (state: RootState) => state.base.settings.fees
   );
 
-  const { shortId, table, status } = order || {};
+  const { shortId, table } = order || {};
 
   const defaultValues: Partial<OrderUpsertSchemaType> = {
     type: order?.type || "TAKE_AWAY",
     items: (order?.items?.drafted || []) as any,
     fees: order?.fees || [],
     taxes: order?.taxes || taxes || [],
+    ...(order?.status ? { status: order?.status } : {}),
     ...(table?.key ? { table } : {}),
     ...(shortId ? { shortId } : {}),
   };
@@ -53,7 +45,7 @@ export default function PointOfSale() {
     mode: "onSubmit",
   });
 
-  const { control, watch } = form;
+  const { control, watch, reset } = form;
 
   const itemsControl = useFieldArray({
     control,
@@ -128,16 +120,27 @@ export default function PointOfSale() {
     }
   };
 
+  const onNewOrderClick = () => {
+    reset({
+      type: "TAKE_AWAY",
+      items: [],
+      fees: [],
+      taxes: taxes || [],
+    });
+    dispatch(setUpdateOrder(null));
+  };
+
   return (
     <div className="flex md:flex-row flex-col w-full h-full">
-      <POSExplorer
-        onItemClick={onItemClick}
-        className={clsx("h-[1000px]", {
-          "h-d-screen-top-close": !topBarOpen,
-          "h-d-screen-top-open": topBarOpen,
-        })}
-      />
       <Form {...form}>
+        <POSExplorer
+          onItemClick={onItemClick}
+          onNewOrderClick={onNewOrderClick}
+          className={clsx("h-[1000px]", {
+            "h-d-screen-top-close": !topBarOpen,
+            "h-d-screen-top-open": topBarOpen,
+          })}
+        />
         <form
           className={clsx(
             "flex md:flex-row flex-col md:w-4/12 3xl:w-3/12 4xl:2/12 w-full duration-300 transition-all border-l",
@@ -147,7 +150,7 @@ export default function PointOfSale() {
             }
           )}
         >
-          <POSCart tabValue={tabValue} setTabValue={setTabValue} />
+          <POSCartTabs tabValue={tabValue} setTabValue={setTabValue} />
         </form>
       </Form>
     </div>

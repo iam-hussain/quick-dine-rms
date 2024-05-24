@@ -4,7 +4,7 @@ export const dateTimeDifferent = (input: string | Date) => {
   return formatDistance(new Date(input), new Date(), { addSuffix: true });
 };
 
-export const dateTimeFormat = (input: string | Date) => {
+export const dateTimeFormat = (input: string | Date = new Date()) => {
   return format(new Date(input), "PPPp");
 };
 

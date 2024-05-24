@@ -66,20 +66,29 @@ function usePOSCart() {
     },
   });
 
+  const fetchOrderMutation = useMutation({
+    mutationFn: ({ shortId }: any) => fetcher(`/store/order/${shortId}`),
+    onSuccess: async (order: any) => {
+      const { shortId, items, table = {}, status } = order || {};
+      dispatch(setUpdateOrder(order));
+      reset({
+        type: order?.type || "TAKE_AWAY",
+        items: items?.drafted || [],
+        fees: order?.fees || [],
+        taxes: order?.taxes || [],
+        ...(table.key ? { table } : {}),
+        ...(shortId ? { shortId } : {}),
+        ...(status ? { status } : {}),
+      });
+    },
+  });
+
   const refetchOrderMutation = useMutation({
     mutationFn: ({ shortId }: any) => fetcher(`/store/order/${shortId}`),
     onSuccess: async (order: any) => {
       dispatch(setUpdateOrder(order));
     },
   });
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const refetch = useCallback(
-    _.throttle((shortId: string) => {
-      return refetchOrderMutation.mutateAsync({ shortId });
-    }, 3000),
-    []
-  );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const upsert = useCallback(
@@ -100,6 +109,22 @@ function usePOSCart() {
     []
   );
 
-  return { upsert, refetch };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fetch = useCallback(
+    _.throttle((shortId: string) => {
+      return fetchOrderMutation.mutateAsync({ shortId });
+    }, 1000),
+    []
+  );
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const refetch = useCallback(
+    _.throttle((shortId: string) => {
+      return refetchOrderMutation.mutateAsync({ shortId });
+    }, 3000),
+    []
+  );
+
+  return { upsert, refetch, fetch };
 }
 export default usePOSCart;

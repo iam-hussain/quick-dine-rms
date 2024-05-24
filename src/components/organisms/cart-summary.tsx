@@ -11,8 +11,7 @@ function CartSummary({
   className?: string;
   items: ItemType[];
 }) {
-  const { shouldAddPackingCharge, shouldAddDeliveryCharge, showPushToKot } =
-    useCartSettings();
+  const { shouldAddPackingCharge, shouldAddDeliveryCharge } = useCartSettings();
   const { subTotal, packagingCharge, deliveryCharge, taxesValue, grandTotal } =
     useCartSummary({
       items,

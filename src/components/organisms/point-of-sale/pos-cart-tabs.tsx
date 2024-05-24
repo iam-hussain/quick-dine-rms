@@ -10,11 +10,11 @@ import {
   TabsTrigger,
 } from "@/components/atoms/tabs-primary";
 import OrderDetails from "@/components/molecules/order-details";
-import OrderStatus from "@/components/templates/post-of-sale/tabs/order-status";
-import OrderCart from "@/components/templates/post-of-sale/tabs/order-cart";
-import OrderCheckOut from "@/components/templates/post-of-sale/tabs/order-checkout";
+import CartStatusTab from "@/components/organisms/point-of-sale/cart-tabs/cart-status-tab";
+import CartOrderTab from "@/components/organisms/point-of-sale/cart-tabs/cart-order-tab";
+import CartCheckOutTab from "@/components/organisms/point-of-sale/cart-tabs/cart-checkout-tab";
 
-export default function POSCart({
+export default function POSCartTabs({
   tabValue,
   setTabValue,
 }: {
@@ -38,13 +38,13 @@ export default function POSCart({
       <Separator className="bg-primary col-span-3" />
       {order?.shortId && <OrderDetails order={order} />}
       <TabsContent value="cart" className="grow">
-        <OrderCart />
+        <CartOrderTab />
       </TabsContent>
       <TabsContent value="progress" className="grow">
-        <OrderStatus />
+        <CartStatusTab />
       </TabsContent>
       <TabsContent value="summary" className="grow">
-        <OrderCheckOut />
+        <CartCheckOutTab />
       </TabsContent>
     </Tabs>
   );

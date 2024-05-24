@@ -1,7 +1,6 @@
 import React from "react";
 import Icon from "@/components/atoms/icon";
 import { Button } from "@/components/atoms/button";
-import { CartItemSchemaValues } from "@/validations";
 import { ItemCreateSchemaType } from "@iam-hussain/qd-copilot";
 
 type DraftItemsProps = {
