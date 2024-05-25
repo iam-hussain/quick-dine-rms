@@ -34,7 +34,7 @@ function useTokenQuery() {
         return false;
       }
       return updateTokenMutation.mutateAsync(variables);
-    }, 1000),
+    }, 500),
     []
   );
 

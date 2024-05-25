@@ -34,7 +34,7 @@ function useItemQuery() {
         return false;
       }
       return updateItemMutation.mutateAsync(variables);
-    }, 1000),
+    }, 500),
     []
   );
 

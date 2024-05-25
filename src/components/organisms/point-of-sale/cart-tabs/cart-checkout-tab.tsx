@@ -18,7 +18,7 @@ export default function CartCheckOutTab({ className }: { className?: string }) {
 
   return (
     <div className={clsx("flex flex-col h-full gap-2", className)}>
-      <ScrollArea className="w-full flex justify-end grow bg-background px-4 cart">
+      <ScrollArea className="w-full flex justify-end grow bg-background px-4 h-[300px] cart">
         <div className="flex flex-col h-full">
           <div className="flex flex-col gap-4 pt-2 justify-between h-full">
             {summary.length === 0 && (
@@ -30,7 +30,7 @@ export default function CartCheckOutTab({ className }: { className?: string }) {
           </div>
         </div>
       </ScrollArea>
-      <Separator />
+      <Separator className="my-2 mt-4" />
       <div className="flex justify-center align-middle items-center gap-4 flex-col text-sm bg-background select-none h-auto px-6">
         <CartSummary items={summary} />
         <div className="flex gap-2 w-full">

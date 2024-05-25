@@ -1,25 +1,21 @@
 "use client";
 
 import clsx from "clsx";
-import { useMemo, useState } from "react";
+import _ from "lodash";
+import { useCallback, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { Button } from "@/components/atoms/button";
 import CategoryCollection from "@/components/organisms/category-collection";
 import ProductCollection from "@/components/organisms/product-collection";
 import SearchBar from "@/components/organisms/search-bar";
-import useOrderQuery from "@/hooks/useOrderQuery";
 import { isValidArray } from "@/lib/utils";
 import { RootState } from "@/store";
 import { ProductAPIType } from "@/types";
 
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../atoms/tabs-primary";
-import OrderCollection from "./order-collection";
+import { ScrollArea } from "../atoms/scroll-area";
+import RecentOrdersProvider from "../templates/recent-orders-provider";
+import RecentOrderCollection from "./recent-order-collection";
 
 export default function POSExplorer({
   onItemClick,
@@ -29,11 +25,25 @@ export default function POSExplorer({
   onNewOrderClick: () => void;
   className?: string;
 }) {
-  const [tabValue, setTabValue] = useState("products");
   const categories = useSelector((state: RootState) => state.base.categories);
   const products = useSelector((state: RootState) => state.base.products);
-  const { fetch } = useOrderQuery();
-  const [selectedCat, setSelectedCat] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleSearch = useCallback(
+    _.debounce((searchQuery) => {
+      if (searchQuery) {
+        const filtered = products.filter((product) =>
+          product.name.toLowerCase().includes(searchQuery.trim().toLowerCase())
+        );
+        setFilteredProducts(filtered);
+      } else {
+        setFilteredProducts(products);
+      }
+    }, 500),
+    [products]
+  );
 
   const categoriesData: any[] = useMemo(() => {
     if (categories && isValidArray(categories)) {
@@ -43,65 +53,51 @@ export default function POSExplorer({
   }, [categories]);
 
   const productsData: any[] = useMemo(() => {
-    if (products && isValidArray(products)) {
-      if (selectedCat) {
-        return products.filter((e) => e.categoryId === selectedCat);
-      } else {
-        return products;
-      }
-    }
-    return [];
-  }, [products, selectedCat]);
+    const actualProducts =
+      Array.isArray(filteredProducts) && filteredProducts?.length
+        ? filteredProducts
+        : products;
 
-  const handleNewOrderClick = () => {
-    onNewOrderClick();
-    setTabValue("products");
-  };
+    if (selectedCategory) {
+      return actualProducts.filter((e) => e.categoryId === selectedCategory);
+    } else {
+      return actualProducts;
+    }
+  }, [filteredProducts, products, selectedCategory]);
 
   return (
-    <Tabs
-      defaultValue="products"
-      value={tabValue}
-      onValueChange={setTabValue}
-      className={clsx(
-        "flex flex-col md:w-8/12 3xl:w-9/12 4xl:w-10/12 w-full h-full pb-4"
-      )}
-    >
+    <div className={clsx("flex flex-col w-auto h-full grow")}>
       <div className="flex flex-col gap-4 p-4 border-b w-full">
         <div className="flex justify-between align-middle items-center gap-4">
           <div className="justify-start flex gap-4">
-            <SearchBar className="" />
-            <Button variant={"secondary"} onClick={() => handleNewOrderClick()}>
+            <SearchBar onChange={handleSearch} />
+          </div>
+          <div className="flex gap-4">
+            <RecentOrdersProvider>
+              <RecentOrderCollection />
+            </RecentOrdersProvider>{" "}
+            <Button variant={"secondary"} onClick={() => onNewOrderClick()}>
               New Order
             </Button>
           </div>
-          <TabsList className="justify-end">
-            <TabsTrigger value="products">Products</TabsTrigger>
-            <TabsTrigger value="orders">Orders</TabsTrigger>
-          </TabsList>
         </div>
       </div>
-      <div className="flex w-full grow h-5/6">
-        <TabsContent value="products" className=" grow w-full">
-          <div className="flex">
+      <div className="pl-2 py-6 bg-background flex grow h-5/6 ">
+        <div className="flex h-full w-full px-2">
+          <ScrollArea className={clsx("w-auto h-full pr-4")}>
             <CategoryCollection
-              className="border-r border-b"
+              className="min-w-[175px]"
               categories={categoriesData}
-              onClick={(e) => setSelectedCat(e.id || "")}
-              selected={selectedCat}
+              onClick={(e) => setSelectedCategory(e.id || "")}
+              selected={selectedCategory}
               productCount={products.length || 0}
             />
-            <ProductCollection
-              className="border-b"
-              products={productsData}
-              onClick={onItemClick}
-            />
-          </div>
-        </TabsContent>
-        <TabsContent value="orders" className=" grow w-full">
-          <OrderCollection onItemClick={fetch} />
-        </TabsContent>
+          </ScrollArea>
+          <ScrollArea className={clsx("w-full h-full pr-2")}>
+            <ProductCollection products={productsData} onClick={onItemClick} />
+          </ScrollArea>
+        </div>
       </div>
-    </Tabs>
+    </div>
   );
 }

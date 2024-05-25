@@ -29,7 +29,7 @@ export default function POSCartTabs({
       defaultValue={"cart"}
       value={tabValue}
       onValueChange={setTabValue}
-      className="flex flex-col w-full gap-4 py-4 px-2"
+      className="flex flex-col w-full gap-4 pt-4 pb-6 px-2"
     >
       <TabsList className="rounded-none grid grid-cols-3 justify-center w-full">
         <TabsTrigger value="cart">Cart</TabsTrigger>

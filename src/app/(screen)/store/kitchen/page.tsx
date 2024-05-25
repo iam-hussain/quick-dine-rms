@@ -1,5 +1,3 @@
-"use client";
-
 import clsx from "clsx";
 
 import { ScrollArea } from "@/components/atoms/scroll-area";
@@ -10,11 +8,11 @@ import {
   TabsTrigger,
 } from "@/components/atoms/tabs-primary";
 import TokenCollection from "@/components/organisms/token-collection";
-import TokenQuery from "@/components/templates/token-query";
+import TokensProvider from "@/components/templates/tokens-provider";
 
 export default function Kitchen() {
   return (
-    <TokenQuery>
+    <TokensProvider>
       <div className="flex flex-col w-full h-full justify-center align-middle items-center bg-paper py-4 px-6">
         <Tabs
           defaultValue="progress"
@@ -30,7 +28,7 @@ export default function Kitchen() {
               <TabsTrigger value="completed">Completed</TabsTrigger>
             </div>
           </TabsList>
-          <div className="p-6 bg-background flex grow h-4/6 ">
+          <div className="p-6 bg-background flex grow h-5/6 ">
             <ScrollArea className={clsx("w-full h-full pr-4")}>
               <TabsContent value="scheduled">
                 <TokenCollection variant="scheduled" />
@@ -50,6 +48,6 @@ export default function Kitchen() {
           </div>
         </Tabs>
       </div>
-    </TokenQuery>
+    </TokensProvider>
   );
 }

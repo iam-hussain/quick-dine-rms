@@ -1,6 +1,7 @@
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import _ from "lodash";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,16 +9,17 @@ import { toast } from "sonner";
 
 import fetcher from "@/lib/fetcher";
 import { RootState } from "@/store";
-import { setUpdateOrder } from "@/store/baseSlice";
+import { setOrder } from "@/store/baseSlice";
 
 function useOrderQuery() {
+  const router = useRouter();
   const dispatch = useDispatch();
-  // const searchParams = useSearchParams();
-  // const orderId = searchParams.get("orderId");
+  const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get("orderId");
   const { reset } = useFormContext<OrderUpsertSchemaType>();
   const { enableTables, enableCustomerAdding, enableKitchenCategory } =
     useSelector((state: RootState) => state.base.featureFlags);
-  // const order = useSelector((state: RootState) => state.base.order);
 
   const upsertOrderMutation = useMutation({
     mutationFn: (variables) => fetcher.post("/store/order", variables),
@@ -27,21 +29,19 @@ function useOrderQuery() {
           `Order ID ${order.shortId} has been successfully updated! 🚀`
         );
       } else {
-        // if (!orderId) {
-        //   router.push(`/store/pos?orderId=${order.shortId}`);
-        //   window.history.replaceState(
-        //     null,
-        //     `Order: #${order.shortId} || POS || Quick Dine`,
-        //     `/store/pos?orderId=${order.shortId}`
-        //   );
-        // }
+        if (!orderId || orderId !== variables.shortId) {
+          router.push(`/store/pos?orderId=${order.shortId}`);
+          queryClient.invalidateQueries({
+            queryKey: ["recent_orders"],
+          });
+        }
+
         toast.success(
           `A new order with ID ${order.shortId} has been created! 🌟`
         );
       }
       const { shortId, items, table = {}, status } = order || {};
-
-      dispatch(setUpdateOrder(order));
+      dispatch(setOrder(order));
       reset({
         type: order?.type || "TAKE_AWAY",
         items: items?.drafted || [],
@@ -68,9 +68,16 @@ function useOrderQuery() {
 
   const fetchOrderMutation = useMutation({
     mutationFn: ({ shortId }: any) => fetcher(`/store/order/${shortId}`),
-    onSuccess: async (order: any) => {
+    onSuccess: async (order: any, variables: any) => {
       const { shortId, items, table = {}, status } = order || {};
-      dispatch(setUpdateOrder(order));
+      if (!orderId || orderId !== variables.shortId) {
+        router.push(`/store/pos?orderId=${order.shortId}`);
+        queryClient.invalidateQueries({
+          queryKey: ["recent_orders"],
+        });
+      }
+
+      dispatch(setOrder(order));
       reset({
         type: order?.type || "TAKE_AWAY",
         items: items?.drafted || [],
@@ -83,10 +90,10 @@ function useOrderQuery() {
     },
   });
 
-  const refetchOrderMutation = useMutation({
+  const refreshOrderMutation = useMutation({
     mutationFn: ({ shortId }: any) => fetcher(`/store/order/${shortId}`),
     onSuccess: async (order: any) => {
-      dispatch(setUpdateOrder(order));
+      dispatch(setOrder(order));
     },
   });
 
@@ -118,13 +125,21 @@ function useOrderQuery() {
   );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const refetch = useCallback(
+  const fetchOnLoad = useCallback(
     _.throttle((shortId: string) => {
-      return refetchOrderMutation.mutateAsync({ shortId });
+      return fetchOrderMutation.mutateAsync({ shortId });
+    }, 10000),
+    []
+  );
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const refresh = useCallback(
+    _.throttle((shortId: string) => {
+      return refreshOrderMutation.mutateAsync({ shortId });
     }, 3000),
     []
   );
 
-  return { upsert, refetch, fetch };
+  return { upsert, refresh, fetch, fetchOnLoad };
 }
 export default useOrderQuery;

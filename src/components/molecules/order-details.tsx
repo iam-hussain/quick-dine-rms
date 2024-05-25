@@ -17,7 +17,7 @@ function OrderDetails({ order }: { order: OrderAPIType }) {
     (state: RootState) => state.base.featureFlags
   );
   const { enableCustomerAdding, showUpdatedDate } = featureFlags;
-  const { refetch } = useOrderQuery();
+  const { refresh } = useOrderQuery();
 
   return (
     <div className="flex flex-col gap-2 py-2 px-4 justify-center align-middle items-center">
@@ -34,7 +34,7 @@ function OrderDetails({ order }: { order: OrderAPIType }) {
             <Button
               variant={"transparent"}
               className="p-0 hover:scale-110 active:scale-95"
-              onClick={() => order?.shortId && refetch(order?.shortId)}
+              onClick={() => order?.shortId && refresh(order?.shortId)}
             >
               <Icon name="IoReloadCircleSharp" className="h-8 w-8" />
             </Button>

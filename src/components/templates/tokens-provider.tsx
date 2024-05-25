@@ -10,7 +10,7 @@ import { RootState } from "@/store";
 import { setTokens } from "@/store/baseSlice";
 import { SortTokensResult } from "@/types";
 
-export default function TokenQuery({
+export default function TokensProvider({
   children,
 }: {
   children: React.ReactNode;

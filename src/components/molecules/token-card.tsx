@@ -1,3 +1,5 @@
+"use client";
+
 import clsx from "clsx";
 import React, { useState } from "react";
 
@@ -16,33 +18,6 @@ export interface TokenCardProps {
   token: Omit<TokenType, "items">;
   items: SortItemsResult;
   variant: keyof SortTokensResult;
-  onItemClick?: ({
-    id,
-    mode,
-  }: {
-    id: string;
-    shortId: string;
-    orderId?: string | null;
-    mode: "ACCEPT" | "COMPLETE" | "REJECT";
-  }) => void;
-  onCompleteClick?: ({
-    id,
-    shortId,
-    orderId,
-  }: {
-    id: string;
-    shortId: string;
-    orderId?: string | null;
-  }) => void;
-  onDispatchClick?: ({
-    id,
-    shortId,
-    orderId,
-  }: {
-    id: string;
-    shortId: string;
-    orderId?: string | null;
-  }) => void;
 }
 
 function TokenCard({ token, items, variant }: TokenCardProps) {

@@ -8,7 +8,7 @@ import { RootState } from "@/store";
 function CartStatusTab() {
   const order = useSelector((state: RootState) => state.base.order);
   const { enableKDS } = useSelector(
-    (state: RootState) => state.base.featureFlags,
+    (state: RootState) => state.base.featureFlags
   );
 
   const {
@@ -22,9 +22,9 @@ function CartStatusTab() {
 
   return (
     <div className={"flex flex-col h-full gap-2"}>
-      <ScrollArea className="w-full flex justify-end grow bg-background px-4 cart">
+      <ScrollArea className="w-full flex justify-end grow bg-background px-4 h-[300px] cart">
         <div className="flex flex-col h-full">
-          <div className="flex flex-col gap-4 pt-2 justify-between">
+          <div className="flex flex-col gap-4 justify-between">
             {validCount === 0 && (
               <p className="text-sm text-foreground/80 text-center w-full py-6">
                 No items found

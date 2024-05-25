@@ -56,7 +56,7 @@ function CartOrderTab({ className }: { className?: string }) {
         </div>
       </div>
       <Separator className="my-4" />
-      <ScrollArea className="w-full flex justify-end grow bg-background px-4 h-0 cart">
+      <ScrollArea className="w-full flex justify-end grow bg-background px-4 h-[300px] cart">
         <ul className="flex flex-col gap-2">
           {items.length === 0 ? (
             <li className="text-sm text-foreground/80 text-center w-full py-6">
@@ -78,7 +78,7 @@ function CartOrderTab({ className }: { className?: string }) {
         </ul>
         {/* {drafted.length && <DraftItems items={drafted} />} */}
       </ScrollArea>
-      <Separator />
+      <Separator className="my-2 mt-4" />
       <div className="flex justify-center align-middle items-center gap-4 flex-col text-base bg-background select-none h-auto px-6">
         <CartSummary items={items as any} />
         <div className="flex gap-2 w-full">

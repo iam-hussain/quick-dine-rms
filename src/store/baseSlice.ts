@@ -33,8 +33,9 @@ interface PageState {
   user: any | null;
   store: any | null;
   order: OrderAPIType | null;
+  orders: OrderAPIType[];
   token: SortTokensResult | null;
-  defaultOrder: OrderAPIType | null;
+  recentOrders: OrderAPIType[];
   categories: CategoryType[];
   kitchenCategories: CategoryType[];
   products: ProductAPIType[];
@@ -47,8 +48,9 @@ const initialState: PageState = {
   user: null,
   store: null,
   order: null,
+  orders: [],
   token: null,
-  defaultOrder: null,
+  recentOrders: [],
   categories: [],
   kitchenCategories: [],
   products: [],
@@ -64,17 +66,12 @@ export const pageSlice = createSlice({
   name: "base",
   initialState,
   reducers: {
-    setBaseData: (state, action: PayloadAction<any>) => {
+    setBaseData: (state, { payload }: PayloadAction<any>) => {
       const { tables, fees, taxes, featureFlags, ...store } =
-        action.payload?.store || {};
-      state.authenticated = Boolean(action.payload?.user?.id);
-      state.user = action.payload?.user || null;
+        payload?.store || {};
+      state.authenticated = Boolean(payload?.user?.id);
+      state.user = payload?.user || null;
       state.store = store || null;
-      state.order = action.payload?.order || null;
-      state.defaultOrder = action.payload?.defaultOrder || null;
-      state.categories = action.payload?.categories || [];
-      state.kitchenCategories = action.payload?.kitchenCategories || [];
-      state.products = action.payload?.products || [];
       state.settings = {
         tables: tables || [],
         fees: fees || defaultFees,
@@ -83,15 +80,40 @@ export const pageSlice = createSlice({
       state.featureFlags = featureFlags || defaultFeatureFlags;
     },
 
-    setUpdateOrder: (state, action: PayloadAction<OrderAPIType | null>) => {
+    setOrder: (state, action: PayloadAction<OrderAPIType | null>) => {
       state.order = action.payload;
+    },
+    setOrders: (state, action: PayloadAction<OrderAPIType[]>) => {
+      state.orders = action.payload;
+    },
+    setRecentOrders: (state, action: PayloadAction<OrderAPIType[]>) => {
+      state.recentOrders = action.payload;
     },
     setTokens: (state, action: PayloadAction<SortTokensResult | null>) => {
       state.token = action.payload;
     },
+    setCategories: (state, action: PayloadAction<CategoryType[]>) => {
+      state.categories = action.payload.filter(
+        (e: { type: string }) => e.type === "DEFAULT"
+      );
+      state.kitchenCategories = action.payload.filter(
+        (e: { type: string }) => e.type === "KITCHEN"
+      );
+    },
+    setProducts: (state, action: PayloadAction<ProductAPIType[]>) => {
+      state.products = action.payload;
+    },
   },
 });
 
-export const { setBaseData, setUpdateOrder, setTokens } = pageSlice.actions;
+export const {
+  setBaseData,
+  setOrder,
+  setOrders,
+  setRecentOrders,
+  setTokens,
+  setCategories,
+  setProducts,
+} = pageSlice.actions;
 
 export default pageSlice.reducer;
