@@ -1,13 +1,14 @@
-import { Input } from "@/components/atoms/input";
-
-import { cn } from "@/lib/utils";
 import React from "react";
+
+import { Input } from "@/components/atoms/input";
+import { cn } from "@/lib/utils";
+
 import {
-  Period,
-  TimePickerType,
   getArrowByType,
   getDateByType,
+  Period,
   setDateByType,
+  TimePickerType,
 } from "../../lib/time-picker-utils";
 
 export interface TimePickerInputProps
@@ -41,7 +42,7 @@ const TimePickerInput = React.forwardRef<
       onRightFocus,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [flag, setFlag] = React.useState<boolean>(false);
     const [prevIntKey, setPrevIntKey] = React.useState<string>("0");
@@ -107,7 +108,7 @@ const TimePickerInput = React.forwardRef<
         name={name || picker}
         className={cn(
           "w-[48px] text-center font-mono text-base tabular-nums caret-transparent focus:bg-accent focus:text-accent-foreground [&::-webkit-inner-spin-button]:appearance-none",
-          className
+          className,
         )}
         value={value || calculatedValue}
         onChange={(e) => {
@@ -123,7 +124,7 @@ const TimePickerInput = React.forwardRef<
         {...props}
       />
     );
-  }
+  },
 );
 
 TimePickerInput.displayName = "TimePickerInput";

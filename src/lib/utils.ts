@@ -1,7 +1,7 @@
-import { ChargesType } from "@/types";
-import { SortingFnOption } from "@tanstack/react-table";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+
+import { ChargesType } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

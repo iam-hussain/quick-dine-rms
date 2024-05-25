@@ -23,11 +23,12 @@
     }
   },
   "include": [
+    "new-types.d.ts",
     "next-env.d.ts",
-    "./src/**/*.ts",
-    "./src/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     ".next/types/**/*.ts",
     "out/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "src/configs/*.json"]
+  "exclude": ["node_modules", "./out", "./out/**"]
 }

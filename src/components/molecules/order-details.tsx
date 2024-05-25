@@ -1,18 +1,20 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import { Separator } from "../atoms/separator";
-import Icon from "../atoms/icon";
-import { Button } from "../atoms/button";
+
 import usePOSCart from "@/hooks/usePOSCart";
-import { OrderAPIType } from "@/types";
 import { dateTimeFormat } from "@/lib/date-time";
+import { RootState } from "@/store";
+import { OrderAPIType } from "@/types";
+
+import { Button } from "../atoms/button";
+import Icon from "../atoms/icon";
+import { Separator } from "../atoms/separator";
 import OrderStatusIcon from "./order-status-icon";
 import OrderTypeIcon from "./order-type-icon";
 
 function OrderDetails({ order }: { order: OrderAPIType }) {
   const featureFlags = useSelector(
-    (state: RootState) => state.base.featureFlags
+    (state: RootState) => state.base.featureFlags,
   );
   const { enableCustomerAdding, showUpdatedDate } = featureFlags;
   const { refetch } = usePOSCart();
@@ -68,7 +70,7 @@ function OrderDetails({ order }: { order: OrderAPIType }) {
             {dateTimeFormat(
               showUpdatedDate && order?.updatedAt
                 ? order?.updatedAt
-                : order.createdAt
+                : order.createdAt,
             )}
           </p>
         </div>

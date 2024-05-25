@@ -1,9 +1,10 @@
 "use client";
+import { Suspense } from "react";
+
 import Loader from "@/components/molecules/loader";
 import SideMenu from "@/components/organisms/side-menu";
 import TopMenu from "@/components/organisms/top-menu";
 import BasePage from "@/components/templates/base-page";
-import { Suspense } from "react";
 
 export default function POS({ children }: { children: React.ReactNode }) {
   return (

@@ -1,17 +1,18 @@
-import React, { useContext } from "react";
-import { Control, useFormContext } from "react-hook-form";
+import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
+import React from "react";
+import { useFormContext } from "react-hook-form";
+import { useSelector } from "react-redux";
+
 import { FormField, FormItem, FormMessage } from "@/components/atoms/form";
 import {
   Select,
-  SelectLabel,
-  SelectGroup,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select";
-import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 
 function OrderTypeSelect() {

@@ -1,23 +1,24 @@
 "use client";
-import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  formValidationSetter,
+  ProductCreateSchema,
+  ProductCreateSchemaType,
+} from "@iam-hussain/qd-copilot";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormMessage,
   FormLabel,
+  FormMessage,
 } from "@/components/atoms/form";
 import { Input } from "@/components/atoms/input";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  formValidationSetter,
-  ProductCreateSchema,
-  ProductCreateSchemaType,
-} from "@iam-hussain/qd-copilot";
 import {
   Select,
   SelectContent,
@@ -88,7 +89,7 @@ function ProductForm({
 
       if (id) {
         toast.success(
-          `Product ID ${data.id} has been successfully updated! 🚀`
+          `Product ID ${data.id} has been successfully updated! 🚀`,
         );
       } else {
         toast.success(`A new product with ID ${data.id} has been created! 🌟`);
@@ -99,11 +100,11 @@ function ProductForm({
       if (!errors.length) {
         if (id) {
           toast.error(
-            `Unable to update product with ID ${id}. Please review the entered information and try again. If the issue persists, contact support for further assistance.`
+            `Unable to update product with ID ${id}. Please review the entered information and try again. If the issue persists, contact support for further assistance.`,
           );
         } else {
           toast.error(
-            `Failed to create product. Please verify the provided details and attempt again. If the problem persists, reach out to support for additional help.`
+            `Failed to create product. Please verify the provided details and attempt again. If the problem persists, reach out to support for additional help.`,
           );
         }
       }

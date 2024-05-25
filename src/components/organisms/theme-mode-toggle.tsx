@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react";
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import { useTheme } from "next-themes";
 import clsx from "clsx";
+import { useTheme } from "next-themes";
+import * as React from "react";
 
 import { Button } from "@/components/atoms/button";
 import {
@@ -14,7 +14,7 @@ import {
 } from "@/components/atoms/dropdown-menu";
 
 export function ThemeModeToggle({ className }: { className?: string }) {
-  const { setTheme, theme } = useTheme();
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>

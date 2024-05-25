@@ -1,23 +1,24 @@
-import { Button } from "@/components/atoms/button";
+import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import clsx from "clsx";
 import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
+
+import { Button } from "@/components/atoms/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "@/components/atoms/dialog";
-import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import usePOSCart from "@/hooks/usePOSCart";
-import OrderNotes from "@/components/molecules/order-notes";
 import Icon from "@/components/atoms/icon";
-import { Label } from "@/components/atoms/label";
-import { dateTimeFormatAddMinutes, timeAfterMinutes } from "@/lib/date-time";
 import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
+import OrderNotes from "@/components/molecules/order-notes";
+import usePOSCart from "@/hooks/usePOSCart";
+import { dateTimeFormatAddMinutes, timeAfterMinutes } from "@/lib/date-time";
 
 function ScheduleDispatch() {
   const [value, setValue] = React.useState(0);
@@ -57,7 +58,7 @@ function ScheduleDispatch() {
           aria-label="Kitchen Dispatch"
           variant={"secondary"}
           className={clsx(
-            "flex justify-center gap-2 font-normal w-auto col-span-2"
+            "flex justify-center gap-2 font-normal w-auto col-span-2",
           )}
           disabled={!items.length}
         >

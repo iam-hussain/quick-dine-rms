@@ -1,8 +1,11 @@
 "use client";
 
+import { getFeatureFlagForm } from "@iam-hussain/qd-copilot";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
 import {
   Form,
@@ -12,12 +15,9 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/atoms/form";
-import { toast } from "sonner";
 import { Switch } from "@/components/atoms/switch";
-import { getFeatureFlagForm } from "@iam-hussain/qd-copilot";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import fetcher from "@/lib/fetcher";
-import Loader from "../molecules/loader";
+import { RootState } from "@/store";
 
 export function FeatureFlagForm() {
   const featureFlags = useSelector(

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ThemeModeToggle } from "@/components/organisms/theme-mode-toggle";
+
 import BrandStackSlogan from "@/components/atoms/brand/stack-with-slogan";
 
 export default function HalfLayout({

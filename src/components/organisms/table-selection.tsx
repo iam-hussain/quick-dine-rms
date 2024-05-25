@@ -1,12 +1,10 @@
-import { Button } from "@/components/atoms/button";
+import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import clsx from "clsx";
 import React from "react";
-import {
-  Control,
-  useWatch,
-  useController,
-  useFormContext,
-} from "react-hook-form";
+import { useController, useFormContext, useWatch } from "react-hook-form";
+import { useSelector } from "react-redux";
+
+import { Button } from "@/components/atoms/button";
 import {
   Dialog,
   DialogContent,
@@ -15,13 +13,10 @@ import {
   DialogTrigger,
 } from "@/components/atoms/dialog";
 import Icon from "@/components/atoms/icon";
-import { StoreAdditionalType } from "@/types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/atoms/toggle-group";
-import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 
-function TableSelection({ className }: { className?: string }) {
+function TableSelection() {
   const [openTable, setOpenTable] = React.useState(false);
   const { enableTables } = useSelector(
     (state: RootState) => state.base.featureFlags

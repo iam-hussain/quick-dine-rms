@@ -1,23 +1,25 @@
 "use client";
 
+import clsx from "clsx";
+import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Container } from "@/components/atoms/container";
 import Icon, { IconKey } from "@/components/atoms/icon";
-import MenuItem from "@/components/molecules/menu-item";
 import { ScrollArea } from "@/components/atoms/scroll-area";
-import UserBadge from "../molecules/user-badge";
-import { motion } from "framer-motion";
-import clsx from "clsx";
-import { Separator } from "../atoms/separator";
-import { useEffect } from "react";
-import Loader from "../molecules/loader";
-import { useDispatch, useSelector } from "react-redux";
+import MenuItem from "@/components/molecules/menu-item";
 import { RootState } from "@/store";
 import { openSideBar } from "@/store/pageSlice";
+
+import { Separator } from "../atoms/separator";
+import Loader from "../molecules/loader";
+import UserBadge from "../molecules/user-badge";
 
 type Menu = {
   icon: IconKey;
   label: string;
-  active?: Boolean;
+  active?: boolean;
   link?: string;
 };
 
@@ -154,13 +156,13 @@ function SideMenu({ className }: { className?: string }) {
         style={{ width: "500px" }}
         className={clsx(
           "side-menu py-4 bg-background px-2 z-50 items-end relative",
-          className
+          className,
         )}
       >
         <div className="flex justify-center align-middle items-center flex-col h-full w-[300px]">
           <div
             className={clsx(
-              "flex gap-2 justify-start align-middle items-center select-none text-right m-auto my-4"
+              "flex gap-2 justify-start align-middle items-center select-none text-right m-auto my-4",
             )}
           >
             <motion.div

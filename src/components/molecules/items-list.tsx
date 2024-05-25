@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Separator } from "../atoms/separator";
 
 function ItemsList({ items, label }: { items: any[]; label?: string }) {

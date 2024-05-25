@@ -1,15 +1,17 @@
 "use client";
 
 import clsx from "clsx";
-import Icon from "@/components/atoms/icon";
-import { Button } from "@/components/atoms/button";
-import BrandSideBySide from "../atoms/brand/side-by-side";
-import { useMemo, useEffect, useState, useCallback } from "react";
-import { useWindowScroll } from "react-use";
 import { motion } from "framer-motion";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useWindowScroll } from "react-use";
+
+import { Button } from "@/components/atoms/button";
+import Icon from "@/components/atoms/icon";
 import { RootState } from "@/store";
 import { openSideBar, openTopBar } from "@/store/pageSlice";
+
+import BrandSideBySide from "../atoms/brand/side-by-side";
 
 const closerButton = {
   initial: {},
@@ -60,7 +62,7 @@ function TopMenu({ className }: { className?: string }) {
         setScrollDirection("DOWN");
       }
     },
-    [sideBarOpen]
+    [sideBarOpen],
   );
 
   const shouldHide = useMemo(() => {
@@ -76,7 +78,7 @@ function TopMenu({ className }: { className?: string }) {
     <motion.nav
       className={clsx(
         "border-b border-paper w-full h-[50px] flex justify-center align-middle items-center fixed",
-        className
+        className,
       )}
       initial="show"
       variants={animator}

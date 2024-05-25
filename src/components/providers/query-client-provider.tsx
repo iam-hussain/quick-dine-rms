@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
 import {
-  QueryClientProvider as QClient,
   QueryClient,
+  QueryClientProvider as QClient,
 } from "@tanstack/react-query";
+import * as React from "react";
 
 const queryClient = new QueryClient();
 

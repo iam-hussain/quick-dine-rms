@@ -1,16 +1,17 @@
 "use client";
 
-import clsx from "clsx";
 import { useQueries } from "@tanstack/react-query";
-import { useSelector, useDispatch } from "react-redux";
+import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { RootState } from "@/store";
-import fetcher from "@/lib/fetcher";
-import Loader from "@/components/molecules/loader";
-import { setBaseData } from "@/store/baseSlice";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import Loader from "@/components/molecules/loader";
 import { cookieNames, removeCookie } from "@/lib/cookies";
+import fetcher from "@/lib/fetcher";
+import { RootState } from "@/store";
+import { setBaseData } from "@/store/baseSlice";
 
 export default function BasePage({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -74,17 +75,17 @@ export default function BasePage({ children }: { children: React.ReactNode }) {
           user: combinedResponse.data[0],
           store: combinedResponse.data[1],
           categories: combinedResponse.data[2].filter(
-            (e: { type: string }) => e.type === "DEFAULT"
+            (e: { type: string }) => e.type === "DEFAULT",
           ),
           kitchenCategories: combinedResponse.data[2].filter(
-            (e: { type: string }) => e.type === "KITCHEN"
+            (e: { type: string }) => e.type === "KITCHEN",
           ),
           products: combinedResponse.data[3],
           defaultOrder: combinedResponse.data[4]?.id
             ? combinedResponse.data[4]
             : null,
           order: combinedResponse.data[4]?.id ? combinedResponse.data[4] : null,
-        })
+        }),
       );
     } else if (!combinedResponse.pending && combinedResponse.data[0]?.message) {
       if (combinedResponse.data[0]?.message === "INVALID_STORE_TOKEN") {

@@ -1,6 +1,7 @@
-import * as React from "react";
 import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
+
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
@@ -47,7 +48,7 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 interface IconProps {
@@ -82,7 +83,7 @@ const Button = React.forwardRef<
       iconPlacement,
       ...props
     },
-    ref
+    ref,
   ) => {
     const Comp = asChild ? Slot : "button";
     return (
@@ -105,7 +106,7 @@ const Button = React.forwardRef<
         )}
       </Comp>
     );
-  }
+  },
 );
 Button.displayName = "Button";
 

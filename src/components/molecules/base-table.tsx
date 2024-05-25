@@ -1,20 +1,22 @@
 "use client";
 
-import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table";
+import * as React from "react";
+
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
+import { Skeleton } from "@/components/atoms/skeleton";
 import {
   Table,
   TableBody,
@@ -23,7 +25,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/atoms/table";
-import { Skeleton } from "@/components/atoms/skeleton";
 import { cn } from "@/lib/utils";
 
 function BaseTable({
@@ -33,13 +34,13 @@ function BaseTable({
   columns,
 }: {
   className?: string;
-  isLoading: Boolean;
+  isLoading: boolean;
   data?: any[] | undefined;
   columns: ColumnDef<any>[];
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -122,7 +123,7 @@ function BaseTable({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -141,7 +142,7 @@ function BaseTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

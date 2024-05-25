@@ -1,20 +1,21 @@
+import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import clsx from "clsx";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+
 import { Button } from "@/components/atoms/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "@/components/atoms/dialog";
 import Icon from "@/components/atoms/icon";
-import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
+import { RootState } from "@/store";
 
 function DeleteOrder() {
   const order = useSelector((state: RootState) => state.base.order);
@@ -34,7 +35,7 @@ function DeleteOrder() {
           variant={"outline"}
           disabled={!order?.shortId}
           className={clsx(
-            "flex justify-center gap-2 font-normal text-lg text-destructive"
+            "flex justify-center gap-2 font-normal text-lg text-destructive",
           )}
         >
           <Icon name={"MdDeleteOutline"} className="h-5 w-5" />

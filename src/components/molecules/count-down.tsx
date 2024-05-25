@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import clsx from "clsx";
+import React, { useEffect, useState } from "react";
 
 const formatTimeDifference = (endDate: number, startDate: number) => {
   const differenceInMilliseconds = Math.max(0, endDate - startDate); // Ensure non-negative

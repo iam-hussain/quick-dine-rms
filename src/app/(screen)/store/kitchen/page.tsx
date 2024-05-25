@@ -1,5 +1,11 @@
 "use client";
 
+import { useMutation, useQuery } from "@tanstack/react-query";
+import clsx from "clsx";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
+
+import { ScrollArea } from "@/components/atoms/scroll-area";
 import {
   Tabs,
   TabsContent,
@@ -7,15 +13,10 @@ import {
   TabsTrigger,
 } from "@/components/atoms/tabs-primary";
 import Loader from "@/components/molecules/loader";
-import { SortTokensResult } from "@/types";
-import fetcher from "@/lib/fetcher";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import clsx from "clsx";
-import { toast } from "sonner";
-import { RootState } from "@/store";
-import { useSelector } from "react-redux";
-import { ScrollArea } from "@/components/atoms/scroll-area";
 import TokenCollection from "@/components/organisms/token-collection";
+import fetcher from "@/lib/fetcher";
+import { RootState } from "@/store";
+import { SortTokensResult } from "@/types";
 
 export default function Kitchen() {
   const { enableKitchenCategory } = useSelector(
@@ -35,6 +36,7 @@ export default function Kitchen() {
   });
 
   const updateItem = useMutation({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mutationFn: ({ id, shortId, ...variables }) =>
       fetcher.post(`/store/order/item/${id}`, variables),
     onSuccess: async (order: any, variables: any) => {
@@ -52,6 +54,7 @@ export default function Kitchen() {
   });
 
   const updateToken = useMutation({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mutationFn: ({ id, shortId, ...variables }) =>
       fetcher.patch(`/store/token/${id}`, variables),
     onSuccess: async (_: any, variables: any) => {

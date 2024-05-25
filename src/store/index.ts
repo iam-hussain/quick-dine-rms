@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+
 import baseReducer from "./baseSlice";
 import pageReducer from "./pageSlice";
 

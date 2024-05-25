@@ -1,16 +1,12 @@
 import React from "react";
-import CartSummaryItem from "../molecules/cart-summary-item";
-import useCartSummary from "@/hooks/useCartSummary";
+
 import useCartSettings from "@/hooks/useCartSettings";
+import useCartSummary from "@/hooks/useCartSummary";
 import { ItemType } from "@/types";
 
-function CartSummary({
-  className,
-  items,
-}: {
-  className?: string;
-  items: ItemType[];
-}) {
+import CartSummaryItem from "../molecules/cart-summary-item";
+
+function CartSummary({ items }: { className?: string; items: ItemType[] }) {
   const { shouldAddPackingCharge, shouldAddDeliveryCharge } = useCartSettings();
   const { subTotal, packagingCharge, deliveryCharge, taxesValue, grandTotal } =
     useCartSummary({
@@ -27,11 +23,9 @@ function CartSummary({
         <CartSummaryItem name="Delivery" price={deliveryCharge} />
       )}
       {taxesValue &&
-        taxesValue.map(
-          (e: { key: string; name: string; amount: any }, i: any) => (
-            <CartSummaryItem key={e.key} name={e.name} price={e.amount} />
-          )
-        )}
+        taxesValue.map((e: { key: string; name: string; amount: any }) => (
+          <CartSummaryItem key={e.key} name={e.name} price={e.amount} />
+        ))}
       <CartSummaryItem name="Grand Total" price={grandTotal} />
     </div>
   );

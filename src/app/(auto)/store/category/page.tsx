@@ -1,4 +1,14 @@
 "use client";
+import { CategoryUpdateSchemaType } from "@iam-hussain/qd-copilot";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ColumnDef, SortingFnOption } from "@tanstack/react-table";
+import clsx from "clsx";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
+
+import { Button } from "@/components/atoms/button";
 import {
   Dialog,
   DialogContent,
@@ -7,22 +17,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/atoms/dialog";
-import { toast } from "sonner";
-import { Button } from "@/components/atoms/button";
 import Icon from "@/components/atoms/icon";
-import BaseTable from "@/components/molecules/base-table";
-import { ColumnDef, SortingFnOption } from "@tanstack/react-table";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import CategoryForm from "@/components/forms/category-form";
-import { useState } from "react";
-import { CaretSortIcon } from "@radix-ui/react-icons";
-import clsx from "clsx";
+import BaseTable from "@/components/molecules/base-table";
+import { dateTimeDifferent, dateTimeFormat } from "@/lib/date-time";
+import fetcher from "@/lib/fetcher";
 import { zeroLastSortMethod } from "@/lib/utils";
 import { RootState } from "@/store";
-import { useSelector } from "react-redux";
-import fetcher from "@/lib/fetcher";
-import { dateTimeDifferent, dateTimeFormat } from "@/lib/date-time";
-import { CategoryUpdateSchemaType } from "@iam-hussain/qd-copilot";
 
 export default function CategoryPage() {
   const categories = useSelector((state: RootState) => state.base.categories);
@@ -47,13 +48,13 @@ export default function CategoryPage() {
       await queryClient.invalidateQueries({ queryKey: ["categories"] });
 
       toast.success(
-        `Category with ID ${value.id} has been successfully deleted. 🎉`
+        `Category with ID ${value.id} has been successfully deleted. 🎉`,
       );
     },
     onError: (err) => {
       setOpen(false);
       toast.error(
-        `Unable to delete the category with ID ${value.id}. Please try again later. If the issue persists, contact support for assistance.`
+        `Unable to delete the category with ID ${value.id}. Please try again later. If the issue persists, contact support for assistance.`,
       );
       console.error(err);
     },

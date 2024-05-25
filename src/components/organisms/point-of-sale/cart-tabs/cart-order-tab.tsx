@@ -1,23 +1,24 @@
-import { ScrollArea } from "@/components/atoms/scroll-area";
-import { RootState } from "@/store";
+import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import clsx from "clsx";
-import ButtonToolTip from "@/components/molecules/button-tooltip";
 import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import CartItem from "@/components/molecules/cart-item";
-import { Separator } from "@/components/atoms/separator";
-import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import OrderTypeSelect from "@/components/molecules/order-type-select";
-import TableSelection from "@/components/organisms/table-selection";
-import CartSummary from "@/components/organisms/cart-summary";
-import DraftOrder from "../actions/draft-order";
-import DeleteOrder from "../actions/delete-order";
-import KitchenDispatch from "../actions/kitchen-dispatch";
 import { useSelector } from "react-redux";
+
+import { ScrollArea } from "@/components/atoms/scroll-area";
+import { Separator } from "@/components/atoms/separator";
+import ButtonToolTip from "@/components/molecules/button-tooltip";
+import CartItem from "@/components/molecules/cart-item";
+import OrderTypeSelect from "@/components/molecules/order-type-select";
+import CartSummary from "@/components/organisms/cart-summary";
+import TableSelection from "@/components/organisms/table-selection";
+import { RootState } from "@/store";
+
+import DeleteOrder from "../actions/delete-order";
+import DraftOrder from "../actions/draft-order";
+import KitchenDispatch from "../actions/kitchen-dispatch";
 import ScheduleDispatch from "../actions/schedule-dispatch";
 
 function CartOrderTab({ className }: { className?: string }) {
-  const { control } = useFormContext<OrderUpsertSchemaType>();
   const { watch } = useFormContext<OrderUpsertSchemaType>();
   const { enableCustomerAdding } = useSelector(
     (state: RootState) => state.base.featureFlags

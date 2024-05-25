@@ -1,13 +1,14 @@
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import { ScrollArea } from "@/components/atoms/scroll-area";
 import React from "react";
+import { useSelector } from "react-redux";
+
+import { ScrollArea } from "@/components/atoms/scroll-area";
 import ItemsList from "@/components/molecules/items-list";
+import { RootState } from "@/store";
 
 function CartStatusTab() {
   const order = useSelector((state: RootState) => state.base.order);
   const { enableKDS } = useSelector(
-    (state: RootState) => state.base.featureFlags
+    (state: RootState) => state.base.featureFlags,
   );
 
   const {

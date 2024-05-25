@@ -1,18 +1,19 @@
-import { Button } from "@/components/atoms/button";
+import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import clsx from "clsx";
-import React, { useContext } from "react";
+import React from "react";
 import { useFormContext } from "react-hook-form";
+
+import { Button } from "@/components/atoms/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "@/components/atoms/dialog";
 import Icon from "@/components/atoms/icon";
-import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import usePOSCart from "@/hooks/usePOSCart";
 
 function DraftOrder() {

@@ -1,12 +1,14 @@
-import { SortTokensResult, SortItemsResult, TokenType } from "@/types";
-import React, { useEffect, useState } from "react";
-import { Button } from "../atoms/button";
-import TokenItem from "./token-item";
 import clsx from "clsx";
-import CountUp from "./count-up";
+import React, { useState } from "react";
+
+import { SortItemsResult, SortTokensResult, TokenType } from "@/types";
+
+import { Button } from "../atoms/button";
 import Icon from "../atoms/icon";
 import CountDown from "./count-down";
+import CountUp from "./count-up";
 import { orderTypeObject } from "./order-type-icon";
+import TokenItem from "./token-item";
 
 export interface TokenCardProps {
   token: Omit<TokenType, "items">;

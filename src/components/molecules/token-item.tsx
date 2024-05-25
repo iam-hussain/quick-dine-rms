@@ -1,8 +1,10 @@
-import React from "react";
 import clsx from "clsx";
+import React from "react";
+
 import { ItemType, SortItemsResult } from "@/types";
-import Icon from "../atoms/icon";
+
 import { Button } from "../atoms/button";
+import Icon from "../atoms/icon";
 import { Separator } from "../atoms/separator";
 
 const buttonAnimateClass = "hover:scale-105 active:scale-95";
@@ -37,12 +39,12 @@ function TokenItem({
   return (
     <div
       className={clsx(
-        "flex flex-col h-auto w-auto justify-center align-middle items-center"
+        "flex flex-col h-auto w-auto justify-center align-middle items-center",
       )}
     >
       <div
         className={clsx(
-          "flex w-full justify-between align-middle items-center text-left px-2 gap-2"
+          "flex w-full justify-between align-middle items-center text-left px-2 gap-2",
         )}
       >
         <div
@@ -51,7 +53,7 @@ function TokenItem({
             {
               "text-sm font-normal text-foreground/80": variant === "rejected",
               "text-base font-medium text-foreground": variant !== "rejected",
-            }
+            },
           )}
         >
           <p className="">{item.quantity}</p>

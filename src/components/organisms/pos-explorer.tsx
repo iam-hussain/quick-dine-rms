@@ -1,28 +1,29 @@
 "use client";
 
+import clsx from "clsx";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+
+import { Button } from "@/components/atoms/button";
 import CategoryCollection from "@/components/organisms/category-collection";
 import ProductCollection from "@/components/organisms/product-collection";
 import SearchBar from "@/components/organisms/search-bar";
-import { Button } from "@/components/atoms/button";
-import { useMemo, useState } from "react";
+import usePOSCart from "@/hooks/usePOSCart";
 import { isValidArray } from "@/lib/utils";
-import { ProductAPIType } from "@/types";
 import { RootState } from "@/store";
-import clsx from "clsx";
+import { ProductAPIType } from "@/types";
+
 import {
   Tabs,
+  TabsContent,
   TabsList,
   TabsTrigger,
-  TabsContent,
 } from "../atoms/tabs-primary";
 import OrderCollection from "./order-collection";
-import usePOSCart from "@/hooks/usePOSCart";
 
 export default function POSExplorer({
   onItemClick,
   onNewOrderClick,
-  className,
 }: {
   onItemClick: (e: any, p: ProductAPIType) => void;
   onNewOrderClick: () => void;

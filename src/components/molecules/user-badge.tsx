@@ -1,9 +1,8 @@
-import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { Button } from "@/components/atoms/button";
-import Icon from "@/components/atoms/icon";
 import clsx from "clsx";
 import { motion } from "framer-motion";
+import React from "react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 
 function UserBadge({
   firstName,
@@ -15,7 +14,7 @@ function UserBadge({
   firstName: string;
   lastName?: string;
   image: string;
-  minimize?: Boolean;
+  minimize?: boolean;
   className?: string;
 }) {
   const buttonVariants = {

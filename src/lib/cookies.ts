@@ -10,7 +10,7 @@ export const getCookie = (name: string) => {
 };
 
 export const getCookieAsync = async (
-  name: string
+  name: string,
 ): Promise<string | undefined> => {
   return new Promise((resolve) => {
     const cookieValue = Cookies.get(name);
@@ -26,7 +26,7 @@ export const setCookie = (name: string, value: string, expires = 2) => {
 export const setCookieAsync = async (
   name: string,
   value: string,
-  expires = 2
+  expires = 2,
 ) => {
   return new Promise((resolve) => {
     Cookies.set(name, value, { expires });

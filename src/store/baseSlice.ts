@@ -1,11 +1,12 @@
+import { defaultFeatureFlags, FeatureFlagsType } from "@iam-hussain/qd-copilot";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import {
   CategoryType,
   OrderAPIType,
   ProductAPIType,
   StoreAdditionalType,
 } from "@/types";
-import { defaultFeatureFlags, FeatureFlagsType } from "@iam-hussain/qd-copilot";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const defaultFees = {
   PACKING: {

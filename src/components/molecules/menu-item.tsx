@@ -1,10 +1,11 @@
-import React from "react";
-import { usePathname } from "next/navigation";
-import Icon, { IconKey } from "@/components/atoms/icon";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
 import { useMedia } from "react-use";
+
+import Icon, { IconKey } from "@/components/atoms/icon";
 
 function MenuItem({
   icon,
@@ -15,7 +16,7 @@ function MenuItem({
 }: {
   icon: IconKey;
   label: string;
-  minimize?: Boolean;
+  minimize?: boolean;
   link?: string;
   onRedirect?: () => void;
 }) {
@@ -44,7 +45,7 @@ function MenuItem({
           "text-foreground/70 text-sm": link !== pathname,
           "justify-center p-2": !isSmallDevice && minimize,
           "justify-start px-4 py-2": !minimize,
-        }
+        },
       )}
       onClick={onRedirect}
       href={link || "#"}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+
 import { Separator } from "@/components/atoms/separator";
 import {
   Tabs,
@@ -10,9 +10,10 @@ import {
   TabsTrigger,
 } from "@/components/atoms/tabs-primary";
 import OrderDetails from "@/components/molecules/order-details";
-import CartStatusTab from "@/components/organisms/point-of-sale/cart-tabs/cart-status-tab";
-import CartOrderTab from "@/components/organisms/point-of-sale/cart-tabs/cart-order-tab";
 import CartCheckOutTab from "@/components/organisms/point-of-sale/cart-tabs/cart-checkout-tab";
+import CartOrderTab from "@/components/organisms/point-of-sale/cart-tabs/cart-order-tab";
+import CartStatusTab from "@/components/organisms/point-of-sale/cart-tabs/cart-status-tab";
+import { RootState } from "@/store";
 
 export default function POSCartTabs({
   tabValue,

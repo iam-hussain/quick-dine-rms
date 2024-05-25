@@ -1,4 +1,14 @@
 "use client";
+import { ProductUpdateSchemaType } from "@iam-hussain/qd-copilot";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
+import clsx from "clsx";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
+
+import { Button } from "@/components/atoms/button";
 import {
   Dialog,
   DialogContent,
@@ -7,21 +17,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/atoms/dialog";
-import { toast } from "sonner";
-import { Button } from "@/components/atoms/button";
 import Icon from "@/components/atoms/icon";
-import BaseTable from "@/components/molecules/base-table";
-import { ColumnDef } from "@tanstack/react-table";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { CaretSortIcon } from "@radix-ui/react-icons";
-import clsx from "clsx";
 import ProductForm from "@/components/forms/product-form";
-import { RootState } from "@/store";
-import { useSelector } from "react-redux";
-import fetcher from "@/lib/fetcher";
+import BaseTable from "@/components/molecules/base-table";
 import { dateTimeDifferent, dateTimeFormat } from "@/lib/date-time";
-import { ProductUpdateSchemaType } from "@iam-hussain/qd-copilot";
+import fetcher from "@/lib/fetcher";
+import { RootState } from "@/store";
 
 const typeMap = {
   VEG: "Veg",
@@ -32,7 +33,7 @@ const typeMap = {
 export default function ProductPage() {
   const categories = useSelector((state: RootState) => state.base.categories);
   const kitchenCategories = useSelector(
-    (state: RootState) => state.base.kitchenCategories
+    (state: RootState) => state.base.kitchenCategories,
   );
   const products = useSelector((state: RootState) => state.base.products);
   const [value, setValue] = useState<
@@ -56,13 +57,13 @@ export default function ProductPage() {
       await queryClient.invalidateQueries({ queryKey: ["products"] });
 
       toast.success(
-        `Product with ID ${value.id} has been successfully deleted. 🎉`
+        `Product with ID ${value.id} has been successfully deleted. 🎉`,
       );
     },
     onError: (err) => {
       setOpen(false);
       toast.error(
-        `Unable to delete the product with ID ${value.id}. Please try again later. If the issue persists, contact support for assistance.`
+        `Unable to delete the product with ID ${value.id}. Please try again later. If the issue persists, contact support for assistance.`,
       );
       console.error(err);
     },

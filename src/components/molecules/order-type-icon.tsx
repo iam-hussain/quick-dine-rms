@@ -1,14 +1,16 @@
-import { ORDER_TYPE } from "@/types";
-import React from "react";
-import Icon, { IconKey } from "../atoms/icon";
 import clsx from "clsx";
-import { cn } from "@/lib/utils";
+import React from "react";
+
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/atoms/tooltip";
+import { cn } from "@/lib/utils";
+import { ORDER_TYPE } from "@/types";
+
+import Icon, { IconKey } from "../atoms/icon";
 
 export const orderTypeObject = {
   DINING: "Dine In",
@@ -61,8 +63,8 @@ function OrderTypeIcon({
             "text-pink-600": value === ORDER_TYPE.DELIVERY,
             "text-yellow-600": value === ORDER_TYPE.PLATFORM,
           },
-          classNames
-        )
+          classNames,
+        ),
       )}
     />
   );
@@ -72,7 +74,7 @@ function OrderTypeIcon({
       <div
         className={clsx(
           "w-fit min-h-[40px] flex justify-center align-middle items-center gap-2 uppercase border px-2 py-1 rounded-lg min-w-[145px] bg-background",
-          wrapperClassNames
+          wrapperClassNames,
         )}
       >
         <IconComp />

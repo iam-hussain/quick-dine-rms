@@ -1,5 +1,6 @@
-import React from "react";
 import clsx from "clsx";
+import React from "react";
+
 import Icon from "@/components/atoms/icon";
 
 type BrandSvgProps = {
@@ -11,7 +12,7 @@ function BrandStackSlogan({ className }: BrandSvgProps) {
     <div
       className={clsx(
         "flex flex-col w-auto m-auto ml-0 gap-2 justify-center align-middle items-center select-none",
-        className
+        className,
       )}
     >
       <Icon

@@ -1,5 +1,7 @@
-import { SortTokensResult, TokenType } from "@/types";
 import React from "react";
+
+import { SortTokensResult, TokenType } from "@/types";
+
 import TokenCard from "../molecules/token-card";
 
 export interface TokenCollectionProps {

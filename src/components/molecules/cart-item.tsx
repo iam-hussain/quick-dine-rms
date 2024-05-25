@@ -1,7 +1,8 @@
-import React from "react";
-import Icon from "@/components/atoms/icon";
-import { Button } from "@/components/atoms/button";
 import { ItemCreateSchemaType } from "@iam-hussain/qd-copilot";
+import React from "react";
+
+import { Button } from "@/components/atoms/button";
+import Icon from "@/components/atoms/icon";
 
 type CartItemProps = {
   index: number;

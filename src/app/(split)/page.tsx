@@ -1,5 +1,5 @@
-import LoginForm from "@/components/forms/login-form";
 import { Button } from "@/components/atoms/button";
+import LoginForm from "@/components/forms/login-form";
 
 export default function LoginPage() {
   return (

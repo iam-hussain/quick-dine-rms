@@ -1,6 +1,5 @@
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import UserBadge from "@/components/molecules/user-badge";
+
 import { Button } from "@/components/atoms/button";
 import {
   DropdownMenu,
@@ -8,14 +7,10 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/atoms/dropdown-menu";
+import UserBadge from "@/components/molecules/user-badge";
 
 function UserMenu() {
   return (

@@ -1,8 +1,9 @@
-import React from "react";
 import clsx from "clsx";
-import Icon from "@/components/atoms/icon";
-import { Button } from "@/components/atoms/button";
+import React from "react";
 import { useFullScreenHandle } from "react-full-screen";
+
+import { Button } from "@/components/atoms/button";
+import Icon from "@/components/atoms/icon";
 
 function FullScreenButton({ onClick }: { onClick: () => Promise<void> }) {
   const handle = useFullScreenHandle();

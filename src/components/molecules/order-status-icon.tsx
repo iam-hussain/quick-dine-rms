@@ -1,14 +1,16 @@
-import { ORDER_STATUS } from "@/types";
-import React from "react";
-import Icon, { IconKey } from "../atoms/icon";
 import clsx from "clsx";
-import { cn } from "@/lib/utils";
+import React from "react";
+
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/atoms/tooltip";
+import { cn } from "@/lib/utils";
+import { ORDER_STATUS } from "@/types";
+
+import Icon, { IconKey } from "../atoms/icon";
 
 export const orderStatusObject = {
   DRAFT: "Draft",
@@ -61,8 +63,8 @@ function OrderStatusIcon({
             "text-pink-600": value === ORDER_STATUS.DELIVERY_PENDING,
             "text-yellow-600": value === ORDER_STATUS.DRAFT,
           },
-          classNames
-        )
+          classNames,
+        ),
       )}
     />
   );
@@ -72,7 +74,7 @@ function OrderStatusIcon({
       <div
         className={clsx(
           "w-fit min-h-[40px] flex justify-center align-middle items-center gap-2 uppercase border px-2 py-1 rounded-lg min-w-[145px] bg-background",
-          wrapperClassNames
+          wrapperClassNames,
         )}
       >
         <IconComp />

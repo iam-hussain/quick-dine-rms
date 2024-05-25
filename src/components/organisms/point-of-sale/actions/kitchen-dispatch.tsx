@@ -1,19 +1,20 @@
-import { Button } from "@/components/atoms/button";
+import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import clsx from "clsx";
-import React, { useContext } from "react";
+import React from "react";
 import { useFormContext } from "react-hook-form";
+
+import { Button } from "@/components/atoms/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "@/components/atoms/dialog";
-import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import usePOSCart from "@/hooks/usePOSCart";
 import OrderNotes from "@/components/molecules/order-notes";
+import usePOSCart from "@/hooks/usePOSCart";
 
 function KitchenDispatch() {
   const [open, setOpen] = React.useState(false);

@@ -1,8 +1,9 @@
+import clsx from "clsx";
 import React from "react";
+
+import { Container } from "@/components/atoms/container";
 import { ScrollArea, ScrollBar } from "@/components/atoms/scroll-area";
 import ProductItem from "@/components/molecules/product-item";
-import { Container } from "@/components/atoms/container";
-import clsx from "clsx";
 import { ProductAPIType } from "@/types";
 
 function ProductCollection({

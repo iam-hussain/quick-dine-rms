@@ -1,10 +1,11 @@
+import { ORDER_TYPE, OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
-import { ItemType } from "@/types";
-import { getChargesValue } from "@/lib/utils";
-import { ORDER_TYPE, OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import { RootState } from "@/store";
 import { useSelector } from "react-redux";
+
+import { getChargesValue } from "@/lib/utils";
+import { RootState } from "@/store";
+import { ItemType } from "@/types";
 
 function useCartSummary({ items }: { items: ItemType[] }) {
   const { watch } = useFormContext<OrderUpsertSchemaType>();
@@ -15,11 +16,11 @@ function useCartSummary({ items }: { items: ItemType[] }) {
 
   const deliveryIndex = useMemo(
     () => fees && fees.findIndex((e) => e.key === "DELIVERY"),
-    [fees]
+    [fees],
   );
   const packagingIndex = useMemo(
     () => fees && fees.findIndex((e) => e.key === "PACKING"),
-    [fees]
+    [fees],
   );
 
   const subTotal = useMemo(() => {
@@ -45,7 +46,7 @@ function useCartSummary({ items }: { items: ItemType[] }) {
       packing?.type || "VALUE",
       packing?.rate || 0,
       subTotal,
-      totalItems
+      totalItems,
     );
   }, [packagingIndex, fees, subTotal, totalItems]);
 
@@ -58,7 +59,7 @@ function useCartSummary({ items }: { items: ItemType[] }) {
       delivery.type || "VALUE",
       delivery.rate,
       subTotal,
-      totalItems
+      totalItems,
     );
   }, [deliveryIndex, fees, subTotal, totalItems]);
 

@@ -1,9 +1,10 @@
 "use client";
-import * as React from "react";
-import CategoryItem from "@/components/molecules/category-item";
-import { Container } from "@/components/atoms/container";
-import { ScrollArea, ScrollBar } from "@/components/atoms/scroll-area";
 import clsx from "clsx";
+import * as React from "react";
+
+import { Container } from "@/components/atoms/container";
+import { ScrollArea } from "@/components/atoms/scroll-area";
+import CategoryItem from "@/components/molecules/category-item";
 
 export default function CategoryCollection({
   className,

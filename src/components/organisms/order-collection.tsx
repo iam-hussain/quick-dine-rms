@@ -1,11 +1,13 @@
 "use client";
 
-import Loader from "@/components/molecules/loader";
-import { ORDER_STATUS, OrderAPIType } from "@/types";
-import fetcher from "@/lib/fetcher";
 import { useQuery } from "@tanstack/react-query";
-import OrderItem from "./order-item";
+
+import Loader from "@/components/molecules/loader";
+import fetcher from "@/lib/fetcher";
+import { ORDER_STATUS, OrderAPIType } from "@/types";
+
 import { Separator } from "../atoms/separator";
+import OrderItem from "./order-item";
 
 export default function OrderCollection({
   onItemClick,
@@ -16,7 +18,6 @@ export default function OrderCollection({
     data: orders,
     isPending,
     isLoading,
-    refetch,
   } = useQuery<OrderAPIType[]>({
     queryKey: ["tokens"],
     queryFn: () => fetcher(`/store/orders/open`),

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import clsx from "clsx";
+import React, { useEffect, useState } from "react";
 
 const formatTimeDifference = (startDate: number, endDate: number) => {
   const differenceInMilliseconds = endDate - startDate;

@@ -1,11 +1,12 @@
-import React, { AnimationEventHandler } from "react";
 import clsx from "clsx";
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { AspectRatio } from "@/components/atoms/aspect-ratio";
-import { ProductAPIType } from "@/types";
+import Image from "next/image";
+import React from "react";
 import { useSelector } from "react-redux";
+
+import { AspectRatio } from "@/components/atoms/aspect-ratio";
 import { RootState } from "@/store";
+import { ProductAPIType } from "@/types";
 
 const animateVariation = {
   initial: { scale: 1 },

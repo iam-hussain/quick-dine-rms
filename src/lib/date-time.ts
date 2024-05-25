@@ -1,4 +1,4 @@
-import { formatISO, formatDistance, format, add } from "date-fns";
+import { add, format, formatDistance, formatISO } from "date-fns";
 
 export const dateTimeDifferent = (input: string | Date) => {
   return formatDistance(new Date(input), new Date(), { addSuffix: true });
@@ -17,7 +17,7 @@ export const dateTimeAfterMinutes = (input: string | number) => {
     add(new Date(), {
       minutes: Number(input) || 0,
     }),
-    "PPPp"
+    "PPPp",
   );
 };
 
@@ -26,7 +26,7 @@ export const timeAfterMinutes = (input: string | number) => {
     add(new Date(), {
       minutes: Number(input) || 0,
     }),
-    "p"
+    "p",
   );
 };
 
@@ -34,6 +34,6 @@ export const dateTimeFormatAddMinutes = (input: string | number) => {
   return formatISO(
     add(new Date(), {
       minutes: Number(input) || 0,
-    })
+    }),
   );
 };

@@ -8,7 +8,7 @@ export interface FetcherPropsOptions {
 
 const fetcher = async (
   path: string,
-  options?: FetcherPropsOptions
+  options?: FetcherPropsOptions,
 ): Promise<any> => {
   try {
     let token: string | null = null;
@@ -30,7 +30,7 @@ const fetcher = async (
           ...header,
         },
         ...(method !== "GET" ? { body: JSON.stringify(body) } : {}),
-      }
+      },
     );
     const responseData = await response.json();
     return responseData;

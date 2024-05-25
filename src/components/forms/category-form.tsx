@@ -1,23 +1,24 @@
 "use client";
-import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  CategoryCreateSchema,
+  CategoryCreateSchemaType,
+  formValidationSetter,
+} from "@iam-hussain/qd-copilot";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormMessage,
   FormLabel,
+  FormMessage,
 } from "@/components/atoms/form";
 import { Input } from "@/components/atoms/input";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  CategoryCreateSchema,
-  CategoryCreateSchemaType,
-  formValidationSetter,
-} from "@iam-hussain/qd-copilot";
 import fetcher from "@/lib/fetcher";
 
 type CategoryFormProps = {
@@ -72,7 +73,7 @@ function CategoryForm({
 
       if (id) {
         toast.success(
-          `Category ID ${data.id} has been successfully updated! 🚀`
+          `Category ID ${data.id} has been successfully updated! 🚀`,
         );
       } else {
         toast.success(`A new category with ID ${data.id} has been created! 🌟`);
@@ -83,11 +84,11 @@ function CategoryForm({
       if (!errors.length) {
         if (id) {
           toast.error(
-            `Unable to update category with ID ${id}. Please review the entered information and try again. If the issue persists, contact support for further assistance.`
+            `Unable to update category with ID ${id}. Please review the entered information and try again. If the issue persists, contact support for further assistance.`,
           );
         } else {
           toast.error(
-            `Failed to create category. Please verify the provided details and attempt again. If the problem persists, reach out to support for additional help.`
+            `Failed to create category. Please verify the provided details and attempt again. If the problem persists, reach out to support for additional help.`,
           );
         }
       }

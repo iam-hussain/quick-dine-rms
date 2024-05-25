@@ -1,21 +1,22 @@
 "use client";
 
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
-import { Form } from "@/components/atoms/form";
-import { ProductAPIType } from "@/types";
 import {
   ORDER_TYPE,
   OrderUpsertSchema,
   OrderUpsertSchemaType,
 } from "@iam-hussain/qd-copilot";
 import clsx from "clsx";
-import POSExplorer from "@/components/organisms/pos-explorer";
 import { useEffect, useMemo, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Form } from "@/components/atoms/form";
 import POSCartTabs from "@/components/organisms/point-of-sale/pos-cart-tabs";
+import POSExplorer from "@/components/organisms/pos-explorer";
+import { RootState } from "@/store";
 import { setUpdateOrder } from "@/store/baseSlice";
+import { ProductAPIType } from "@/types";
 
 export default function POSForm() {
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ export default function POSForm() {
   const order = useSelector((state: RootState) => state.base.order);
   const taxes = useSelector((state: RootState) => state.base.settings.taxes);
   const { DELIVERY, PACKING } = useSelector(
-    (state: RootState) => state.base.settings.fees
+    (state: RootState) => state.base.settings.fees,
   );
 
   const { shortId, table } = order || {};
@@ -63,11 +64,11 @@ export default function POSForm() {
 
   const deliveryIndex = useMemo(
     () => fees && fees.findIndex((e) => e.key === "DELIVERY"),
-    [fees]
+    [fees],
   );
   const packagingIndex = useMemo(
     () => fees && fees.findIndex((e) => e.key === "PACKING"),
-    [fees]
+    [fees],
   );
 
   useEffect(() => {
@@ -147,7 +148,7 @@ export default function POSForm() {
             {
               "h-d-screen-top-close": !topBarOpen,
               "h-d-screen-top-open": topBarOpen,
-            }
+            },
           )}
         >
           <POSCartTabs tabValue={tabValue} setTabValue={setTabValue} />

@@ -1,11 +1,12 @@
 "use client";
 
-import { OrderAPIType } from "@/types";
+import useCartSummary from "@/hooks/useCartSummary";
 import { dateTimeFormat } from "@/lib/date-time";
+import { OrderAPIType } from "@/types";
+
+import { Separator } from "../atoms/separator";
 import OrderStatusIcon from "../molecules/order-status-icon";
 import OrderTypeIcon from "../molecules/order-type-icon";
-import useCartSummary from "@/hooks/useCartSummary";
-import { Separator } from "../atoms/separator";
 
 export default function OrderItem({
   order,
@@ -14,10 +15,9 @@ export default function OrderItem({
   order: OrderAPIType;
   onItemClick: (id: string) => void;
 }) {
-  const { subTotal, packagingCharge, deliveryCharge, taxesValue, grandTotal } =
-    useCartSummary({
-      items: order?.items?.summary || [],
-    });
+  const { subTotal, grandTotal } = useCartSummary({
+    items: order?.items?.summary || [],
+  });
 
   return (
     <div

@@ -1,19 +1,19 @@
-import fetcher from "@/lib/fetcher";
-import { RootState } from "@/store";
-import { setUpdateOrder } from "@/store/baseSlice";
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import _ from "lodash";
+import { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import _ from "lodash";
-import { useCallback } from "react";
+
+import fetcher from "@/lib/fetcher";
+import { RootState } from "@/store";
+import { setUpdateOrder } from "@/store/baseSlice";
 
 function usePOSCart() {
   const dispatch = useDispatch();
-  const searchParams = useSearchParams();
-  const orderId = searchParams.get("orderId");
+  // const searchParams = useSearchParams();
+  // const orderId = searchParams.get("orderId");
   const { reset } = useFormContext<OrderUpsertSchemaType>();
   const { enableTables, enableCustomerAdding, enableKitchenCategory } =
     useSelector((state: RootState) => state.base.featureFlags);

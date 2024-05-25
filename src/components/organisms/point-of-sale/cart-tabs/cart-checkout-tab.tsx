@@ -1,14 +1,15 @@
 "use client";
 
-import { useSelector } from "react-redux";
-import React from "react";
 import clsx from "clsx";
-import { ScrollArea } from "@/components/atoms/scroll-area";
-import ItemsList from "@/components/molecules/items-list";
-import { Separator } from "@/components/atoms/separator";
-import CartSummary from "@/components/organisms/cart-summary";
-import ButtonToolTip from "@/components/molecules/button-tooltip";
+import React from "react";
+import { useSelector } from "react-redux";
+
 import { Button } from "@/components/atoms/button";
+import { ScrollArea } from "@/components/atoms/scroll-area";
+import { Separator } from "@/components/atoms/separator";
+import ButtonToolTip from "@/components/molecules/button-tooltip";
+import ItemsList from "@/components/molecules/items-list";
+import CartSummary from "@/components/organisms/cart-summary";
 import { RootState } from "@/store";
 
 export default function CartCheckOutTab({ className }: { className?: string }) {

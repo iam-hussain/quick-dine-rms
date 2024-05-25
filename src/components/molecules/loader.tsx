@@ -9,7 +9,7 @@ function Loader({ minFullScreen = false }: { minFullScreen?: boolean }) {
         "flex flex-col justify-center align-middle items-center w-full h-full",
         {
           "min-h-screen": minFullScreen,
-        }
+        },
       )}
     >
       <MutatingDots
