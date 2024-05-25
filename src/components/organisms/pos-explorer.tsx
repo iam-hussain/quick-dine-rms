@@ -8,7 +8,7 @@ import { Button } from "@/components/atoms/button";
 import CategoryCollection from "@/components/organisms/category-collection";
 import ProductCollection from "@/components/organisms/product-collection";
 import SearchBar from "@/components/organisms/search-bar";
-import usePOSCart from "@/hooks/usePOSCart";
+import useOrderQuery from "@/hooks/useOrderQuery";
 import { isValidArray } from "@/lib/utils";
 import { RootState } from "@/store";
 import { ProductAPIType } from "@/types";
@@ -32,7 +32,7 @@ export default function POSExplorer({
   const [tabValue, setTabValue] = useState("products");
   const categories = useSelector((state: RootState) => state.base.categories);
   const products = useSelector((state: RootState) => state.base.products);
-  const { fetch } = usePOSCart();
+  const { fetch } = useOrderQuery();
   const [selectedCat, setSelectedCat] = useState("");
 
   const categoriesData: any[] = useMemo(() => {

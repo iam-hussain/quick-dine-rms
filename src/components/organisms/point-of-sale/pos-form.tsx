@@ -25,7 +25,7 @@ export default function POSForm() {
   const order = useSelector((state: RootState) => state.base.order);
   const taxes = useSelector((state: RootState) => state.base.settings.taxes);
   const { DELIVERY, PACKING } = useSelector(
-    (state: RootState) => state.base.settings.fees,
+    (state: RootState) => state.base.settings.fees
   );
 
   const { shortId, table } = order || {};
@@ -64,11 +64,11 @@ export default function POSForm() {
 
   const deliveryIndex = useMemo(
     () => fees && fees.findIndex((e) => e.key === "DELIVERY"),
-    [fees],
+    [fees]
   );
   const packagingIndex = useMemo(
     () => fees && fees.findIndex((e) => e.key === "PACKING"),
-    [fees],
+    [fees]
   );
 
   useEffect(() => {
@@ -132,28 +132,26 @@ export default function POSForm() {
   };
 
   return (
-    <div className="flex md:flex-row flex-col w-full h-full">
-      <Form {...form}>
-        <POSExplorer
-          onItemClick={onItemClick}
-          onNewOrderClick={onNewOrderClick}
-          className={clsx("h-[1000px]", {
+    <Form {...form}>
+      <POSExplorer
+        onItemClick={onItemClick}
+        onNewOrderClick={onNewOrderClick}
+        className={clsx("h-[1000px]", {
+          "h-d-screen-top-close": !topBarOpen,
+          "h-d-screen-top-open": topBarOpen,
+        })}
+      />
+      <form
+        className={clsx(
+          "flex md:flex-row flex-col md:w-4/12 3xl:w-3/12 4xl:2/12 w-full duration-300 transition-all border-l",
+          {
             "h-d-screen-top-close": !topBarOpen,
             "h-d-screen-top-open": topBarOpen,
-          })}
-        />
-        <form
-          className={clsx(
-            "flex md:flex-row flex-col md:w-4/12 3xl:w-3/12 4xl:2/12 w-full duration-300 transition-all border-l",
-            {
-              "h-d-screen-top-close": !topBarOpen,
-              "h-d-screen-top-open": topBarOpen,
-            },
-          )}
-        >
-          <POSCartTabs tabValue={tabValue} setTabValue={setTabValue} />
-        </form>
-      </Form>
-    </div>
+          }
+        )}
+      >
+        <POSCartTabs tabValue={tabValue} setTabValue={setTabValue} />
+      </form>
+    </Form>
   );
 }

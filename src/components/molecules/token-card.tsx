@@ -1,6 +1,8 @@
 import clsx from "clsx";
 import React, { useState } from "react";
 
+import useItemQuery from "@/hooks/useItemQuery";
+import useTokenQuery from "@/hooks/useTokenQuery";
 import { SortItemsResult, SortTokensResult, TokenType } from "@/types";
 
 import { Button } from "../atoms/button";
@@ -43,50 +45,60 @@ export interface TokenCardProps {
   }) => void;
 }
 
-function TokenCard({
-  token,
-  items,
-  variant,
-  onCompleteClick,
-  onItemClick,
-  onDispatchClick,
-}: TokenCardProps) {
+function TokenCard({ token, items, variant }: TokenCardProps) {
+  const tokenQuery = useTokenQuery();
+  const itemQuery = useItemQuery();
   const [editMode, setEditMode] = useState(false);
   const isCompleted = items.validCount === items.completed.length;
 
-  const onCompletedClickHandler = () => {
-    if (onCompleteClick && isCompleted && variant === "placed") {
-      onCompleteClick({
+  const tokenOnClickHandler = async (mode: "COMPLETE" | "DISPATCH") => {
+    if (mode === "COMPLETE" && isCompleted) {
+      tokenQuery.update({
         id: token.id,
         shortId: token.shortId,
         orderId: token.orderId,
+        completedAt: new Date().toISOString(),
+      });
+    }
+    if (mode === "DISPATCH") {
+      tokenQuery.update({
+        id: token.id,
+        shortId: token.shortId,
+        orderId: token.orderId,
+        placedAt: new Date().toISOString(),
       });
     }
   };
 
-  const onDispatchClickHandler = () => {
-    if (onDispatchClick && variant === "scheduled") {
-      onDispatchClick({
-        id: token.id,
-        shortId: token.shortId,
-        orderId: token.orderId,
-      });
-    }
-  };
-
-  const onItemClickHandler = ({
-    id,
-    mode,
-  }: {
-    id: string;
-    mode: "ACCEPT" | "COMPLETE" | "REJECT";
-  }) => {
-    if (onItemClick && variant === "placed") {
-      onItemClick({
+  const itemOnClickHandler = async (
+    id: string,
+    mode: "ACCEPT" | "COMPLETE" | "REJECT"
+  ) => {
+    if (mode === "ACCEPT") {
+      await itemQuery.update({
         id,
-        mode,
+        tokenShortId: token.shortId,
         orderId: token.orderId,
-        shortId: token.shortId,
+        acceptedAt: new Date(),
+      });
+    }
+
+    if (mode === "COMPLETE") {
+      await itemQuery.update({
+        id,
+        orderId: token.orderId,
+        tokenShortId: token.shortId,
+        completedAt: new Date(),
+      });
+    }
+
+    if (mode === "REJECT") {
+      await itemQuery.update({
+        id,
+        orderId: token.orderId,
+        tokenShortId: token.shortId,
+        rejectedAt: new Date(),
+        rejected: true,
       });
     }
   };
@@ -156,7 +168,7 @@ function TokenCard({
                 item={item}
                 key={item.id}
                 variant={item.variant}
-                onClick={onItemClickHandler}
+                onClick={itemOnClickHandler}
                 hideDivider={i + 1 === items.scheduled.length}
                 editMode={editMode}
               />
@@ -171,7 +183,7 @@ function TokenCard({
                 item={item}
                 key={item.id}
                 variant={item.variant}
-                onClick={onItemClickHandler}
+                onClick={itemOnClickHandler}
                 hideDivider={i + 1 === items.placed.length}
                 editMode={editMode}
               />
@@ -186,7 +198,7 @@ function TokenCard({
                 item={item}
                 key={item.id}
                 variant={item.variant}
-                onClick={onItemClickHandler}
+                onClick={itemOnClickHandler}
                 hideDivider={i + 1 === items.accepted.length}
                 editMode={editMode}
               />
@@ -201,7 +213,7 @@ function TokenCard({
                 item={item}
                 key={item.id}
                 variant={item.variant}
-                onClick={onItemClickHandler}
+                onClick={itemOnClickHandler}
                 hideDivider={i + 1 === items.completed.length}
                 editMode={editMode}
               />
@@ -216,7 +228,7 @@ function TokenCard({
                 item={item}
                 key={item.id}
                 variant={item.variant}
-                onClick={onItemClickHandler}
+                onClick={itemOnClickHandler}
                 hideDivider={i + 1 === items.rejected.length}
               />
             ))}
@@ -233,7 +245,7 @@ function TokenCard({
         <Button
           variant={isCompleted ? "secondary" : "outline"}
           className="w-full"
-          onClick={() => onCompletedClickHandler()}
+          onClick={() => tokenOnClickHandler("COMPLETE")}
           disabled={!isCompleted}
         >
           Completed
@@ -243,7 +255,7 @@ function TokenCard({
         <Button
           variant={"accent"}
           className="w-full"
-          onClick={() => onDispatchClickHandler()}
+          onClick={() => tokenOnClickHandler("DISPATCH")}
         >
           Dispatch Now
         </Button>

@@ -14,13 +14,13 @@ import {
   DialogTrigger,
 } from "@/components/atoms/dialog";
 import Icon from "@/components/atoms/icon";
-import usePOSCart from "@/hooks/usePOSCart";
+import useOrderQuery from "@/hooks/useOrderQuery";
 
 function DraftOrder() {
   const [open, setOpen] = React.useState(false);
   const { handleSubmit, formState } = useFormContext<OrderUpsertSchemaType>();
   const { isDirty, isSubmitting } = formState;
-  const { upsert } = usePOSCart();
+  const { upsert } = useOrderQuery();
 
   async function onSubmit({ items, ...data }: OrderUpsertSchemaType) {
     await upsert({

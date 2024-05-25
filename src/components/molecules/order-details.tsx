@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-import usePOSCart from "@/hooks/usePOSCart";
+import useOrderQuery from "@/hooks/useOrderQuery";
 import { dateTimeFormat } from "@/lib/date-time";
 import { RootState } from "@/store";
 import { OrderAPIType } from "@/types";
@@ -14,10 +14,10 @@ import OrderTypeIcon from "./order-type-icon";
 
 function OrderDetails({ order }: { order: OrderAPIType }) {
   const featureFlags = useSelector(
-    (state: RootState) => state.base.featureFlags,
+    (state: RootState) => state.base.featureFlags
   );
   const { enableCustomerAdding, showUpdatedDate } = featureFlags;
-  const { refetch } = usePOSCart();
+  const { refetch } = useOrderQuery();
 
   return (
     <div className="flex flex-col gap-2 py-2 px-4 justify-center align-middle items-center">
@@ -70,7 +70,7 @@ function OrderDetails({ order }: { order: OrderAPIType }) {
             {dateTimeFormat(
               showUpdatedDate && order?.updatedAt
                 ? order?.updatedAt
-                : order.createdAt,
+                : order.createdAt
             )}
           </p>
         </div>

@@ -10,7 +10,7 @@ import fetcher from "@/lib/fetcher";
 import { RootState } from "@/store";
 import { setUpdateOrder } from "@/store/baseSlice";
 
-function usePOSCart() {
+function useOrderQuery() {
   const dispatch = useDispatch();
   // const searchParams = useSearchParams();
   // const orderId = searchParams.get("orderId");
@@ -127,4 +127,4 @@ function usePOSCart() {
 
   return { upsert, refetch, fetch };
 }
-export default usePOSCart;
+export default useOrderQuery;

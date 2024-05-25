@@ -14,13 +14,7 @@ export interface TokenTypeProps {
   variant: keyof SortItemsResult;
   hideDivider?: boolean;
   editMode?: boolean;
-  onClick?: ({
-    id,
-    mode,
-  }: {
-    id: string;
-    mode: "ACCEPT" | "COMPLETE" | "REJECT";
-  }) => void;
+  onClick?: (id: string, mode: "ACCEPT" | "COMPLETE" | "REJECT") => void;
 }
 
 function TokenItem({
@@ -32,19 +26,19 @@ function TokenItem({
 }: TokenTypeProps) {
   const onClickHandler = (mode: "ACCEPT" | "COMPLETE" | "REJECT") => {
     if (onClick) {
-      onClick({ id: item.id, mode });
+      onClick(item.id, mode);
     }
   };
 
   return (
     <div
       className={clsx(
-        "flex flex-col h-auto w-auto justify-center align-middle items-center",
+        "flex flex-col h-auto w-auto justify-center align-middle items-center"
       )}
     >
       <div
         className={clsx(
-          "flex w-full justify-between align-middle items-center text-left px-2 gap-2",
+          "flex w-full justify-between align-middle items-center text-left px-2 gap-2"
         )}
       >
         <div
@@ -53,7 +47,7 @@ function TokenItem({
             {
               "text-sm font-normal text-foreground/80": variant === "rejected",
               "text-base font-medium text-foreground": variant !== "rejected",
-            },
+            }
           )}
         >
           <p className="">{item.quantity}</p>

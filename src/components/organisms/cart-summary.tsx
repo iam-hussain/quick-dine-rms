@@ -1,7 +1,7 @@
 import React from "react";
 
 import useCartSettings from "@/hooks/useCartSettings";
-import useCartSummary from "@/hooks/useCartSummary";
+import useOrderSummary from "@/hooks/useOrderSummary";
 import { ItemType } from "@/types";
 
 import CartSummaryItem from "../molecules/cart-summary-item";
@@ -9,7 +9,7 @@ import CartSummaryItem from "../molecules/cart-summary-item";
 function CartSummary({ items }: { className?: string; items: ItemType[] }) {
   const { shouldAddPackingCharge, shouldAddDeliveryCharge } = useCartSettings();
   const { subTotal, packagingCharge, deliveryCharge, taxesValue, grandTotal } =
-    useCartSummary({
+    useOrderSummary({
       items,
     });
 

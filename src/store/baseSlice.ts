@@ -5,6 +5,7 @@ import {
   CategoryType,
   OrderAPIType,
   ProductAPIType,
+  SortTokensResult,
   StoreAdditionalType,
 } from "@/types";
 
@@ -32,6 +33,7 @@ interface PageState {
   user: any | null;
   store: any | null;
   order: OrderAPIType | null;
+  token: SortTokensResult | null;
   defaultOrder: OrderAPIType | null;
   categories: CategoryType[];
   kitchenCategories: CategoryType[];
@@ -45,6 +47,7 @@ const initialState: PageState = {
   user: null,
   store: null,
   order: null,
+  token: null,
   defaultOrder: null,
   categories: [],
   kitchenCategories: [],
@@ -80,12 +83,15 @@ export const pageSlice = createSlice({
       state.featureFlags = featureFlags || defaultFeatureFlags;
     },
 
-    setUpdateOrder: (state, action: PayloadAction<any>) => {
+    setUpdateOrder: (state, action: PayloadAction<OrderAPIType | null>) => {
       state.order = action.payload;
+    },
+    setTokens: (state, action: PayloadAction<SortTokensResult | null>) => {
+      state.token = action.payload;
     },
   },
 });
 
-export const { setBaseData, setUpdateOrder } = pageSlice.actions;
+export const { setBaseData, setUpdateOrder, setTokens } = pageSlice.actions;
 
 export default pageSlice.reducer;

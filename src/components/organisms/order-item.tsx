@@ -1,6 +1,6 @@
 "use client";
 
-import useCartSummary from "@/hooks/useCartSummary";
+import useOrderSummary from "@/hooks/useOrderSummary";
 import { dateTimeFormat } from "@/lib/date-time";
 import { OrderAPIType } from "@/types";
 
@@ -15,7 +15,7 @@ export default function OrderItem({
   order: OrderAPIType;
   onItemClick: (id: string) => void;
 }) {
-  const { subTotal, grandTotal } = useCartSummary({
+  const { subTotal, grandTotal } = useOrderSummary({
     items: order?.items?.summary || [],
   });
 

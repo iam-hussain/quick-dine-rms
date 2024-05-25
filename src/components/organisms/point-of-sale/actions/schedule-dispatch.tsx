@@ -17,14 +17,14 @@ import Icon from "@/components/atoms/icon";
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
 import OrderNotes from "@/components/molecules/order-notes";
-import usePOSCart from "@/hooks/usePOSCart";
+import useOrderQuery from "@/hooks/useOrderQuery";
 import { dateTimeFormatAddMinutes, timeAfterMinutes } from "@/lib/date-time";
 
 function ScheduleDispatch() {
   const [value, setValue] = React.useState(0);
   const [open, setOpen] = useState(false);
   const { handleSubmit, watch } = useFormContext<OrderUpsertSchemaType>();
-  const { upsert } = usePOSCart();
+  const { upsert } = useOrderQuery();
 
   const items = watch("items", []);
 
@@ -58,7 +58,7 @@ function ScheduleDispatch() {
           aria-label="Kitchen Dispatch"
           variant={"secondary"}
           className={clsx(
-            "flex justify-center gap-2 font-normal w-auto col-span-2",
+            "flex justify-center gap-2 font-normal w-auto col-span-2"
           )}
           disabled={!items.length}
         >

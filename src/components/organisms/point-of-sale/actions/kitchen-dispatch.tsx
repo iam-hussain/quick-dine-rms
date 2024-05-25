@@ -14,12 +14,12 @@ import {
   DialogTrigger,
 } from "@/components/atoms/dialog";
 import OrderNotes from "@/components/molecules/order-notes";
-import usePOSCart from "@/hooks/usePOSCart";
+import useOrderQuery from "@/hooks/useOrderQuery";
 
 function KitchenDispatch() {
   const [open, setOpen] = React.useState(false);
   const { handleSubmit, watch } = useFormContext<OrderUpsertSchemaType>();
-  const { upsert } = usePOSCart();
+  const { upsert } = useOrderQuery();
 
   const items = watch("items", []);
 
