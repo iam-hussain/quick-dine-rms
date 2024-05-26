@@ -8,6 +8,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  PaginationState,
   SortingState,
   useReactTable,
   VisibilityState,
@@ -38,9 +39,13 @@ function BaseTable({
   data?: any[] | undefined;
   columns: ColumnDef<any>[];
 }) {
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
+    []
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -57,11 +62,13 @@ function BaseTable({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination,
     },
   });
 
@@ -110,10 +117,9 @@ function BaseTable({
                     <TableHead
                       key={header.id}
                       style={{
-                        width:
-                          header.getSize() !== 150 ? header.getSize() : "auto",
+                        width: "auto",
                         ...(header.getSize() !== 150
-                          ? {}
+                          ? { minWidth: header.getSize() }
                           : {
                               minWidth: 200,
                             }),
@@ -123,7 +129,7 @@ function BaseTable({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   );
@@ -142,7 +148,7 @@ function BaseTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

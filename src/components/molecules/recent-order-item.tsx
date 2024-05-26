@@ -13,7 +13,7 @@ function RecentOrderItem({
 }) {
   return (
     <Button variant={"outline"} onClick={() => onClick(order.shortId)}>
-      <p className="text-sm font-medium">{order.shortId}</p>
+      <p className="text-sm font-medium">#{order.shortId}</p>
     </Button>
   );
 }

@@ -20,7 +20,7 @@ import {
 import Icon from "@/components/atoms/icon";
 import ProductForm from "@/components/forms/product-form";
 import BaseTable from "@/components/molecules/base-table";
-import { dateTimeDifferent, dateTimeFormat } from "@/lib/date-time";
+import { dateTimeFormat } from "@/lib/date-time";
 import fetcher from "@/lib/fetcher";
 import { RootState } from "@/store";
 
@@ -33,7 +33,7 @@ const typeMap = {
 export default function ProductPage() {
   const categories = useSelector((state: RootState) => state.base.categories);
   const kitchenCategories = useSelector(
-    (state: RootState) => state.base.kitchenCategories,
+    (state: RootState) => state.base.kitchenCategories
   );
   const products = useSelector((state: RootState) => state.base.products);
   const [value, setValue] = useState<
@@ -57,13 +57,13 @@ export default function ProductPage() {
       await queryClient.invalidateQueries({ queryKey: ["products"] });
 
       toast.success(
-        `Product with ID ${value.id} has been successfully deleted. 🎉`,
+        `Product with ID ${value.id} has been successfully deleted. 🎉`
       );
     },
     onError: (err) => {
       setOpen(false);
       toast.error(
-        `Unable to delete the product with ID ${value.id}. Please try again later. If the issue persists, contact support for assistance.`,
+        `Unable to delete the product with ID ${value.id}. Please try again later. If the issue persists, contact support for assistance.`
       );
       console.error(err);
     },
@@ -72,18 +72,15 @@ export default function ProductPage() {
   const columns: ColumnDef<any>[] = [
     {
       size: 155,
-      minSize: 155,
-      maxSize: 155,
       accessorKey: "id",
       header: () => <div className="text-left">ID</div>,
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-left">{row.getValue("id")}</div>
+        <div className="text-foreground/70 text-left">
+          #{row.getValue("id")}
+        </div>
       ),
     },
     {
-      size: 250,
-      minSize: 250,
-      maxSize: 250,
       accessorKey: "name",
       header: ({ column }) => (
         <Button
@@ -108,13 +105,11 @@ export default function ProductPage() {
     },
     {
       size: 120,
-      minSize: 120,
-      maxSize: 120,
       accessorKey: "price",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          className={clsx("w-full px-0", {
+          className={clsx("px-0", {
             "font-bold": column.getIsSorted(),
           })}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -124,7 +119,7 @@ export default function ProductPage() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-right">
+        <div className="text-foreground/70 text-left">
           {Number(row.getValue("price")).toLocaleString("en-IN", {
             style: "currency",
             currency: "INR",
@@ -134,13 +129,11 @@ export default function ProductPage() {
     },
     {
       size: 140,
-      minSize: 140,
-      maxSize: 140,
       accessorKey: "type",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          className={clsx("w-full px-0", {
+          className={clsx("px-0", {
             "font-bold": column.getIsSorted(),
           })}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -150,20 +143,18 @@ export default function ProductPage() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-center">
+        <div className="text-foreground/70 text-left">
           {typeMap[row.getValue("type") as keyof typeof typeMap]}
         </div>
       ),
     },
     {
       size: 120,
-      minSize: 120,
-      maxSize: 120,
       accessorKey: "outOfStock",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          className={clsx("w-full px-0", {
+          className={clsx("px-0", {
             "font-bold": column.getIsSorted(),
           })}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -173,20 +164,17 @@ export default function ProductPage() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-center">
+        <div className="text-foreground/70 text-left">
           {row.getValue("outOfStock") ? "No" : "Yes"}
         </div>
       ),
     },
     {
-      size: 120,
-      minSize: 120,
-      maxSize: 120,
       accessorKey: "categoryId",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          className={clsx("w-full px-0", {
+          className={clsx("px-0 text-left", {
             "font-bold": column.getIsSorted(),
           })}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -196,20 +184,17 @@ export default function ProductPage() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-center">
+        <div className="text-foreground/70 text-left">
           {row.getValue("categoryId")}
         </div>
       ),
     },
     {
-      size: 120,
-      minSize: 120,
-      maxSize: 120,
       accessorKey: "categoryName",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          className={clsx("w-full px-0", {
+          className={clsx("px-0 text-left", {
             "font-bold": column.getIsSorted(),
           })}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -219,20 +204,17 @@ export default function ProductPage() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-center">
+        <div className="text-foreground/70 text-left">
           {row.getValue("categoryName")}
         </div>
       ),
     },
     {
-      size: 120,
-      minSize: 120,
-      maxSize: 120,
       accessorKey: "kitchenCategoryId",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          className={clsx("w-full px-0", {
+          className={clsx("px-0 text-left", {
             "font-bold": column.getIsSorted(),
           })}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -242,20 +224,17 @@ export default function ProductPage() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-center">
+        <div className="text-foreground/70 text-left">
           {row.getValue("kitchenCategoryId")}
         </div>
       ),
     },
     {
-      size: 120,
-      minSize: 120,
-      maxSize: 120,
       accessorKey: "kitchenCategoryName",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          className={clsx("w-full px-0", {
+          className={clsx("px-0 text-left", {
             "font-bold": column.getIsSorted(),
           })}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -265,20 +244,17 @@ export default function ProductPage() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-center">
+        <div className="text-foreground/70 text-left">
           {row.getValue("kitchenCategoryName")}
         </div>
       ),
     },
     {
-      size: 230,
-      minSize: 230,
-      maxSize: 230,
       accessorKey: "createdAt",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          className={clsx("px-0", {
+          className={clsx("px-0 text-left", {
             "font-bold": column.getIsSorted(),
           })}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -287,21 +263,23 @@ export default function ProductPage() {
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       ),
+      sortingFn: (rowA, rowB) => {
+        const dateA = new Date((rowA as unknown as string) || "");
+        const dateB = new Date((rowB as unknown as string) || "");
+        return dateA > dateB ? 1 : -1;
+      },
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-center">
+        <div className="text-foreground/70 text-left">
           {dateTimeFormat(row.getValue("createdAt"))}
         </div>
       ),
     },
     {
-      size: 170,
-      minSize: 170,
-      maxSize: 170,
       accessorKey: "updatedAt",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          className={clsx("px-0", {
+          className={clsx("px-0 text-left", {
             "font-bold": column.getIsSorted(),
           })}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -310,16 +288,19 @@ export default function ProductPage() {
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       ),
+      sortingFn: (rowA, rowB) => {
+        const dateA = new Date((rowA as unknown as string) || "");
+        const dateB = new Date((rowB as unknown as string) || "");
+        return dateA > dateB ? 1 : -1;
+      },
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-center">
-          {dateTimeDifferent(row.getValue("updatedAt"))}
+        <div className="text-foreground/70 text-left">
+          {dateTimeFormat(row.getValue("updatedAt"))}
         </div>
       ),
     },
     {
       size: 100,
-      minSize: 100,
-      maxSize: 100,
       accessorKey: "action",
       header: () => <div className="text-right pr-4">Action</div>,
       cell: ({ row }) => (

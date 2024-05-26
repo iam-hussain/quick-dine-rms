@@ -8,7 +8,6 @@ import { OrderAPIType } from "@/types";
 
 import { Button } from "../atoms/button";
 import Icon from "../atoms/icon";
-import { Separator } from "../atoms/separator";
 import OrderStatusIcon from "./order-status-icon";
 import OrderTypeIcon from "./order-type-icon";
 
@@ -20,13 +19,13 @@ function OrderDetails({ order }: { order: OrderAPIType }) {
   const { refresh } = useOrderQuery();
 
   return (
-    <div className="flex flex-col gap-2 py-2 px-4 justify-center align-middle items-center">
+    <div className="flex flex-col gap-2 px-4 justify-center align-middle items-center">
       <div className="flex justify-between align-middle items-center w-full gap-2">
         <div className="flex w-max justify-center items-center align-middle">
           <div className="flex justify-center align-middle items-center gap-2">
             <p className="text-foreground/80 w-max">
               Order:{" "}
-              <span className="text-foreground font-medium text-base">
+              <span className="text-foreground font-medium text-lg">
                 #{order?.shortId}
                 {order?.table?.key ? ` / ${order?.table?.key}` : ""}
               </span>
@@ -75,8 +74,6 @@ function OrderDetails({ order }: { order: OrderAPIType }) {
           </p>
         </div>
       </div>
-
-      <Separator className="bg-accent" />
     </div>
   );
 }

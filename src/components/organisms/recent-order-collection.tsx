@@ -17,7 +17,8 @@ function RecentOrderCollection() {
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex justify-center align-middle items-center gap-2">
+      <p className="text-sm font-medium text-foreground/60">Recent Orders: </p>
       {recentOrders.map((order) => (
         <RecentOrderItem key={order.id} order={order} onClick={handleOnClick} />
       ))}

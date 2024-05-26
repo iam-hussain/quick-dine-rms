@@ -20,14 +20,14 @@ import {
 import Icon from "@/components/atoms/icon";
 import CategoryForm from "@/components/forms/category-form";
 import BaseTable from "@/components/molecules/base-table";
-import { dateTimeDifferent, dateTimeFormat } from "@/lib/date-time";
+import { dateTimeFormat } from "@/lib/date-time";
 import fetcher from "@/lib/fetcher";
 import { zeroLastSortMethod } from "@/lib/utils";
 import { RootState } from "@/store";
 
 export default function KitchenGroupPage() {
   const categories = useSelector(
-    (state: RootState) => state.base.kitchenCategories,
+    (state: RootState) => state.base.kitchenCategories
   );
   const [value, setValue] = useState<
     Partial<
@@ -50,13 +50,13 @@ export default function KitchenGroupPage() {
       await queryClient.invalidateQueries({ queryKey: ["categories"] });
 
       toast.success(
-        `Kitchen Group with ID ${value.id} has been successfully deleted. 🎉`,
+        `Kitchen Group with ID ${value.id} has been successfully deleted. 🎉`
       );
     },
     onError: (err) => {
       setOpen(false);
       toast.error(
-        `Unable to delete the kitchen group with ID ${value.id}. Please try again later. If the issue persists, contact support for assistance.`,
+        `Unable to delete the kitchen group with ID ${value.id}. Please try again later. If the issue persists, contact support for assistance.`
       );
       console.error(err);
     },
@@ -65,8 +65,6 @@ export default function KitchenGroupPage() {
   const columns: ColumnDef<any>[] = [
     {
       size: 155,
-      minSize: 155,
-      maxSize: 155,
       accessorKey: "id",
       header: () => <div className="text-left">ID</div>,
       cell: ({ row }) => (
@@ -75,15 +73,13 @@ export default function KitchenGroupPage() {
     },
 
     {
-      size: 120,
-      minSize: 120,
-      maxSize: 120,
+      size: 80,
       accessorKey: "position",
       sortingFn: zeroLastSortMethod as SortingFnOption<any> | undefined,
       header: ({ column }) => (
         <Button
           variant="ghost"
-          className={clsx({
+          className={clsx("px-0", {
             "font-bold": column.getIsSorted(),
           })}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -93,15 +89,12 @@ export default function KitchenGroupPage() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-center">
+        <div className="text-foreground/70 text-left">
           {row.getValue("position")}
         </div>
       ),
     },
     {
-      size: 250,
-      minSize: 250,
-      maxSize: 250,
       accessorKey: "name",
       header: ({ column }) => (
         <Button
@@ -129,28 +122,14 @@ export default function KitchenGroupPage() {
       minSize: 120,
       maxSize: 120,
       accessorKey: "productsConnected",
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          className={clsx({
-            "font-bold": column.getIsSorted(),
-          })}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Products
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      ),
+      header: () => <div className="text-left">Products</div>,
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-center">
+        <div className="text-foreground/70 text-left">
           {row.getValue("productsConnected")}
         </div>
       ),
     },
     {
-      size: 230,
-      minSize: 230,
-      maxSize: 230,
       accessorKey: "createdAt",
       header: ({ column }) => (
         <Button
@@ -164,16 +143,18 @@ export default function KitchenGroupPage() {
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       ),
+      sortingFn: (rowA, rowB) => {
+        const dateA = new Date((rowA as unknown as string) || "");
+        const dateB = new Date((rowB as unknown as string) || "");
+        return dateA > dateB ? 1 : -1;
+      },
       cell: ({ row }) => (
-        <div className="text-foreground/70 text-center">
+        <div className="text-foreground/70 text-left">
           {dateTimeFormat(row.getValue("createdAt"))}
         </div>
       ),
     },
     {
-      size: 170,
-      minSize: 170,
-      maxSize: 170,
       accessorKey: "updatedAt",
       header: ({ column }) => (
         <Button
@@ -187,16 +168,19 @@ export default function KitchenGroupPage() {
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       ),
+      sortingFn: (rowA, rowB) => {
+        const dateA = new Date((rowA as unknown as string) || "");
+        const dateB = new Date((rowB as unknown as string) || "");
+        return dateA > dateB ? 1 : -1;
+      },
       cell: ({ row }) => (
         <div className="text-foreground/70 text-center">
-          {dateTimeDifferent(row.getValue("updatedAt"))}
+          {dateTimeFormat(row.getValue("updatedAt"))}
         </div>
       ),
     },
     {
       size: 100,
-      minSize: 100,
-      maxSize: 100,
       accessorKey: "action",
       header: () => <div className="text-right pr-4">Action</div>,
       cell: ({ row }) => (

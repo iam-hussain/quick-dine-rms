@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Loader from "@/components/molecules/loader";
-import { cookieNames, removeCookie } from "@/lib/cookies";
+import { cookieNames, removeCookieAsync } from "@/lib/cookies";
 import fetcher from "@/lib/fetcher";
 import { RootState } from "@/store";
 import { setBaseData } from "@/store/baseSlice";
@@ -56,12 +56,13 @@ export default function BasePage({ children }: { children: React.ReactNode }) {
         })
       );
     } else if (!combinedResponse.pending && combinedResponse.data[0]?.message) {
-      if (combinedResponse.data[0]?.message === "INVALID_STORE_TOKEN") {
-        router.push("/stores");
-      } else {
-        removeCookie(cookieNames.access_token);
+      // if (combinedResponse.data[0]?.message === "INVALID_STORE_TOKEN") {
+      //   router.push("/stores");
+      // } else {
+      removeCookieAsync(cookieNames.access_token).then(() => {
         router.push("/");
-      }
+      });
+      // }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [combinedResponse]);
