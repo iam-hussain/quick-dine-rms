@@ -32,7 +32,7 @@ import {
 } from "@/components/atoms/table";
 import { orderStatusObject } from "@/components/molecules/order-status-icon";
 import { orderTypeObject } from "@/components/molecules/order-type-icon";
-import { dateTimeFormat } from "@/lib/date-time";
+import { formatDateTime } from "@/lib/date-time";
 import fetcher from "@/lib/fetcher";
 import { ORDER_STATUS, ORDER_TYPE, OrderAPIType } from "@/types";
 
@@ -218,7 +218,7 @@ export default function OrdersPage() {
       ),
       cell: ({ row }) => (
         <div className="text-foreground/70 text-left">
-          {dateTimeFormat(row.getValue("createdAt"))}
+          {formatDateTime(row.getValue("createdAt"))}
         </div>
       ),
     },
@@ -248,7 +248,7 @@ export default function OrdersPage() {
       ),
       cell: ({ row }) => (
         <div className="text-foreground/70 text-left">
-          {dateTimeFormat(row.getValue("updatedAt"))}
+          {formatDateTime(row.getValue("updatedAt"))}
         </div>
       ),
     },

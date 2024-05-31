@@ -1,39 +1,39 @@
 import { add, format, formatDistance, formatISO } from "date-fns";
 
-export const dateTimeDifferent = (input: string | Date) => {
+export const getRelativeTime = (input: string | Date) => {
   return formatDistance(new Date(input), new Date(), { addSuffix: true });
 };
 
-export const dateTimeFormat = (input: string | Date = new Date()) => {
+export const formatDateTime = (input: string | Date = new Date()) => {
   return format(new Date(input), "PPp");
 };
 
-export const timeFormat = (input: string | Date) => {
+export const formatTime = (input: string | Date) => {
   return format(new Date(input), "PPPp");
 };
 
-export const dateTimeAfterMinutes = (input: string | number) => {
+export const getDateTimeAfterMinutes = (minutes: string | number) => {
   return format(
     add(new Date(), {
-      minutes: Number(input) || 0,
+      minutes: Number(minutes) || 0,
     }),
     "PPPp",
   );
 };
 
-export const timeAfterMinutes = (input: string | number) => {
+export const getTimeAfterMinutes = (minutes: string | number) => {
   return format(
     add(new Date(), {
-      minutes: Number(input) || 0,
+      minutes: Number(minutes) || 0,
     }),
     "p",
   );
 };
 
-export const dateTimeFormatAddMinutes = (input: string | number) => {
+export const getISODateTimeAfterMinutes = (minutes: string | number) => {
   return formatISO(
     add(new Date(), {
-      minutes: Number(input) || 0,
+      minutes: Number(minutes) || 0,
     }),
   );
 };

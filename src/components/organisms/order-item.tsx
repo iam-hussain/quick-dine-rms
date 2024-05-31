@@ -1,7 +1,7 @@
 "use client";
 
 import useOrderSummary from "@/hooks/useOrderSummary";
-import { dateTimeFormat } from "@/lib/date-time";
+import { formatDateTime } from "@/lib/date-time";
 import { OrderAPIType } from "@/types";
 
 import { Separator } from "../atoms/separator";
@@ -81,17 +81,17 @@ export default function OrderItem({
 
         <p className="p-2 font-bold min-w-[300px] text-center bg-background">
           <span className="font-normal mr-2 text-sm">Updated: </span>
-          {dateTimeFormat(order?.updatedAt || "")}
+          {formatDateTime(order?.updatedAt || "")}
         </p>
       </div>
       {/* <div className="flex m-auto gap-2 text-base font-medium text-foreground/80">
         <p className="text-foreground/90 font-medium text-base w-full text-right">
           <span className="text-foreground/80 text-sm">Created @ </span>{" "}
-          {dateTimeFormat(order?.createdAt || "")}
+          {formatDateTime(order?.createdAt || "")}
         </p>
         <p className="text-foreground/90 font-medium text-base w-full text-right">
           <span className="text-foreground/80 text-sm">Updated @ </span>{" "}
-          {dateTimeFormat(order?.updatedAt || "")}
+          {formatDateTime(order?.updatedAt || "")}
         </p>
       </div> */}
       {/* 

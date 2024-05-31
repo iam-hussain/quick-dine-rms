@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 import useOrderQuery from "@/hooks/useOrderQuery";
-import { dateTimeFormat } from "@/lib/date-time";
+import { formatDateTime } from "@/lib/date-time";
 import { RootState } from "@/store";
 import { OrderAPIType } from "@/types";
 
@@ -66,7 +66,7 @@ function OrderDetails({ order }: { order: OrderAPIType }) {
                 ? "Updated @ "
                 : "Created @ "}
             </span>{" "}
-            {dateTimeFormat(
+            {formatDateTime(
               showUpdatedDate && order?.updatedAt
                 ? order?.updatedAt
                 : order.createdAt

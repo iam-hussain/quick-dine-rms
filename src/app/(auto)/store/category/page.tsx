@@ -20,7 +20,7 @@ import {
 import Icon from "@/components/atoms/icon";
 import CategoryForm from "@/components/forms/category-form";
 import BaseTable from "@/components/molecules/base-table";
-import { dateTimeFormat } from "@/lib/date-time";
+import { formatDateTime } from "@/lib/date-time";
 import fetcher from "@/lib/fetcher";
 import { zeroLastSortMethod } from "@/lib/utils";
 import { RootState } from "@/store";
@@ -148,7 +148,7 @@ export default function CategoryPage() {
       },
       cell: ({ row }) => (
         <div className="text-foreground/70 text-left">
-          {dateTimeFormat(row.getValue("createdAt"))}
+          {formatDateTime(row.getValue("createdAt"))}
         </div>
       ),
     },
@@ -173,7 +173,7 @@ export default function CategoryPage() {
       },
       cell: ({ row }) => (
         <div className="text-foreground/70 text-left">
-          {dateTimeFormat(row.getValue("updatedAt"))}
+          {formatDateTime(row.getValue("updatedAt"))}
         </div>
       ),
     },

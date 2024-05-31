@@ -20,7 +20,7 @@ import {
 import Icon from "@/components/atoms/icon";
 import ProductForm from "@/components/forms/product-form";
 import BaseTable from "@/components/molecules/base-table";
-import { dateTimeFormat } from "@/lib/date-time";
+import { formatDateTime } from "@/lib/date-time";
 import fetcher from "@/lib/fetcher";
 import { RootState } from "@/store";
 
@@ -270,7 +270,7 @@ export default function ProductPage() {
       },
       cell: ({ row }) => (
         <div className="text-foreground/70 text-left">
-          {dateTimeFormat(row.getValue("createdAt"))}
+          {formatDateTime(row.getValue("createdAt"))}
         </div>
       ),
     },
@@ -295,7 +295,7 @@ export default function ProductPage() {
       },
       cell: ({ row }) => (
         <div className="text-foreground/70 text-left">
-          {dateTimeFormat(row.getValue("updatedAt"))}
+          {formatDateTime(row.getValue("updatedAt"))}
         </div>
       ),
     },

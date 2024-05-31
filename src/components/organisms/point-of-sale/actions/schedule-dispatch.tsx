@@ -18,7 +18,7 @@ import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
 import OrderNotes from "@/components/molecules/order-notes";
 import useOrderQuery from "@/hooks/useOrderQuery";
-import { dateTimeFormatAddMinutes, timeAfterMinutes } from "@/lib/date-time";
+import { getISODateTimeAfterMinutes, getTimeAfterMinutes } from "@/lib/date-time";
 
 function ScheduleDispatch() {
   const [value, setValue] = React.useState(0);
@@ -32,7 +32,7 @@ function ScheduleDispatch() {
     await upsert({
       ...data,
       status: "IN_PROGRESS",
-      scheduledAt: new Date(dateTimeFormatAddMinutes(value)).toISOString(),
+      scheduledAt: new Date(getISODateTimeAfterMinutes(value)).toISOString(),
       items: items.map((e, i) => ({
         ...e,
         position: i,
@@ -81,7 +81,7 @@ function ScheduleDispatch() {
             <Label htmlFor="minutes" className="text-base">
               Minutes
             </Label>
-            <p>is {timeAfterMinutes(value)}</p>
+            <p>is {getTimeAfterMinutes(value)}</p>
           </div>
           <OrderNotes />
           <DialogDescription className="text-foreground">
