@@ -12,15 +12,15 @@ function BrandStackSlogan({ className }: BrandSvgProps) {
     <div
       className={clsx(
         "flex flex-col w-auto m-auto ml-0 gap-2 justify-center align-middle items-center select-none",
-        className,
+        className
       )}
     >
       <Icon
-        name="FaBowlFood"
+        name="FaConciergeBell"
         className="text-primary md:text-9xl text-7xl font-thin"
       />
       <h1 className="md:text-7xl text-5xl font-display text-foreground">
-        QuickDine
+        DingDine
       </h1>
       <p className="text-foreground/50 uppercase font-medium text-xs md:text-base">
         Order with Ease, Dine with Pleasure

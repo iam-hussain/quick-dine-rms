@@ -12,14 +12,14 @@ function BrandStack({ className }: BrandSvgProps) {
     <div
       className={clsx(
         "flex flex-col w-auto m-auto ml-0 gap-2 justify-center align-middle items-center select-none",
-        className,
+        className
       )}
     >
       <Icon
-        name="FaBowlFood"
+        name="FaConciergeBell"
         className="text-primary md:text-9xl text-7xl font-thin"
       />
-      <h1 className="md:text-7xl text-5xl font-display">QuickDine</h1>
+      <h1 className="md:text-7xl text-5xl font-display">DingDine</h1>
     </div>
   );
 }

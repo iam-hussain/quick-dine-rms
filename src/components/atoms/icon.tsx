@@ -10,6 +10,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { FaSave } from "react-icons/fa";
 import { FaRegObjectGroup } from "react-icons/fa";
 import { FaTruckLoading } from "react-icons/fa";
+import { FaConciergeBell } from "react-icons/fa";
 import { FaKitchenSet } from "react-icons/fa6";
 import { FaCartShopping } from "react-icons/fa6";
 import { FaTags } from "react-icons/fa6";
@@ -153,6 +154,7 @@ const icons = {
   TfiPackage,
   RiEBike2Fill,
   MdBookOnline,
+  FaConciergeBell,
 };
 
 export type IconKey = keyof typeof icons;

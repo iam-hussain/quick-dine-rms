@@ -62,7 +62,7 @@ function TopMenu({ className }: { className?: string }) {
         setScrollDirection("DOWN");
       }
     },
-    [sideBarOpen],
+    [sideBarOpen]
   );
 
   const shouldHide = useMemo(() => {
@@ -78,7 +78,7 @@ function TopMenu({ className }: { className?: string }) {
     <motion.nav
       className={clsx(
         "border-b border-paper w-full h-[50px] flex justify-center align-middle items-center fixed",
-        className,
+        className
       )}
       initial="show"
       variants={animator}
@@ -102,7 +102,6 @@ function TopMenu({ className }: { className?: string }) {
         <BrandSideBySide
           className={clsx("h-[40px] py-2 md:ml-0 ml-2 w-auto", {})}
         />
-        <h1 className="hidden">QuickDine</h1>
       </div>
 
       <motion.div

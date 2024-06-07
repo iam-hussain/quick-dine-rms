@@ -156,13 +156,13 @@ function SideMenu({ className }: { className?: string }) {
         style={{ width: "500px" }}
         className={clsx(
           "side-menu py-4 bg-background px-2 z-50 items-end relative",
-          className,
+          className
         )}
       >
         <div className="flex justify-center align-middle items-center flex-col h-full w-[300px]">
           <div
             className={clsx(
-              "flex gap-2 justify-start align-middle items-center select-none text-right m-auto my-4",
+              "flex gap-2 justify-start align-middle items-center select-none text-right m-auto my-4"
             )}
           >
             <motion.div
@@ -178,10 +178,10 @@ function SideMenu({ className }: { className?: string }) {
               <div className="flex flex-col justify-center align-middle items-center gap-0">
                 <div className="cursor-pointer flex gap-2 justify-center align-middle items-center">
                   <Icon
-                    name="FaBowlFood"
+                    name="FaConciergeBell"
                     className="text-primary text-3xl font-thin my-[2px]"
                   />
-                  <h1 className={clsx("text-2xl font-display")}>QuickDine</h1>
+                  <h1 className={clsx("text-2xl font-display")}>DingDine</h1>
                 </div>
               </div>
               <Separator className="my-2 select-none" />

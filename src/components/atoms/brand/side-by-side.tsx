@@ -12,11 +12,14 @@ function BrandSideBySide({ className }: BrandSvgProps) {
     <div
       className={clsx(
         "flex flex-row w-auto m-auto ml-0 gap-2 justify-center align-middle items-center select-none text-xl",
-        className,
+        className
       )}
     >
-      <Icon name="FaBowlFood" className="text-primary font-thin text-2xl" />
-      <h1 className="font-display">QuickDine</h1>
+      <Icon
+        name="FaConciergeBell"
+        className="text-primary font-thin text-2xl"
+      />
+      <h1 className="font-display">DingDine</h1>
     </div>
   );
 }
