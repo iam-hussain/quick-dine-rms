@@ -1,7 +1,7 @@
 import { OrderUpsertSchemaType } from "@iam-hussain/qd-copilot";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import _ from "lodash";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,7 +30,7 @@ function useOrderQuery() {
         );
       } else {
         if (!orderId || orderId !== variables.shortId) {
-          router.push(`/store/pos?orderId=${order.shortId}`);
+          router.history.push(`/store/pos?orderId=${order.shortId}`);
           queryClient.invalidateQueries({
             queryKey: ["recent_orders"],
           });
@@ -71,7 +71,7 @@ function useOrderQuery() {
     onSuccess: async (order: any, variables: any) => {
       const { shortId, items, table = {}, status } = order || {};
       if (!orderId || orderId !== variables.shortId) {
-        router.push(`/store/pos?orderId=${order.shortId}`);
+        router.history.push(`/store/pos?orderId=${order.shortId}`);
         queryClient.invalidateQueries({
           queryKey: ["recent_orders"],
         });

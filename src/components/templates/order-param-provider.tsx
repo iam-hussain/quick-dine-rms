@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "@tanstack/react-router";
 import { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 

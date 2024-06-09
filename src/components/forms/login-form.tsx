@@ -7,7 +7,7 @@ import {
   SignInSchemaType,
 } from "@iam-hussain/qd-copilot";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/atoms/button";
@@ -48,9 +48,9 @@ function LoginForm() {
       if (data?.access_token) {
         await setCookieAsync(cookieNames.access_token, data.access_token);
         if (data?.includes_store) {
-          router.push("/store");
+          router.history.push("/store");
         } else {
-          router.push("/stores");
+          router.history.push("/stores");
         }
       }
     },

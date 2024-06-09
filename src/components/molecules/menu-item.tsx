@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@tanstack/react-router";
 import React from "react";
 import { useMedia } from "react-use";
 
@@ -45,7 +45,7 @@ function MenuItem({
           "text-foreground/70 text-sm": link !== pathname,
           "justify-center p-2": !isSmallDevice && minimize,
           "justify-start px-4 py-2": !minimize,
-        },
+        }
       )}
       onClick={onRedirect}
       href={link || "#"}

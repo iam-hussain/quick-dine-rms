@@ -2,7 +2,7 @@
 
 import { useQueries } from "@tanstack/react-query";
 import clsx from "clsx";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -57,10 +57,10 @@ export default function BasePage({ children }: { children: React.ReactNode }) {
       );
     } else if (!combinedResponse.pending && combinedResponse.data[0]?.message) {
       // if (combinedResponse.data[0]?.message === "INVALID_STORE_TOKEN") {
-      //   router.push("/stores");
+      //   router.history.push("/stores");
       // } else {
       removeCookieAsync(cookieNames.access_token).then(() => {
-        router.push("/");
+        router.history.push("/");
       });
       // }
     }

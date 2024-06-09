@@ -16,7 +16,7 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 import clsx from "clsx";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { Button } from "@/components/atoms/button";
@@ -261,7 +261,9 @@ export default function OrdersPage() {
           <Button
             variant={"outline"}
             onClick={() =>
-              router.push(`/store/order?orderId=${row.getValue("shortId")}`)
+              router.history.push(
+                `/store/order?orderId=${row.getValue("shortId")}`
+              )
             }
           >
             View
@@ -269,7 +271,9 @@ export default function OrdersPage() {
           <Button
             variant={"outline"}
             onClick={() =>
-              router.push(`/store/pos?orderId=${row.getValue("shortId")}`)
+              router.history.push(
+                `/store/pos?orderId=${row.getValue("shortId")}`
+              )
             }
           >
             POS
